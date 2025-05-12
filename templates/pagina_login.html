@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pagina_login.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Processos KATO - Login</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestão de Processos</h1>
+        <img src="{{ url_for('static', filename='img/Logo - Grupo Kato Preto.png') }}" alt="Logo KATO" class="logo-kato">
+
+        <form action="{{ url_for('blueprint_login.fazer_login') }}" method="POST" class="formulario">
+            <label for="usuario_id" class="label-usuario">Usuario</label>
+            <input type="text" id="usuario_id" name="usuario" class="input-usuario">
+
+            <label for="senha_id" class="label-senha">Senha</label>
+            <input type="password" id="senha_id" name="senha" class="input-senha">
+
+            <input type="submit" class="botao-enviar" value="Fazer Login">
+        </form>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>
