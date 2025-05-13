@@ -9,7 +9,7 @@ blueprint_gestao_usuarios = Blueprint('blueprint_gestao_usuarios', __name__)
 @login_required
 @role_required('ADMIN')
 def pagina_gestao_usuarios():
-    return render_template('pagina_gestao_usuarios.html', funcao_usuario=current_user.FUNCAO)
+    return render_template('pagina_gestao_usuarios.html', usuario_logado=current_user.USUARIO)
 
 @blueprint_gestao_usuarios.route('/cadastrar-usuario', methods=['POST', 'GET'])
 @login_required
@@ -54,4 +54,4 @@ def cadastrar_usuario():
             return redirect(url_for('blueprint_gestao_usuarios.pagina_gestao_usuarios'))
             
     
-    return render_template('pagina_gestao_usuarios.html')
+    return render_template('pagina_gestao_usuarios.html', usuario_logado=current_user.USUARIO)

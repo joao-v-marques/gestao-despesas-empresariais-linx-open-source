@@ -19,7 +19,6 @@ def fazer_login():
 
             if usuario_existente.SENHA == senha_form:
                 login_user(usuario_existente)
-                flash('Login efetuado com sucesso!')
                 return redirect(url_for('blueprint_principal.pagina_principal'))
             else:
                 flash('Senha Incorreta! Tente novamente.', 'error')

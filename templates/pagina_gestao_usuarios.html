@@ -10,6 +10,7 @@
 <body>
     <header>
         <nav class="navbar navbar-light bg-dark px-4">
+            <a class="navbar-brand" href="{{ url_for('blueprint_principal.pagina_principal') }}"><img src="{{ url_for('static', filename='img/Logo - Grupo Kato Branco.png') }}" alt="Logo KATO"></a>
             <a class="navbar-brand text-white fw-bold" href="{{ url_for('blueprint_principal.pagina_principal') }}">Gestão de Despesas</a>
             <ul class="nav">
                 <li class="nav-item">                   
@@ -33,6 +34,9 @@
                 {% endif %}
                 <li class="nav-item">
                     <a class="nav-link text-white" href="#">Logout</a>
+                </li>
+                <li class="user">
+                    <a class="user" href="">{{ usuario_logado }}</a>
                 </li>
             </ul>
         </nav>

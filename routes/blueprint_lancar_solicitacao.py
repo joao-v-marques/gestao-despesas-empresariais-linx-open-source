@@ -6,4 +6,4 @@ blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name_
 @blueprint_lancar_solicitacao.route('/')
 @login_required
 def pagina_lancar_solicitacao():
-    return render_template('pagina_lancar_solicitacao.html')
+    return render_template('pagina_lancar_solicitacao.html', usuario_logado=current_user.USUARIO)

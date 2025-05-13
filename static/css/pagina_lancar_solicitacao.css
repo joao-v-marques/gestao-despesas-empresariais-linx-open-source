@@ -9,68 +9,44 @@
     font-family: 'Poppins', sans-serif;
 }
 
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa;
+.navbar-brand img {
+    max-height: 50px;
+    width: auto;
+    margin-right: 10px;
 }
 
-.titulo-gestao {
-    text-align: center;
-    margin: 40px 0 20px 0;
-    color: #1d3557;
+.navbar-brand {
+    display: flex;
+    align-items: center;
 }
 
-form {
-    max-width: 500px;
-    margin: 0 auto 50px auto;
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-}
-
-.label-usuario,
-.label-senha,
-.label-confirma-senha {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 5px;
+.user {
+    text-decoration: none;
+    color: var(--primary-color);
     font-weight: 600;
-    color: #333;
-}
-
-.input-usuario,
-.input-senha,
-.input-confirma-senha {
-    width: 100%;
-    padding: 10px;
     font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 10px;
+    text-transform: uppercase;
+    padding: 8px 10px;
+    border-radius: 20px; /* Bordas arredondadas */
+    background: linear-gradient(45deg, #f1faee, #a8dadc); /* Gradiente azul */
+    transition: all 0.3s ease; /* Transição suave */
 }
 
-.botao-enviar {
-    width: 100%;
-    padding: 12px;
-    background-color: #1d3557;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    margin-top: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.navbar {
+    background-color: var(--primary-color) !important;
 }
 
-.botao-enviar:hover {
-    background-color: #457b9d;
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--secondary-color) !important;
 }
 
-main h1:last-of-type {
-    text-align: center;
-    margin-top: 60px;
-    color: #1d3557;
+.nav-link {
+    color: var(--secondary-color) !important;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #a8dadc !important;
 }

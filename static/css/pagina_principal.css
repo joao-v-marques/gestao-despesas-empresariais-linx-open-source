@@ -13,15 +13,32 @@
     background-color: var(--primary-color) !important;
 }
 
+.navbar-brand img {
+    max-height: 50px;
+    width: auto;
+    margin-right: 10px;
+}
+
 .navbar-brand {
     font-weight: bold;
     font-size: 1.5rem;
     color: var(--secondary-color) !important;
 }
 
+.user {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    padding: 8px 10px;
+    border-radius: 20px; /* Bordas arredondadas */
+    background: linear-gradient(45deg, #f1faee, #a8dadc); /* Gradiente azul */
+    transition: all 0.3s ease; /* Transição suave */
+}
+
 .nav-link {
     color: var(--secondary-color) !important;
-    margin-left: 20px;
     transition: color 0.3s ease;
 }
 
