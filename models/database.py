@@ -7,7 +7,7 @@ class Usuarios(UserMixin, Model):
     USUARIO = CharField(unique=True)
     SENHA = CharField()
     NOME = CharField()
-    CPF = CharField(unique=True)
+    CPF = CharField()
     FUNCAO = CharField()
     EMPRESA = IntegerField()
     REVENDA = IntegerField()

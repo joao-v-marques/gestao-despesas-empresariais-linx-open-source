@@ -25,7 +25,7 @@ empresa_inserida.addEventListener('change', atualizarOpcoesRevenda);
 
 atualizarOpcoesRevenda();
 
-const cpf_form = document.querySelector('#cpf_id')
+const cpf_form = document.querySelector('#cpf_id');
 
 cpf_form.addEventListener('input', function () {
     let cpf = cpf_form.value;
