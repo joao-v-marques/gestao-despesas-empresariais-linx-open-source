@@ -43,7 +43,43 @@
     </header>
 
     <main>
+        <h1 class="titulo-solicitacao">Lançar Solicitação</h1>
 
+        <form action="{{ url_for('blueprint_lancar_solicitacao.fazer_lancamento') }}" method="POST" class="formulario">
+            <label for="departamento_id" class="label-departamento">Departamento</label>
+            <select name="departamento" id="departamento_id" class="input-departamento">
+                <option value="100">100 - NOVOS</option>
+                <option value="110">110 - NOVOS - REVENDA</option>
+                <option value="200">200 - USADOS</option>
+                <option value="300">300 - PECAS</option>
+                <option value="301">301 - PECAS ATACADO</option>
+                <option value="310">310 - ACESSORIOS</option>
+                <option value="400">400 - ASSISTENCIA TECNICA</option>
+                <option value="410">410 - FUNILARIA E PINTURA</option>
+                <option value="500">500 - ADMINISTRAÇÃO</option>
+            </select>
+
+            <label for="tipo_despesa_id" class="label-tipo-despesa">Tipo Despesa</label>
+            <select name="tipo_despesa" id="tipo_despesa_id" class="input-tipo-despesa">
+                <option value="5006">5006 - ND-MAT. DE ESCRITÓRIO</option>
+                <option value="5114">5114 - ND-LUZ</option>
+                <option value="5123">5123 - ND-EMBALAGENS</option>
+                <option value="5138">5138 - ND-INTERNET</option>
+                <option value="5140">5140 - ND-PUBLICIDADE E PROPAGANDA</option>
+            </select>
+
+            <label for="descricao_id" class="label-descricao">Descrição</label>
+            <input type="text" id="descricao_id" name="descricao" class="input-descricao">
+
+            <label for="valor_id" class="label-valor">Valor</label>
+            <input type="text" id="valor_id" name="valor" class="input-valor">
+
+            <!-- Já gravar o status da solicitação PENDENTE como padrão no Backend -->
+
+            <input type="submit">
+        </form>
+
+        <script src="{{ url_for('static', filename='js/pagina_lancar_solicitacao.js') }}"></script>
     </main>
 </body>
 </html>
