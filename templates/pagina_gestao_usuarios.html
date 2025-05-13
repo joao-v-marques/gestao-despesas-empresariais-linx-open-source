@@ -21,12 +21,16 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{{ url_for('blueprint_lancar_solicitacao.pagina_lancar_solicitacao') }}">Lançar Solicitação</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('blueprint_gestao_usuarios.pagina_gestao_usuarios') }}">Gestão de Usuários</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Controle (Diretoria)</a>
-                </li>
+                {% if current_user.FUNCAO == 'ADMIN' %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('blueprint_gestao_usuarios.pagina_gestao_usuarios') }}">Gestão de Usuários</a>
+                    </li>
+                {% endif %}
+                {% if current_user.FUNCAO == 'ADMIN' or current_user.FUNCAO == 'DIRETORIA' %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Controle (Diretoria)</a>
+                    </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link text-white" href="#">Logout</a>
                 </li>

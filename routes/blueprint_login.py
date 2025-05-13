@@ -1,4 +1,6 @@
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash
+from flask_login import login_user
+from models.database import Usuarios
 
 blueprint_login = Blueprint('blueprint_login', __name__)
 
@@ -9,9 +11,19 @@ def pagina_login():
 @blueprint_login.route('/fazer-login', methods=['POST', 'GET'])
 def fazer_login():
     if request.method == 'POST':
-        usuario = request.form['usuario']
-        senha = request.form['senha']
-        # usuario_existente = 
-
-        # Fazer a validação para ver se o usuário/senha inserido existe ou não
+        usuario_form = request.form['usuario']
+        senha_form = request.form['senha']
         
+        try:
+            usuario_existente = Usuarios.get(Usuarios.USUARIO == usuario_form)
+
+            if usuario_existente.SENHA == senha_form:
+                login_user(usuario_existente)
+                flash('Login efetuado com sucesso!')
+                return redirect(url_for('blueprint_principal.pagina_principal'))
+            else:
+                flash('Senha Incorreta! Tente novamente.', 'error')
+        except Usuarios.DoesNotExist:
+            flash('Usuário não encontrado! Tente novamente.', 'error')
+
+    return render_template("pagina_login.html")

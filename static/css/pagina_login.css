@@ -72,3 +72,9 @@ h1 {
 .botao-enviar:hover {
     background-color: #457b9d;
 }
+
+.flashes {
+    color: red;
+    list-style: none;
+    text-align: center;
+}

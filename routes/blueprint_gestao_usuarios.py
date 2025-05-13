@@ -1,13 +1,19 @@
 from flask import Blueprint, render_template, redirect, request, flash, url_for
+from flask_login import login_required, current_user
 from models.database import db, Usuarios
+from decorators import role_required
 
 blueprint_gestao_usuarios = Blueprint('blueprint_gestao_usuarios', __name__)
 
 @blueprint_gestao_usuarios.route('/')
+@login_required
+@role_required('ADMIN')
 def pagina_gestao_usuarios():
-    return render_template('pagina_gestao_usuarios.html')
+    return render_template('pagina_gestao_usuarios.html', funcao_usuario=current_user.FUNCAO)
 
 @blueprint_gestao_usuarios.route('/cadastrar-usuario', methods=['POST', 'GET'])
+@login_required
+@role_required('ADMIN')
 def cadastrar_usuario():
     if request.method == 'POST':
         usuario_form = request.form['usuario'].upper()
@@ -45,7 +51,7 @@ def cadastrar_usuario():
                             FUNCAO=funcao_form,
                             EMPRESA=empresa_form,
                             REVENDA=revenda_form)
-            return render_template('pagina_gestao_usuarios.html')
+            return redirect(url_for('blueprint_gestao_usuarios.pagina_gestao_usuarios'))
             
     
     return render_template('pagina_gestao_usuarios.html')

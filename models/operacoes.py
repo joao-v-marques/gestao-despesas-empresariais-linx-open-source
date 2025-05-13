@@ -1,4 +1,4 @@
-from database import db, Usuarios, Solicitacoes
+# from database import db, Usuarios, Solicitacoes
 
 # Usuarios.delete_by_id(2)
 
@@ -8,3 +8,7 @@ from database import db, Usuarios, Solicitacoes
 # usuario_existente = Usuarios.select().where(Usuarios.USUARIO == usuario_form)
 
 # print(usuario_existente.exists())
+
+# import secrets
+
+# print(secrets.token_hex(32))
