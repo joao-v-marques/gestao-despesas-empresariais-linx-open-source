@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, redirect
+from flask import Blueprint, render_template, url_for, redirect, flash
 from flask_login import current_user, login_required, logout_user
 
 blueprint_principal = Blueprint('blueprint_principal', __name__)
@@ -12,4 +12,5 @@ def pagina_principal():
 @login_required
 def funcao_logout():
     logout_user()
+    flash('Você deslogou da sua conta com sucesso!', 'success')
     return redirect(url_for('blueprint_login.pagina_login'))

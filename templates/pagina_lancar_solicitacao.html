@@ -11,7 +11,6 @@
     <header> 
         <nav class="navbar navbar-light bg-dark px-4">
             <a class="navbar-brand" href="{{ url_for('blueprint_principal.pagina_principal') }}"><img src="{{ url_for('static', filename='img/Logo - Grupo Kato Branco.png') }}" alt="Logo KATO"></a>
-            <a class="navbar-brand text-white fw-bold" href="{{ url_for('blueprint_principal.pagina_principal') }}">Gestão de Despesas</a>
             <ul class="nav">
                 <li class="nav-item">                   
                     <a class="nav-link text-white" href="{{ url_for('blueprint_principal.pagina_principal') }}">Home</a>
@@ -29,7 +28,7 @@
                 {% endif %}
                 {% if current_user.FUNCAO == 'ADMIN' or current_user.FUNCAO == 'DIRETORIA' %}
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Controle (Diretoria)</a>
+                        <a class="nav-link text-white" href="#">Controle Diretoria</a>
                     </li>
                 {% endif %}
                 <li class="nav-item">
@@ -43,9 +42,22 @@
     </header>
 
     <main>
-        <h1 class="titulo-solicitacao">Lançar Solicitação</h1>
+        <h1 class="titulo-solicitacao">Lançar Nova Solicitação</h1>
 
         <form action="{{ url_for('blueprint_lancar_solicitacao.fazer_lancamento') }}" method="POST" class="formulario">
+            <label for="empresa_id" class="label-empresa">Empresa</label>
+            <select name="empresa" id="empresa_id">
+                <option value="1">1</option>
+                <option value="4">4</option>
+            </select>
+
+            <label for="revenda_id" class="label-revenda">Revenda</label>
+            <select name="revenda" id="revenda_id">
+                <!-- As opções de revenda são adicionadas dinamicamente pelo JavaScript -->
+            </select>
+
+            <label for="revenda_id" class="label-revenda">Revenda</label>
+
             <label for="departamento_id" class="label-departamento">Departamento</label>
             <select name="departamento" id="departamento_id" class="input-departamento">
                 <option value="100">100 - NOVOS</option>
@@ -77,6 +89,17 @@
             <!-- Já gravar o status da solicitação PENDENTE como padrão no Backend -->
 
             <input type="submit">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="flashes">
+                        {% for category, message in messages %}
+                            <li class="flash-{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
         </form>
 
         <script src="{{ url_for('static', filename='js/pagina_lancar_solicitacao.js') }}"></script>

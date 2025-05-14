@@ -7,7 +7,7 @@ def role_required(*roles):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if current_user.FUNCAO not in roles:
-                flash('Você não tem permissão para acessar esta página!')
+                flash('Você não tem permissão para acessar esta página!', 'info')
                 return redirect(url_for('blueprint_principal.pagina_principal'))
             return func(*args, **kwargs)
         return wrapper

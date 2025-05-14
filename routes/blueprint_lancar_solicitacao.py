@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
+from models.database import Solicitacoes
 
 blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name__)
 
@@ -8,16 +9,47 @@ blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name_
 def pagina_lancar_solicitacao():
     return render_template('pagina_lancar_solicitacao.html', usuario_logado=current_user.USUARIO)
 
-@blueprint_lancar_solicitacao.route('/fazer-lancamento')
+@blueprint_lancar_solicitacao.route('/fazer-lancamento', methods=['POST', 'GET'])
 @login_required
 def fazer_lancamento():
     if request.method == 'POST':
+        empresa_form = request.form['empresa'] 
+        revenda_form = request.form['revenda']
+        usuario_solicitante_form = current_user.USUARIO
         departamento_form = request.form['departamento']
         tipo_despesa_form = request.form['tipo_despesa']
         descricao_form = request.form['descricao']
         valor_form = request.form['valor']
         status_form = 'PENDENTE'
 
-        return redirect(url_for('blueprint_lancar_solicitacoes.pagina_lancar_solicitacoes'))
+        try:
+            valor_float = float(valor_form.replace('R$', ''))
+        except ValueError:
+            flash('O valor inserido é inválido! Tente novamente.', 'error')
+            return redirect(url_for('blueprint_lancar_solicitacao.pagina_lancar_solicitacao'))
 
+        if descricao_form == '':
+            flash('Nenhum campo pode estar vazio! Tente novamente.', 'error')
+            return redirect(url_for('blueprint_lancar_solicitacao.pagina_lancar_solicitacao'))
+        elif valor_form == '':
+            flash('Nenhum campo pode estar vazio! Tente novamente.', 'error')
+            return redirect(url_for('blueprint_lancar_solicitacao.pagina_lancar_solicitacao'))
+        else:
+            flash('Cadastro realizado com sucesso!', 'success')
+
+            Solicitacoes.create(
+                EMPRESA=empresa_form,
+                REVENDA=revenda_form,
+                USUARIO_SOLICITANTE = usuario_solicitante_form,
+                DEPARTAMENTO=departamento_form,
+                TIPO_DESPESA=tipo_despesa_form,
+                DESCRICAO=descricao_form,
+                VALOR=valor_float,
+                STATUS=status_form
+            )
+
+            return redirect(url_for('blueprint_lancar_solicitacao.pagina_lancar_solicitacao'))
+
+        
+    return render_template('blueprint_lancar_solicitacao.pagina_lancar_solicitacao')
     

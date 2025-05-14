@@ -9,6 +9,14 @@
     font-family: 'Poppins', sans-serif;
 }
 
+.nav {
+    display: flex; /* Garante que os itens fiquem em linha */
+    gap: 15px; /* Define um espaçamento uniforme entre os itens */
+    list-style: none; /* Remove os marcadores de lista */
+    padding: 0; /* Remove o padding padrão */
+    margin: 0; /* Remove o margin padrão */
+}
+
 .navbar {
     background-color: var(--primary-color) !important;
 }
@@ -32,9 +40,9 @@
     font-size: 1rem;
     text-transform: uppercase;
     padding: 8px 10px;
-    border-radius: 20px; /* Bordas arredondadas */
-    background: linear-gradient(45deg, #f1faee, #a8dadc); /* Gradiente azul */
-    transition: all 0.3s ease; /* Transição suave */
+    border-radius: 20px;
+    background: linear-gradient(45deg, #f1faee, #a8dadc);
+    transition: all 0.3s ease;
 }
 
 .nav-link {
@@ -49,4 +57,28 @@
 .welcome {
     text-align: center;
     margin-top: 30px;
+}
+
+.titulo {
+    color: var(--primary-color);
+    text-align: center;
+    margin-top: 40px;
+}
+
+.flash-error {
+    text-align: center;
+    color: #721c24;
+    list-style: none;
+}
+
+.flash-success {
+    text-align: center;
+    color: #155724;
+    list-style: none;
+}
+
+.flash-info {
+    text-align: center;
+    color: blue;
+    list-style: none;
 }

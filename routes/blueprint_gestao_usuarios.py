@@ -39,18 +39,21 @@ def cadastrar_usuario():
             flash('A senha deve conter no minimo 2 caracteres! Tente novamente.', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.pagina_gestao_usuarios'))
         elif len(cpf_form) != 14:
-            flash('O CPF deve ter exatamente 11 números! tente novamente.')
+            flash('O CPF deve ter exatamente 11 números! tente novamente.', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.pagina_gestao_usuarios'))
         else:
-            flash('Cadastro realizado com sucesso!')
+            flash('Cadastro realizado com sucesso!', 'success')
 
-            Usuarios.create(USUARIO=usuario_form,
-                            SENHA=senha_form,
-                            NOME=nome_form,
-                            CPF=cpf_form,
-                            FUNCAO=funcao_form,
-                            EMPRESA=empresa_form,
-                            REVENDA=revenda_form)
+            Usuarios.create(
+                USUARIO=usuario_form,
+                SENHA=senha_form,
+                NOME=nome_form,
+                CPF=cpf_form,
+                FUNCAO=funcao_form,
+                EMPRESA=empresa_form,
+                REVENDA=revenda_form
+            )
+
             return redirect(url_for('blueprint_gestao_usuarios.pagina_gestao_usuarios'))
             
     

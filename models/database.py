@@ -16,11 +16,14 @@ class Usuarios(UserMixin, Model):
         database = db
 
 class Solicitacoes(Model):
+    USUARIO_SOLICITANTE = ForeignKeyField(Usuarios, backref='solicitacoes', on_delete='CASCADE')
     DEPARTAMENTO = CharField()
     TIPO_DESPESA = CharField()
     DESCRICAO = CharField()
     VALOR = FloatField()
-    STATUS = BooleanField()
+    STATUS = CharField()
+    EMPRESA = IntegerField()
+    REVENDA = IntegerField()
 
     class Meta:
         database = db

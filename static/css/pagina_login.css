@@ -73,8 +73,20 @@ h1 {
     background-color: #457b9d;
 }
 
-.flashes {
-    color: red;
-    list-style: none;
+.flash-error {
     text-align: center;
+    color: #721c24;
+    list-style: none;
+}
+
+.flash-success {
+    text-align: center;
+    color: #155724;
+    list-style: none;
+}
+
+.flash-info {
+    text-align: center;
+    color: blue;
+    list-style: none;
 }

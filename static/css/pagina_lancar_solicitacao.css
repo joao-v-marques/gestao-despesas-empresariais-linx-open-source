@@ -9,6 +9,14 @@
     font-family: 'Poppins', sans-serif;
 }
 
+.nav {
+    display: flex; /* Garante que os itens fiquem em linha */
+    gap: 15px; /* Define um espaçamento uniforme entre os itens */
+    list-style: none; /* Remove os marcadores de lista */
+    padding: 0; /* Remove o padding padrão */
+    margin: 0; /* Remove o margin padrão */
+}
+
 .navbar-brand img {
     max-height: 50px;
     width: auto;
@@ -49,4 +57,103 @@
 
 .nav-link:hover {
     color: #a8dadc !important;
+}
+
+.titulo-solicitacao {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.formulario {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.formulario label {
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.formulario input,
+.formulario select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    transition: border-color 0.3s ease;
+}
+
+.formulario input:focus,
+.formulario select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.formulario input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.formulario input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.flash-messages {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.flash-messages .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.flash-messages .alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.flash-error {
+    text-align: center;
+    color: #721c24;
+    list-style: none;
+}
+
+.flash-success {
+    text-align: center;
+    color: #155724;
+    list-style: none;
+}
+
+.flash-info {
+    text-align: center;
+    color: blue;
+    list-style: none;
 }
