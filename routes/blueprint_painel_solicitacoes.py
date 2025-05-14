@@ -7,8 +7,6 @@ blueprint_painel_solicitacoes = Blueprint('blueprint_painel_solicitacoes', __nam
 @blueprint_painel_solicitacoes.route('/')
 @login_required
 def pagina_painel_solicitacoes():
-    # lista_pendentes = Solicitacoes.select().where(Solicitacoes.STATUS == 'PENDENTE')
-    # lista_autorizadas = Solicitacoes.select().where(Solicitacoes.STATUS == 'AUTORIZADA')
-    # lista_compra = Solicitacoes.select().where(Solicitacoes.STATUS == 'PROCESSO DE COMPRA')
+    lista_solicitacoes = Solicitacoes.select().where(Solicitacoes.USUARIO_SOLICITANTE == current_user.id)
 
-    return render_template('pagina_painel_solicitacoes.html', usuario_logado=current_user.USUARIO)
+    return render_template('pagina_painel_solicitacoes.html', usuario_logado=current_user.USUARIO, lista_solicitacoes=lista_solicitacoes)

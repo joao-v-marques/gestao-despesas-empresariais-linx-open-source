@@ -42,22 +42,19 @@
     </header>
 
     <main>
-        <div class="container-listas">
-            <div class="lista-pendentes">
-                <h2>Lista de Solicitações Pendentes</h2>
-
-            </div>
-
-            <div class="lista-autorizadas">
-                <h2>Lista de Solicitações Autorizadas</h2>
-
-            </div>
-
-            <div class="lista-compra">
-                <h2>Lista de Solicitações em Processo de Compra</h2>
-
-            </div>
+        <div class="botoes-filtro">
+            <button class="btn-pendente" onclick="filtrarSolicitacoes('PENDENTE')">Pendentes</button>
+            <button class="btn-autorizadas" onclick="filtrarSolicitacoes('AUTORIZADA')">Autorizadas</button>
+            <button class="btn-compra" onclick="filtrarSolicitacoes('PROCESSO DE COMPRA')">Em Processo de Compra</button>
+            <button class="btn-todos" onclick="filtrarSolicitacoes('TODOS')">Todos</button>
         </div>
+
+        <!-- Codar uma lista de todos as solicitações com base no botões acima -->
+
+
+        
     </main>
+
+    <script src="{{ url_for('static', filename='js/pagina_painel_solicitacoes.js') }}"></script>
 </body>
 </html>
