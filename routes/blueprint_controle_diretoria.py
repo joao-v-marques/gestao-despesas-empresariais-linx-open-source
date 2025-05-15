@@ -14,3 +14,15 @@ def controle_diretoria():
 
     return render_template('controle_diretoria.html', query=query, usuario_logado=current_user.USUARIO)
 
+
+@blueprint_controle_diretoria.route('/mudar-status', methods=['POST'])
+def mudar_status():
+    if request.method == 'POST':
+        solicitacao_id = request.form['id']
+        novo_status = request.form['status']
+        solicitacao = Solicitacoes.get(Solicitacoes.id == solicitacao_id)
+        solicitacao.STATUS = novo_status
+        solicitacao.save()
+        return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
+    
+    return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
