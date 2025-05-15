@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/controle_diretoria.css')}}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Processos KATO - Controle Diretoria</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-light bg-dark px-4">
+            <a class="navbar-brand" href="{{ url_for('blueprint_principal.principal') }}"><img src="{{ url_for('static', filename='img/Logo - Grupo Kato Branco.png') }}" alt="Logo KATO"></a>
+            <ul class="nav">
+                <li class="nav-item">                   
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_principal.principal') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}">Painel de Solicitações</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_lancar_solicitacao.lancar_solicitacao') }}">Lançar Solicitação</a>
+                </li>
+                {% if current_user.FUNCAO == 'ADMIN' %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a>
+                    </li>
+                {% endif %}
+                {% if current_user.FUNCAO == 'ADMIN' or current_user.FUNCAO == 'DIRETORIA' %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Controle Diretoria</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_principal.logout') }}">Logout</a>
+                </li>
+                <li class="user">
+                    <a class="user" href="">{{ usuario_logado }}</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        
+        <div class="container-tabela">
+            <h1 class="titulo">Controle de Solicitações</h1>
+            <table class="tabela">
+                <thead>
+                    <tr class="head-lista">
+                        <th>Emp./Rev.</th>
+                        <th>Usuario</th>
+                        <th>Departamento</th>
+                        <th>Tipo da Despesa</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Descrição</th>
+                        <th colspan="2" class="opcoes">Opções</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for solicitacao in query %}
+                        <tr class="body-lista">
+                            <td>{{ solicitacao.EMPRESA }}.{{ solicitacao.REVENDA }}</td>
+                            <td>{{ solicitacao.USUARIO_SOLICITANTE }}</td>
+                            <td>{{ solicitacao.DEPARTAMENTO }}</td>
+                            <td>{{ solicitacao.TIPO_DESPESA }}</td>
+                            <td>{{ solicitacao.VALOR }}</td>
+                            <td>{{ solicitacao.STATUS }}</td>
+                            <td>{{ solicitacao.DESCRICAO }}</td>
+
+                            <td>
+                                <form action="#" method="POST">
+                                    <input type="hidden" name="id" value="{{ solicitacao.id }}" >
+                                    <input type="hidden" name="status" value="aprovado">
+                                    <input type="submit" value="Aprovar" class="btn btn-success">
+                                </form>
+                            </td>
+
+                            <td>
+                                <form action="#" method="POST">
+                                    <input type="hidden" name="id" value="{{ solicitacao.id }}">
+                                    <input type="hidden" name="status" value="reprovado">
+                                    <input type="submit" value="Reprovar" class="btn btn-danger">
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

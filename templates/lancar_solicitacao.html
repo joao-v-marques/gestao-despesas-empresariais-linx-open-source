@@ -28,7 +28,7 @@
                 {% endif %}
                 {% if current_user.FUNCAO == 'ADMIN' or current_user.FUNCAO == 'DIRETORIA' %}
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Controle Diretoria</a>
+                        <a class="nav-link text-white" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Controle Diretoria</a>
                     </li>
                 {% endif %}
                 <li class="nav-item">

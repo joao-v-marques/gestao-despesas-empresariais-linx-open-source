@@ -28,7 +28,7 @@
                 {% endif %}
                 {% if current_user.FUNCAO == 'ADMIN' or current_user.FUNCAO == 'DIRETORIA' %}
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Controle Diretoria</a>
+                        <a class="nav-link text-white" href="url_for('blueprint_controle_diretoria.controle_diretoria')">Controle Diretoria</a>
                     </li>
                 {% endif %}
                 <li class="nav-item">
@@ -79,23 +79,6 @@
                 {% endfor %}
             </tbody>
         </table>
-
-
-
-
-
-        <!-- Feito sem ser uma table -->
-        <!-- {% if filtro_form == 'pendentes' %}
-            <ul class="lista-pendentes">
-                {% for solicitacao in solicitacoes_pendentes %}
-                    <li class="item-pendentes">
-                        Usuario: {{ solicitacao.USUARIO }}
-                        Departamento: {{ solicitacao.DEPARTAMENTO }}
-                        Código da Despesa: {{ solicitacao.TIPO_DESPESA }}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}                  -->
     </main>
 
     <script src="{{ url_for('static', filename='js/painel_solicitacoes.js') }}"></script>

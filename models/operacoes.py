@@ -12,13 +12,18 @@ from database import db, Usuarios, Solicitacoes
 
 # print(usuario_existente.exists())
 
-Solicitacoes.create(
-                EMPRESA=1,
-                REVENDA=1,
-                USUARIO_SOLICITANTE = 'ADMIN',
-                DEPARTAMENTO='400',
-                TIPO_DESPESA='5138',
-                DESCRICAO='TESTEEEEEEEE',
-                VALOR=578,
-                STATUS='pendente'
-            )
+# Solicitacoes.create(
+#                 EMPRESA=1,
+#                 REVENDA=1,
+#                 USUARIO_SOLICITANTE = 'ADMIN',
+#                 DEPARTAMENTO='400',
+#                 TIPO_DESPESA='5138',
+#                 DESCRICAO='TESTEEEEEEEE',
+#                 VALOR=578,
+#                 STATUS='PENDENTE'
+#             )
+
+query = Solicitacoes.select().where(Solicitacoes.STATUS == 'PENDENTE').order_by(Solicitacoes.USUARIO_SOLICITANTE)
+
+for solicitacao in query:
+    print(solicitacao.USUARIO_SOLICITANTE, solicitacao.STATUS)

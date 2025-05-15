@@ -16,7 +16,7 @@ class Usuarios(UserMixin, Model):
         database = db
 
 class Solicitacoes(Model):
-    USUARIO_SOLICITANTE = ForeignKeyField(Usuarios, backref='solicitacoes', on_delete='CASCADE')
+    USUARIO_SOLICITANTE = CharField()
     DEPARTAMENTO = CharField()
     TIPO_DESPESA = CharField()
     DESCRICAO = CharField()
