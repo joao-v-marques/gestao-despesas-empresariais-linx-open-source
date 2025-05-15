@@ -42,43 +42,10 @@
     </header>
 
     <main>
+        <h1 class="titulo">Painel de Solicitações</h1>
 
-        <div class="botoes-filtro">
-            <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes', filtro='todos') }}" class="btn btn-secondary {% if filtro == 'todos' %}active{% endif %}">Todos</a>
-            <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes', filtro='pendente') }}" class="btn btn-primary {% if filtro == 'pendente' %}active{% endif %}">Pendentes</a>
-            <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes', filtro='autorizada') }}" class="btn btn-success {% if filtro == 'autorizada' %}active{% endif %}">Autorizadas</a>
-            <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes', filtro='processo_compra') }}" class="btn btn-warning {% if filtro == 'processo_compra' %}active{% endif %}">Em Processo de Compra</a>
-        </div>
-        
-        <p>Filtro atual: {{ filtro }}</p>
-        <p>Total de Solicitações: {{ solicitacoes|length }}</p>
-
-        <table class="tabela">
-            <thead>
-                <tr>
-                    <th>Empresa/Revenda</th>
-                    <th>Usuário</th>
-                    <th>Departamento</th>
-                    <th>Tipo da Despesa</th>
-                    <th>Valor</th>
-                    <th>Status</th>
-                    <th>Descrição</th>
-                </tr>
-            </thead>
-            <tbody id="lista-solicitacoes">
-                {% for solicitacao in solicitacoes %}
-                    <tr>
-                        <td>{{ solicitacao.EMPRESA }}/{{ solicitacao.REVENDA }}</td>
-                        <td>{{ solicitacao.USUARIO_SOLICITANTE }}</td>
-                        <td>{{ solicitacao.DEPARTAMENTO }}</td>
-                        <td>{{ solicitacao.TIPO_DESPESA }}</td>
-                        <td>R$ {{ solicitacao.VALOR }}</td>
-                        <td>{{ solicitacao.STATUS }}</td>
-                        <td>{{ solicitacao.DESCRICAO }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <!-- Codar o painel de solicitações -->
+         
     </main>
 
     <script src="{{ url_for('static', filename='js/painel_solicitacoes.js') }}"></script>
