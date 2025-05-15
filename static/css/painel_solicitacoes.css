@@ -59,23 +59,3 @@ body, html {
     background: linear-gradient(45deg, #f1faee, #a8dadc); /* Gradiente azul */
     transition: all 0.3s ease; /* Transição suave */
 }
-
-.container-listas {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 20px;
-}
-
-.botoes-filtro {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.btn-pendente, .btn-autorizadas, .btn-compra, .btn-todos {
-    border: 1px solid var(--primary-color);
-    background-color: transparent;
-    border-radius: 5px;
-}

@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pagina_principal.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/principal.css')}}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Processos KATO - Home</title>
@@ -10,20 +10,20 @@
 <body>
     <header> 
         <nav class="navbar navbar-light bg-dark px-4">
-            <a class="navbar-brand" href="{{ url_for('blueprint_principal.pagina_principal') }}"><img src="{{ url_for('static', filename='img/Logo - Grupo Kato Branco.png') }}" alt="Logo KATO"></a>
+            <a class="navbar-brand" href="{{ url_for('blueprint_principal.principal') }}"><img src="{{ url_for('static', filename='img/Logo - Grupo Kato Branco.png') }}" alt="Logo KATO"></a>
             <ul class="nav">
                 <li class="nav-item">                   
-                    <a class="nav-link text-white" href="{{ url_for('blueprint_principal.pagina_principal') }}">Home</a>
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_principal.principal') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('blueprint_painel_solicitacoes.pagina_painel_solicitacoes') }}">Painel de Solicitações</a>
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}">Painel de Solicitações</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('blueprint_lancar_solicitacao.pagina_lancar_solicitacao') }}">Lançar Solicitação</a>
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_lancar_solicitacao.lancar_solicitacao') }}">Lançar Solicitação</a>
                 </li>
                 {% if current_user.FUNCAO == 'ADMIN' %}
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('blueprint_gestao_usuarios.pagina_gestao_usuarios') }}">Gestão de Usuários</a>
+                        <a class="nav-link text-white" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a>
                     </li>
                 {% endif %}
                 {% if current_user.FUNCAO == 'ADMIN' or current_user.FUNCAO == 'DIRETORIA' %}
@@ -32,7 +32,7 @@
                     </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('blueprint_principal.funcao_logout') }}">Logout</a>
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_principal.logout') }}">Logout</a>
                 </li>
                 <li class="user">
                     <a class="user" href="">{{ usuario_logado }}</a>

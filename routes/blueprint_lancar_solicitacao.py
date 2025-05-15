@@ -6,8 +6,8 @@ blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name_
 
 @blueprint_lancar_solicitacao.route('/')
 @login_required
-def pagina_lancar_solicitacao():
-    return render_template('pagina_lancar_solicitacao.html', usuario_logado=current_user.USUARIO)
+def lancar_solicitacao():
+    return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO)
 
 @blueprint_lancar_solicitacao.route('/fazer-lancamento', methods=['POST', 'GET'])
 @login_required
@@ -26,14 +26,14 @@ def fazer_lancamento():
             valor_float = float(valor_form.replace('R$', ''))
         except ValueError:
             flash('O valor inserido é inválido! Tente novamente.', 'error')
-            return redirect(url_for('blueprint_lancar_solicitacao.pagina_lancar_solicitacao'))
+            return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
 
         if descricao_form == '':
             flash('Nenhum campo pode estar vazio! Tente novamente.', 'error')
-            return redirect(url_for('blueprint_lancar_solicitacao.pagina_lancar_solicitacao'))
+            return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
         elif valor_form == '':
             flash('Nenhum campo pode estar vazio! Tente novamente.', 'error')
-            return redirect(url_for('blueprint_lancar_solicitacao.pagina_lancar_solicitacao'))
+            return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
         else:
             flash('Cadastro realizado com sucesso!', 'success')
 
@@ -48,8 +48,8 @@ def fazer_lancamento():
                 STATUS=status_form
             )
 
-            return redirect(url_for('blueprint_lancar_solicitacao.pagina_lancar_solicitacao'))
+            return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
 
         
-    return render_template('blueprint_lancar_solicitacao.pagina_lancar_solicitacao')
+    return render_template('blueprint_lancar_solicitacao.lancar_solicitacao')
     

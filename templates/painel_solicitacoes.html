@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/painel_solicitacoes.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Processos KATO - Painel de Solicitações</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-light bg-dark px-4">
+            <a class="navbar-brand" href="{{ url_for('blueprint_principal.principal') }}"><img src="{{ url_for('static', filename='img/Logo - Grupo Kato Branco.png') }}" alt="Logo KATO"></a>
+            <ul class="nav">
+                <li class="nav-item">                   
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_principal.principal') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}">Painel de Solicitações</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_lancar_solicitacao.lancar_solicitacao') }}">Lançar Solicitação</a>
+                </li>
+                {% if current_user.FUNCAO == 'ADMIN' %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a>
+                    </li>
+                {% endif %}
+                {% if current_user.FUNCAO == 'ADMIN' or current_user.FUNCAO == 'DIRETORIA' %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Controle Diretoria</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('blueprint_principal.logout') }}">Logout</a>
+                </li>
+                <li class="user">
+                    <a class="user" href="">{{ usuario_logado }}</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="botoes-filtro">
+            <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes', filtro='todos') }}" class="btn btn-secondary {% if filtro == 'todos' %}active{% endif %}">Todos</a>
+            <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes', filtro='pendente') }}" class="btn btn-primary {% if filtro == 'pendente' %}active{% endif %}">Pendentes</a>
+            <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes', filtro='autorizada') }}" class="btn btn-success {% if filtro == 'autorizada' %}active{% endif %}">Autorizadas</a>
+            <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes', filtro='processo_compra') }}" class="btn btn-warning {% if filtro == 'processo_compra' %}active{% endif %}">Em Processo de Compra</a>
+        </div>
+        
+        <p>Filtro atual: {{ filtro }}</p>
+        <p>Total de Solicitações: {{ solicitacoes|length }}</p>
+
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>Empresa/Revenda</th>
+                    <th>Usuário</th>
+                    <th>Departamento</th>
+                    <th>Tipo da Despesa</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody id="lista-solicitacoes">
+                {% for solicitacao in solicitacoes %}
+                    <tr>
+                        <td>{{ solicitacao.EMPRESA }}/{{ solicitacao.REVENDA }}</td>
+                        <td>{{ solicitacao.USUARIO_SOLICITANTE }}</td>
+                        <td>{{ solicitacao.DEPARTAMENTO }}</td>
+                        <td>{{ solicitacao.TIPO_DESPESA }}</td>
+                        <td>R$ {{ solicitacao.VALOR }}</td>
+                        <td>{{ solicitacao.STATUS }}</td>
+                        <td>{{ solicitacao.DESCRICAO }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+
+
+        <!-- Feito sem ser uma table -->
+        <!-- {% if filtro_form == 'pendentes' %}
+            <ul class="lista-pendentes">
+                {% for solicitacao in solicitacoes_pendentes %}
+                    <li class="item-pendentes">
+                        Usuario: {{ solicitacao.USUARIO }}
+                        Departamento: {{ solicitacao.DEPARTAMENTO }}
+                        Código da Despesa: {{ solicitacao.TIPO_DESPESA }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}                  -->
+    </main>
+
+    <script src="{{ url_for('static', filename='js/painel_solicitacoes.js') }}"></script>
+</body>
+</html>

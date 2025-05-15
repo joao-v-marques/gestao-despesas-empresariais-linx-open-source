@@ -6,7 +6,7 @@ blueprint_login = Blueprint('blueprint_login', __name__)
 
 @blueprint_login.route('/')
 def pagina_login():
-    return render_template('pagina_login.html')
+    return render_template('login.html')
 
 @blueprint_login.route('/fazer-login', methods=['POST', 'GET'])
 def fazer_login():
@@ -19,10 +19,10 @@ def fazer_login():
 
             if usuario_existente.SENHA == senha_form:
                 login_user(usuario_existente)
-                return redirect(url_for('blueprint_principal.pagina_principal'))
+                return redirect(url_for('blueprint_principal.principal'))
             else:
                 flash('Senha Incorreta! Tente novamente.', 'error')
         except Usuarios.DoesNotExist:
             flash('Usuário não encontrado! Tente novamente.', 'error')
 
-    return render_template("pagina_login.html")
+    return render_template("login.html")

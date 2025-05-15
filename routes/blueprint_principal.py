@@ -5,12 +5,12 @@ blueprint_principal = Blueprint('blueprint_principal', __name__)
 
 @blueprint_principal.route('/')
 @login_required
-def pagina_principal():
-    return render_template('pagina_principal.html', usuario_logado=current_user.USUARIO)
+def principal():
+    return render_template('principal.html', usuario_logado=current_user.USUARIO)
 
 @blueprint_principal.route('/logout')
 @login_required
-def funcao_logout():
+def logout():
     logout_user()
     flash('Você deslogou da sua conta com sucesso!', 'success')
-    return redirect(url_for('blueprint_login.pagina_login'))
+    return redirect(url_for('blueprint_login.fazer_login'))
