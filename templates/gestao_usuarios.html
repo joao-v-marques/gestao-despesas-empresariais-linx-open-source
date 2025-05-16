@@ -98,7 +98,32 @@
         <div class="container-lista">
             <h1>Lista de Gerenciamento de Cliente</h1>
 
-            <!-- Codar uma lista de clientes usando o for. COLOCAR FILTRO POR EMPRESA/REVENDA e BUSCA POR USUARIO -->
+            <table class="tabela">
+                <thead class="tabela-head">
+                    <tr>
+                        <th>ID</th>
+                        <th>Emp./Rev.</th>
+                        <th>Usuario</th>
+                        <th>Senha</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Função</th>
+                    </tr>
+                </thead>
+                <tbody class="tabela-body">
+                    {% for u in usuarios %}
+                        <tr>
+                            <td>{{ u.id }}</td>
+                            <td>{{ u.EMPRESA }}.{{ u.REVENDA }}</td>
+                            <td>{{ u.USUARIO }}</td>
+                            <td>{{ u.SENHA }}</td>
+                            <td>{{ u.NOME }}</td>
+                            <td>{{ u.CPF }}</td>
+                            <td>{{ u.FUNCAO }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </main>
 

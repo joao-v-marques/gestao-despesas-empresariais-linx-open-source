@@ -23,7 +23,7 @@ from database import db, Usuarios, Solicitacoes
 #                 STATUS='PENDENTE'
 #             )
 
-query = Solicitacoes.select().where(Solicitacoes.STATUS == 'PENDENTE').order_by(Solicitacoes.USUARIO_SOLICITANTE)
+# query = Solicitacoes.select().where(Solicitacoes.STATUS == 'PENDENTE').order_by(Solicitacoes.USUARIO_SOLICITANTE)
 
-for solicitacao in query:
-    print(solicitacao.USUARIO_SOLICITANTE, solicitacao.STATUS)
+# for solicitacao in query:
+#     print(solicitacao.USUARIO_SOLICITANTE, solicitacao.STATUS)

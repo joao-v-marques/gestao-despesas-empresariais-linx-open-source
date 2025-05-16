@@ -9,7 +9,9 @@ blueprint_gestao_usuarios = Blueprint('blueprint_gestao_usuarios', __name__)
 @login_required
 @role_required('ADMIN')
 def gestao_usuarios():
-    return render_template('gestao_usuarios.html', usuario_logado=current_user.USUARIO)
+    query = Usuarios.select().order_by(Usuarios.id)
+
+    return render_template('gestao_usuarios.html', usuario_logado=current_user.USUARIO, usuarios=query)
 
 @blueprint_gestao_usuarios.route('/cadastrar-usuario', methods=['POST', 'GET'])
 @login_required

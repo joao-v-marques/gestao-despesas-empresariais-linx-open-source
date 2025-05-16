@@ -119,7 +119,7 @@ body, html {
     color: var(--primary-color);
     font-weight: 600;
     padding: 14px 10px;
-    border-bottom: 2px solid var(--accent-color);
+    border-bottom: 2px solid rgba(38, 38, 38, 0.287);
     text-align: left;
     font-size: 1.05rem;
     letter-spacing: 0.5px;
