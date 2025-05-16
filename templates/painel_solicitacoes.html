@@ -71,7 +71,7 @@
                             <td>{{ s.USUARIO_SOLICITANTE }}</td>
                             <td>{{ s.DEPARTAMENTO }}</td>
                             <td>{{ s.TIPO_DESPESA }}</td>
-                            <td>{{ s.VALOR }}</td>
+                            <td>{{ "{:,.2f}".format(s.VALOR).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
                             <td>{{ s.STATUS }}</td>
                             <td>{{ s.DESCRICAO }}</td>
                         </tr>

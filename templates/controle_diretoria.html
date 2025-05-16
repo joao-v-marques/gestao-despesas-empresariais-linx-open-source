@@ -38,9 +38,7 @@
         </nav>
     </header>
 
-    <main>
-
-        
+    <main>        
         <div class="container-tabela">
             <h1 class="titulo">Controle de Solicitações</h1>
             <table class="tabela">
@@ -63,7 +61,7 @@
                             <td>{{ solicitacao.USUARIO_SOLICITANTE }}</td>
                             <td>{{ solicitacao.DEPARTAMENTO }}</td>
                             <td>{{ solicitacao.TIPO_DESPESA }}</td>
-                            <td>{{ solicitacao.VALOR }}</td>
+                            <td>{{ "{:,.2f}".format(solicitacao.VALOR).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
                             <td>{{ solicitacao.STATUS }}</td>
                             <td>{{ solicitacao.DESCRICAO }}</td>
 
