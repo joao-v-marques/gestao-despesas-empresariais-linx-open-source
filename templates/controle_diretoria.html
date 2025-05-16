@@ -86,6 +86,10 @@
                                 </form>
                             </td>
                         </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="nenhuma-solicitacao">Nenhuma solicitação foi encontrada</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

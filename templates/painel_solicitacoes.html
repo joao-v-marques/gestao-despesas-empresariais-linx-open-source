@@ -35,17 +35,58 @@
                     <a class="nav-link text-white" href="{{ url_for('blueprint_principal.logout') }}">Logout</a>
                 </li>
                 <li class="user">
-                    <a class="user" href="">{{ usuario_logado }}</a>
+                    <a class="user" href="">{{ usuario_logado.USUARIO }}</a>
                 </li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <h1 class="titulo">Painel de Solicitações</h1>
+        <div class="container">
+            <h1 class="titulo">Painel de Solicitações</h1>
 
-        <!-- Codar o painel de solicitações -->
-         
+            <div class="container-btn">
+                <form method="GET" class="formulario-btn">
+                    <button type="submit" name="filtro" value="PENDENTE" class="btn btn-outline-primary {% if filtro == 'PENDENTE' %}active{% endif %}">Pendentes</button>
+                    <button type="submit" name="filtro" value="APROVADO" class="btn btn-outline-success {% if filtro == 'APROVADO' %}active{% endif %}">Aprovados</button>
+                    <button type="submit" name="filtro" value="REPROVADO" class="btn btn-outline-danger {% if filtro == 'REPROVADO' %}active{% endif %}">Reprovados</button>
+                    <button type="submit" name="filtro" value="COMPRA" class="btn btn-outline-warning {% if filtro == 'COMPRA' %}active{% endif %}">Em Compra</button>
+                    <button type="submit" name="filtro" value="TODOS" class="btn btn-outline-secondary {% if filtro == 'TODOS' %}active{% endif %}">Todos</button>
+                </form>
+            </div>
+
+            <table class="tabela">
+                <thead>
+                    <tr>
+                        <th>Emp./Rev.</th>
+                        <th>Usuario</th>
+                        <th>Departamento</th>
+                        <th>Tipo da Despesa</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in solicitacoes %}
+                        <tr>
+                            <td>{{ s.EMPRESA }}.{{ s.REVENDA }}</td>
+                            <td>{{ s.USUARIO_SOLICITANTE }}</td>
+                            <td>{{ s.DEPARTAMENTO }}</td>
+                            <td>{{ s.TIPO_DESPESA }}</td>
+                            <td>{{ s.VALOR }}</td>
+                            <td>{{ s.STATUS }}</td>
+                            <td>{{ s.DESCRICAO }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="nenhuma-solicitacao">Nenhuma solicitação foi encontrada</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table >
+
+        </div>
     </main>
 
     <script src="{{ url_for('static', filename='js/painel_solicitacoes.js') }}"></script>

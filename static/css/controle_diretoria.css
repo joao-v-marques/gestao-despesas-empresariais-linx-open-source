@@ -157,3 +157,11 @@ body, html {
 .btn-danger:hover {
     background: #c30f0f;
 }
+
+.nenhuma-solicitacao {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 24px 0;
+    font-size: 1.1rem;
+}
