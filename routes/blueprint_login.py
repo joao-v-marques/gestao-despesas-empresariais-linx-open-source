@@ -19,7 +19,7 @@ def fazer_login():
 
             if usuario_existente.SENHA == senha_form:
                 login_user(usuario_existente)
-                return redirect(url_for('blueprint_principal.principal'))
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
             else:
                 flash('Senha Incorreta! Tente novamente.', 'error')
         except Usuarios.DoesNotExist:
