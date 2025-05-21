@@ -41,7 +41,7 @@
     <main>
         <h1 class="titulo-gestao">Gestão de Usuários</h1>
 
-        <form action="{{ url_for('blueprint_gestao_usuarios.cadastrar_usuario') }}" method="POST">
+        <form action="{{ url_for('blueprint_gestao_usuarios.cadastrar_usuario') }}" method="POST" class="formulario">
             <h2 class="sub-titulo">Cadastrar um usuário</h2>
 
             <label for="usuario_id" class="label-usuario">Usuario</label>
@@ -105,6 +105,7 @@
                         <th>Nome</th>
                         <th>CPF</th>
                         <th>Função</th>
+                        <th colspan="2" class="opcoes">Opções</th>
                     </tr>
                 </thead>
                 <tbody class="tabela-body">
@@ -117,7 +118,33 @@
                             <td>{{ u.NOME }}</td>
                             <td>{{ u.CPF }}</td>
                             <td>{{ u.FUNCAO }}</td>
+                            <td>
+                                <a href="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=u.id) }}" class="btn-editar">Editar</a>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">Deletar</button>
+                            </td>
                         </tr>
+
+                        <div class="modal fade" id="confirmModal{{ u.id }}" tabindex="-1" aria-labelledby="confirmModalLabel{{ u.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmModalLabel{{ u.id }}">Confirmar ação</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Você tem certeza que deseja deletar o usuário <strong>{{ u.USUARIO }}</strong>?
+                                    </div>
+                                    <div class="modal-footer d-flex justify-content-end gap-2">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <form method="POST" action="{{ url_for('blueprint_gestao_usuarios.deletar_usuario', id=u.id) }}">
+                                            <button type="submit" class="btn btn-danger">Confirmar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     {% endfor %}
                 </tbody>
             </table>
@@ -125,5 +152,6 @@
     </main>
 
     <script src="{{ url_for('static', filename='js/gestao_usuarios.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

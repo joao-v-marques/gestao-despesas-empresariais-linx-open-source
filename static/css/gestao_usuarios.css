@@ -16,11 +16,11 @@ body, html {
 }
 
 .nav {
-    display: flex; /* Garante que os itens fiquem em linha */
-    gap: 15px; /* Define um espaçamento uniforme entre os itens */
-    list-style: none; /* Remove os marcadores de lista */
-    padding: 0; /* Remove o padding padrão */
-    margin: 0; /* Remove o margin padrão */
+    display: flex;
+    gap: 15px; 
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .navbar {
@@ -55,9 +55,9 @@ body, html {
     font-size: 1rem;
     text-transform: uppercase;
     padding: 8px 10px;
-    border-radius: 20px; /* Bordas arredondadas */
-    background: linear-gradient(45deg, #f1faee, #a8dadc); /* Gradiente azul */
-    transition: all 0.3s ease; /* Transição suave */
+    border-radius: 20px;
+    background: linear-gradient(45deg, #f1faee, #a8dadc);
+    transition: all 0.3s ease; 
 }
 
 .titulo-gestao {
@@ -66,8 +66,8 @@ body, html {
     color: #1d3557;
 }
 
-form {
-    max-width: 600px;
+.formulario {
+    width: 70%;
     margin: 0 auto 50px;
     padding: 30px;
     background-color: #ffffff;
@@ -81,7 +81,7 @@ form {
     color: #1d3557;
 }
 
-form label {
+.formulario label {
     display: block;
     margin-top: 15px;
     margin-bottom: 5px;
@@ -93,9 +93,9 @@ form label {
     text-transform: uppercase;
 }
 
-form input[type="text"],
-form input[type="password"],
-form select {
+.formulario input[type="text"],
+.formulario input[type="password"],
+.formulario select {
     width: 100%;
     padding: 10px;
     font-size: 1rem;
@@ -105,36 +105,26 @@ form select {
 }
 
 .botao-enviar {
-    width: 100%;
-    padding: 12px;
-    background-color: #1d3557;
-    color: white;
+    width: 220px;
+    display: block;
+    margin: 22px auto 0 auto;
+    padding: 12px 0;
+    background: linear-gradient(90deg, #1d3557 60%, #457b9d 100%);
+    color: #fff;
     border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    margin-top: 20px;
+    border-radius: 30px;
+    font-size: 1.12rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 16px rgba(29,53,87,0.10);
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 
 .botao-enviar:hover {
-    background-color: #457b9d;
-}
-
-.container-lista {
-    max-width: 90%;
-    margin: 0 auto 60px auto;
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-}
-
-.container-lista h1 {
-    color: #1d3557;
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    text-align: center;
+    background: linear-gradient(90deg, #457b9d 60%, #1d3557 100%);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 24px rgba(29,53,87,0.18);
 }
 
 @media (max-width: 768px) {
@@ -167,12 +157,13 @@ form select {
 }
 
 .container-lista {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 30px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
 }
 
 .container-lista h1 {
@@ -185,6 +176,7 @@ form select {
 
 .tabela {
     width: 100%;
+    min-width: 900px;
     border-collapse: collapse;
     border-radius: 8px;
     overflow-x: auto;
@@ -213,4 +205,21 @@ form select {
 
 .tabela tr:hover td {
     background: #e3f2fd;
+}
+
+.btn-editar {
+    border: 1px solid rgb(8, 0, 255);
+    padding-bottom: 8px;
+    padding-top: 6px;
+    padding-right: 18px;
+    padding-left: 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    background-color: rgb(8, 0, 255);
+}
+
+.tabela .opcoes {
+    text-align: center;
+    margin-right: 5px;
 }

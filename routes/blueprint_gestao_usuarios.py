@@ -60,3 +60,44 @@ def cadastrar_usuario():
             
     
     return render_template('gestao_usuarios.html', usuario_logado=current_user.USUARIO)
+
+# Rota para editar um usuário
+@blueprint_gestao_usuarios.route('/editar-usuario/<int:id>', methods=['GET', 'POST'])
+@login_required
+@role_required('ADMIN')
+def editar_usuario(id):
+    usuario = Usuarios.get_or_none(Usuarios.id == id)
+    if not usuario:
+        flash('Usuário não encontardo.', 'error')
+        return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+    
+    if request.method == 'POST':
+        usuario.USUARIO = request.form['usuario']
+        usuario.SENHA = request.form['senha']
+        usuario.NOME = request.form['nome']
+        usuario.CPF = request.form['cpf']
+        usuario.FUNCAO = request.form['funcao']
+        usuario.EMPRESA = request.form['empresa']
+        usuario.REVENDA = request.form['revenda']
+        usuario.save()
+        flash('Usuário atualizado com sucesso!', 'success')
+    return render_template('pagina_editar.html', usuario_logado=current_user.USUARIO, usuario=usuario)
+
+# Rota para deletar um usuário
+@blueprint_gestao_usuarios.route('/deletar-usuario/<int:id>', methods=['GET', 'POST'])
+@login_required
+@role_required('ADMIN')
+def deletar_usuario(id):
+    usuario = Usuarios.get_or_none(Usuarios.id == id)
+    if not usuario:
+        flash('Usuário não foi encontrado!', 'error')
+        return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+    if current_user.id == id:
+        flash('Você não pode deletar a si mesmo enquanto estiver logado!', 'error')
+        return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+    
+    if request.method == 'POST':
+        usuario_deletado = Usuarios.get(Usuarios.id == id)
+        usuario_deletado.delete_instance()
+        flash('Usuário deletado com sucesso!', 'success')
+        return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
