@@ -74,11 +74,7 @@
                             </td>
 
                             <td>
-                                <form action="{{url_for('blueprint_controle_diretoria.mudar_status')}}" method="POST">
-                                    <input type="hidden" name="id" value="{{ solicitacao.id }}">
-                                    <input type="hidden" name="status" value="REPROVADO">
-                                    <input type="submit" value="Reprovar" class="btn btn-danger">
-                                </form>
+                                <a href="{{ url_for('blueprint_controle_diretoria.pagina_reprova', id=solicitacao.id) }}" class="btn btn-danger">Reprovar</a>
                             </td>
                         </tr>
                     {% else %}

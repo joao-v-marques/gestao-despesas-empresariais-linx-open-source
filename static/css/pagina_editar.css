@@ -138,7 +138,7 @@ body, html {
 }
 
 .formulario input[type="submit"]:hover {
-    background: linear-gradient(90deg, #457b9d 40%, #1d3557 100%);
+    background: linear-gradient(90deg, cornflowerblue 40%, #1d3557 100%);
     transform: translateY(-2px) scale(1.03);
     box-shadow: 0 8px 24px rgba(29,53,87,0.18);
 }
@@ -152,6 +152,15 @@ body, html {
         font-size: 1.3rem;
         margin: 30px 0 18px 0;
     }
+}
+
+.retornar {
+    text-decoration: none;
+    color: cornflowerblue;
+}
+
+.retornar:hover {
+    text-decoration: underline;
 }
 
 ::-webkit-input-placeholder { color: #bdbdbd; }

@@ -16,14 +16,15 @@ class Usuarios(UserMixin, Model):
         database = db
 
 class Solicitacoes(Model):
+    EMPRESA = IntegerField()
+    REVENDA = IntegerField()
     USUARIO_SOLICITANTE = CharField()
     DEPARTAMENTO = CharField()
     TIPO_DESPESA = CharField()
     DESCRICAO = CharField()
     VALOR = FloatField()
     STATUS = CharField()
-    EMPRESA = IntegerField()
-    REVENDA = IntegerField()
+    MOTIVO_REPROVA = CharField()
 
     class Meta:
         database = db

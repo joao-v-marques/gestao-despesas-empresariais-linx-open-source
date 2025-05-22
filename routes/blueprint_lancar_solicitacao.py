@@ -45,7 +45,8 @@ def fazer_lancamento():
                 TIPO_DESPESA=tipo_despesa_form,
                 DESCRICAO=descricao_form,
                 VALOR=valor_float,
-                STATUS=status_form
+                STATUS=status_form,
+                MOTIVO_REPROVA=''
             )
 
             return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
