@@ -44,38 +44,28 @@
             <table class="tabela">
                 <thead>
                     <tr class="head-lista">
+                        <th>ID</th>
                         <th>Emp./Rev.</th>
                         <th>Usuario</th>
                         <th>Departamento</th>
                         <th>Tipo da Despesa</th>
                         <th>Valor</th>
                         <th>Status</th>
-                        <th>Descrição</th>
-                        <th colspan="2" class="opcoes">Opções</th>
+                        <th class="opcoes">Opções</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for solicitacao in query %}
                         <tr class="body-lista">
+                            <td>{{ solicitacao.id }}</td>
                             <td>{{ solicitacao.EMPRESA }}.{{ solicitacao.REVENDA }}</td>
                             <td>{{ solicitacao.USUARIO_SOLICITANTE }}</td>
                             <td>{{ solicitacao.DEPARTAMENTO }}</td>
                             <td>{{ solicitacao.TIPO_DESPESA }}</td>
                             <td>{{ "{:,.2f}".format(solicitacao.VALOR).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
                             <td>{{ solicitacao.STATUS }}</td>
-                            <td>{{ solicitacao.DESCRICAO }}</td>
 
-                            <td>
-                                <form action="{{url_for('blueprint_controle_diretoria.mudar_status')}}" method="POST">
-                                    <input type="hidden" name="id" value="{{ solicitacao.id }}" >
-                                    <input type="hidden" name="status" value="APROVADO">
-                                    <input type="submit" value="Aprovar" class="btn btn-success">
-                                </form>
-                            </td>
-
-                            <td>
-                                <a href="{{ url_for('blueprint_controle_diretoria.pagina_reprova', id=solicitacao.id) }}" class="btn btn-danger">Reprovar</a>
-                            </td>
+                            <td><a href="{{ url_for('blueprint_controle_diretoria.mais_info_cd', id=solicitacao.id) }}" class="btn btn-primary">Mais Informações</a></td>
                         </tr>
                     {% else %}
                         <tr>

@@ -1,5 +1,6 @@
 from database import db, Usuarios, Solicitacoes
 
+# Solicitacoes.delete_by_id(6)
 # Usuarios.delete_by_id(2)
 
 # Usuarios.create(USUARIO='ADMIN', SENHA='123', NOME='ADMINISTRATOR', CPF='000.000.000-00', FUNCAO='ADMIN', EMPRESA=1, REVENDA=1)

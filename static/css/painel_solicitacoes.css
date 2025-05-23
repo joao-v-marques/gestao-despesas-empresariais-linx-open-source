@@ -16,11 +16,11 @@ body, html {
 }
 
 .nav {
-    display: flex; /* Garante que os itens fiquem em linha */
-    gap: 15px; /* Define um espaçamento uniforme entre os itens */
-    list-style: none; /* Remove os marcadores de lista */
-    padding: 0; /* Remove o padding padrão */
-    margin: 0; /* Remove o margin padrão */
+    display: flex; 
+    gap: 15px; 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
 }
 
 .navbar {
@@ -55,14 +55,14 @@ body, html {
     font-size: 1rem;
     text-transform: uppercase;
     padding: 8px 10px;
-    border-radius: 20px; /* Bordas arredondadas */
-    background: linear-gradient(45deg, #f1faee, #a8dadc); /* Gradiente azul */
-    transition: all 0.3s ease; /* Transição suave */
+    border-radius: 20px; 
+    background: linear-gradient(45deg, #f1faee, #a8dadc); 
+    transition: all 0.3s ease; 
 }
 
 .container {
-    background: #fff;
-    max-width: 1200px;
+    background: hsl(0, 0%, 100%);
+    max-width: 1400px;
     margin: 40px auto 60px auto;
     padding: 32px 18px;
     border-radius: 12px;
@@ -156,6 +156,27 @@ body, html {
     font-style: italic;
     padding: 24px 0;
     font-size: 1.1rem;
+}
+
+.btn-danger {
+    padding: 6px 16px;
+    font-size: 0.95rem;
+    border-radius: 18px;
+    font-weight: 600;
+    box-shadow: none;
+    background: #e63946;
+    transition: background 0.2s;
+}
+
+.btn-danger:hover, .btn-danger:focus {
+    background: #b71c1c;
+    color: #fff;
+}
+
+.head-lista th:last-child,
+.body-lista td:last-child {
+    text-align: center;
+    vertical-align: middle;
 }
 
 @media (max-width: 900px) {
