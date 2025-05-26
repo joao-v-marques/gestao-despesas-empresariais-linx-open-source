@@ -129,100 +129,53 @@ body, html {
     grid-column: 1 / 3;
 }
 
-
-.modal-content {
-    border-radius: 10px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-    border: none;
-    background: #fff;
+.formulario label[for="motivo_reprova_id"],
+.formulario input#motivo_reprova_id {
+    grid-column: 1 / 3;
 }
 
-.modal-header {
-    border-bottom: 1px solid #e9ecef;
-    background: #f8f9fa;
-    border-radius: 10px 10px 0 0;
-    padding: 16px 20px;
+.formulario label[for="motivo_reprova_id"] {
+    text-align: center;
+    text-decoration: underline;
 }
 
-.modal-title {
-    color: #1d3557;
-    font-weight: 600;
-    font-size: 1.1rem;
+.formulario input#motivo_reprova_id {
+    padding-bottom: 30px;
+    color: black;
 }
 
-.modal-body {
-    color: #222;
-    font-size: 1rem;
-    padding: 16px 20px;
-}
-
-.modal-footer {
-    border-top: 1px solid #e9ecef;
-    background: #f8f9fa;
-    border-radius: 0 0 10px 10px;
-    padding: 12px 20px;
-    gap: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-
-.modal-footer form {
+.formulario select {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.modal-footer label {
-    font-weight: 500;
-    color: #1d3557;
+    padding: 8px 8px 10px;
+    font-size: 1rem;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    background: var(--input-bg);
+    color: #333;
+    transition: border 0.2s, background 0.2s;
     margin-bottom: 2px;
-    font-size: 0.98rem;
+    cursor: pointer;
+    box-sizing: border-box;
 }
 
-.modal-footer input[type="text"] {
-    width: 100%;
-    padding: 7px 10px;
-    font-size: 1rem;
-    border: 1px solid #bdbdbd;
-    border-radius: 5px;
-    background: #f7fafc;
+.formulario select:focus {
+    border: 1.5px solid var(--primary-color);
+    background: #e3f2fd;
+    outline: none;
 }
 
-.modal-footer input[type="submit"], .modal-footer .btn {
-    min-width: 100px;
-    font-weight: 600;
-    border-radius: 18px;
-    font-size: 1rem;
-    padding: 7px 0;
-    box-shadow: none;
-    border: none;
-    transition: background 0.2s;
+.formulario select:disabled {
+    background: var(--input-readonly-bg);
+    color: var(--input-readonly-color);
+    cursor: not-allowed;
 }
 
-.modal-footer .btn-danger, .modal-footer input[type="submit"].btn-danger {
-    background: #e63946;
-    color: #fff;
+.formulario option {
+    background: #fff;
+    color: #333;
 }
 
-.modal-footer .btn-danger:hover, .modal-footer input[type="submit"].btn-danger:hover {
-    background: #b71c1c;
-}
-
-.modal-footer .btn-secondary {
-    background: #bdbdbd;
-    color: #222;
-}
-
-.modal-footer .btn-secondary:hover {
-    background: #a8dadc;
-    color: #1d3557;
-}
-
-@media (max-width: 600px) {
-    .modal-content, .modal-header, .modal-footer, .modal-body {
-        padding-left: 8px !important;
-        padding-right: 8px !important;
-    }
+.formulario select option:checked {
+    background: var(--accent-color);
+    color: var(--primary-color);
 }

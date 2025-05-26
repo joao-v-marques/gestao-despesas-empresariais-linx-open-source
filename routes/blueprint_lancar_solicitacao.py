@@ -49,8 +49,8 @@ def fazer_lancamento():
                 MOTIVO_REPROVA=''
             )
 
-            return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
+            return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao', usuario_logado=current_user.USUARIO))
 
         
-    return render_template('blueprint_lancar_solicitacao.lancar_solicitacao')
+    return render_template('blueprint_lancar_solicitacao.lancar_solicitacao', usuario_logado=current_user.USUARIO)
     

@@ -42,7 +42,7 @@
         <div class="container">
             <h2 class="titulo">Mais Informações</h2>
 
-            <form action="#" method="POST" class="formulario">
+            <form action="{{ url_for('blueprint_painel_solicitacoes.salvar_edicao', id=solicitacao.id) }}" method="POST" class="formulario">
                 <label for="id_solicitacao_id">ID:</label>
                 <input type="text" readonly id="id_solicitacao_id" name="id" value="{{ solicitacao.id }}">
 
@@ -53,22 +53,77 @@
                 <input type="text" readonly id="usuario_solicitante_id" name="usuario_solicitante" value="{{ solicitacao.USUARIO_SOLICITANTE }}">
 
                 <label for="departamento_id">Departamento:</label>
-                <input type="text" readonly id="departamento_id" name="departamento" value="{{ solicitacao.DEPARTAMENTO }}">
+                <select name="departamento" id="departamento_id" class="input-departamento" disabled>
+                    <option value="100" {% if solicitacao.DEPARTAMENTO == '100' %}selected{% endif %}>100 - NOVOS</option>
+                    <option value="110" {% if solicitacao.DEPARTAMENTO == '110' %}selected{% endif %}>110 - NOVOS - REVENDA</option>
+                    <option value="200" {% if solicitacao.DEPARTAMENTO == '200' %}selected{% endif %}>200 - USADOS</option>
+                    <option value="300" {% if solicitacao.DEPARTAMENTO == '300' %}selected{% endif %}>300 - PECAS</option>
+                    <option value="301" {% if solicitacao.DEPARTAMENTO == '301' %}selected{% endif %}>301 - PECAS ATACADO</option>
+                    <option value="310" {% if solicitacao.DEPARTAMENTO == '310' %}selected{% endif %}>310 - ACESSORIOS</option>
+                    <option value="400" {% if solicitacao.DEPARTAMENTO == '400' %}selected{% endif %}>400 - ASSISTENCIA TECNICA</option>
+                    <option value="410" {% if solicitacao.DEPARTAMENTO == '410' %}selected{% endif %}>410 - FUNILARIA E PINTURA</option>
+                    <option value="500" {% if solicitacao.DEPARTAMENTO == '500' %}selected{% endif %}>500 - ADMINISTRAÇÃO</option>
+                </select>
 
                 <label for="tipo_despesa_id">Tipo da Despesa:</label>
-                <input type="text" readonly id="tipo_despesa_id" name="tipo_despesa" value="{{ solicitacao.TIPO_DESPESA }}">
+                <select name="tipo_despesa" id="tipo_despesa_id" class="input-tipo-despesa" disabled>
+                    <option value="5006" {% if solicitacao.TIPO_DESPESA == '5006' %}selected{% endif %}>5006 - ND-MAT. DE ESCRITÓRIO</option>
+                    <option value="5114" {% if solicitacao.TIPO_DESPESA == '5114' %}selected{% endif %}>5114 - ND-LUZ</option>
+                    <option value="5123" {% if solicitacao.TIPO_DESPESA == '5123' %}selected{% endif %}>5123 - ND-EMBALAGENS</option>
+                    <option value="5138" {% if solicitacao.TIPO_DESPESA == '5138' %}selected{% endif %}>5138 - ND-INTERNET</option>
+                    <option value="5140" {% if solicitacao.TIPO_DESPESA == '5140' %}selected{% endif %}>5140 - ND-PUBLICIDADE E PROPAGANDA</option>
+                </select>
 
                 <label for="descricao_id">Descrição:</label>
                 <input type="text" readonly id="descricao_id" name="descricao" value="{{ solicitacao.DESCRICAO }}">
 
                 <label for="valor_id">Valor:</label>
-                <input type="text" readonly id="valor_id" name="valor" value="R$ {{ "{:,.2f}".format(solicitacao.VALOR).replace(',',"X").replace(".", ",").replace("X", ".") }}">
+                <input type="text" readonly id="valor_id" name="valor" value="{{ "{:,.2f}".format(solicitacao.VALOR).replace(',',"X").replace(".", ",").replace("X", ".") }}">
+
+                {% if solicitacao.STATUS == 'REPROVADO' %}
+                    <label for="motivo_reprova_id">Motivo da Reprova</label>
+                    <input type="text" readonly id="motivo_reprova_id" name="motivo_reprova" value="{{ solicitacao.MOTIVO_REPROVA }}">
+
+                    <div id="botoes_edicao_id">
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                        <button type="button" class="btn btn-danger" id="btn-cancelar" style="margin-left: 5px;">Cancelar</button>
+                    </div>
+                {% endif %}
             </form>
 
-            {% if solicitacao.STATUS == 'PENDENTE' %}
-                <button class="btn btn-danger">Excluir Solicitação</button>
-            {% endif %}
+            <div class="botoes">
+                {% if solicitacao.STATUS == 'PENDENTE' %}
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao.id }}">Excluir</button>
+                {% elif solicitacao.STATUS == 'REPROVADO' %}
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao.id }}">Excluir</button>
+                    <button type="button" class="btn btn-primary" id="btn-editar">Editar</button>
+                    <a href="#" class="btn btn-secondary" style="margin-left: 285px;">Reenviar</a>
+                {% endif %}
+            </div>
         </div>
+
+        <div class="modal fade" id="modalExcluir{{ solicitacao.id }}" tabindex="-1" aria-labelledby="modalExcluirLabel{{ solicitacao.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalExcluirLabel{{ solicitacao.id }}">Confirmar ação</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body">
+                            Você tem certeza que deseja <b>Excluir</b> essa solicitação? Esta ação não pode ser revertida
+                        </div>
+                        <div class="modal-footer d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <form method="POST" action="{{ url_for('blueprint_painel_solicitacoes.excluir_solicitacao', id=solicitacao.id) }}">
+                                <button type="submit" class="btn btn-danger">Confirmar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/mais_info_sol.js') }}"></script>
 </body>
 </html>
