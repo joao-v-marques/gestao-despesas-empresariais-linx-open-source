@@ -93,34 +93,54 @@
 
             <div class="botoes">
                 {% if solicitacao.STATUS == 'PENDENTE' %}
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao.id }}">Excluir</button>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao.id }}">Cancelar Envio</button>
                 {% elif solicitacao.STATUS == 'REPROVADO' %}
                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao.id }}">Excluir</button>
                     <button type="button" class="btn btn-primary" id="btn-editar">Editar</button>
-                    <a href="#" class="btn btn-secondary" style="margin-left: 285px;">Reenviar</a>
+                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalReenviar{{ solicitacao.id }}" style="margin-left: 285px;">Reenviar</button>
                 {% endif %}
             </div>
         </div>
 
-        <div class="modal fade" id="modalExcluir{{ solicitacao.id }}" tabindex="-1" aria-labelledby="modalExcluirLabel{{ solicitacao.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalExcluirLabel{{ solicitacao.id }}">Confirmar ação</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                        </div>
-                        <div class="modal-body">
-                            Você tem certeza que deseja <b>Excluir</b> essa solicitação? Esta ação não pode ser revertida
-                        </div>
-                        <div class="modal-footer d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <form method="POST" action="{{ url_for('blueprint_painel_solicitacoes.excluir_solicitacao', id=solicitacao.id) }}">
-                                <button type="submit" class="btn btn-danger">Confirmar</button>
-                            </form>
-                        </div>
+        <div class="modal fade" id="modalReenviar{{ solicitacao.id }}" tabindex="-1" aria-labelledby="modalReenviarLabel{{ solicitacao.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalReenviarLabel{{ solicitacao.id }}">Confirmar ação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        Você tem certeza de que deseja <b>Reenviar</b> esta solicitação? Ela voltará a ficar PENDENTE.
+                    </div>
+                    <div class="modal-footer d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form method="POST" action="{{ url_for('blueprint_painel_solicitacoes.reenviar_solicitacao', id=solicitacao.id) }}">
+                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="modal fade" id="modalExcluir{{ solicitacao.id }}" tabindex="-1" aria-labelledby="modalExcluirLabel{{ solicitacao.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalExcluirLabel{{ solicitacao.id }}">Confirmar ação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        Você tem certeza que deseja <b>Excluir</b> essa solicitação? Esta ação não pode ser revertida
+                    </div>
+                    <div class="modal-footer d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form method="POST" action="{{ url_for('blueprint_painel_solicitacoes.excluir_solicitacao', id=solicitacao.id) }}">
+                            <button type="submit" class="btn btn-danger">Confirmar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -49,13 +49,30 @@ def salvar_edicao(id):
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/excluir', methods=['POST', 'GET'])
 @login_required
 def excluir_solicitacao(id):
+        solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
+        if not solicitacao:
+                flash('Nenhuma Solicitação foi encontrada!', 'error')
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user))
+        
         if request.method == 'POST':
-                solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
-                if not solicitacao:
-                        flash('Nenhuma Solicitação foi encontrada!', 'error')
-                        return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', usuario_logado=current_user))
                 solicitacao_deletada = Solicitacoes.get(Solicitacoes.id == id)
                 solicitacao_deletada.delete_instance()
                 flash('Solicitação Excluida com sucesso!', 'success')
-                return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', usuario_logado=current_user, id=id))
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user))
         return render_template('mais_info_sol.html', usuario_logado=current_user)
+
+
+@blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/reenviar', methods=['POST', 'GET'])
+@login_required
+def reenviar_solicitacao(id):
+        solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
+        if not solicitacao:
+                flash('Nenhuma Solicitação foi encontrada!', 'error')
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user))
+        
+        if request.method == 'POST':
+                solicitacao.STATUS = 'PENDENTE'
+                solicitacao.save()
+                flash('Solicitação Reenviada com sucesso!', 'success')
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user))
+        return render_template('painel_solicitacoes.html')
