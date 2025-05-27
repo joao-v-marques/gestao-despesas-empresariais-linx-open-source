@@ -1,10 +1,12 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, session
 from flask_login import current_user, login_required, logout_user
+from decorators import role_required
 
 blueprint_principal = Blueprint('blueprint_principal', __name__)
 
 @blueprint_principal.route('/')
 @login_required
+@role_required('ADMIN')
 def principal():
     return render_template('principal.html', usuario_logado=current_user.USUARIO)
 

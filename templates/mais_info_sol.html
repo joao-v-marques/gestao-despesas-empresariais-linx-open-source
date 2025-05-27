@@ -10,7 +10,7 @@
 <body>
     <header>
         <nav class="navbar navbar-light bg-dark px-4">
-            <a class="navbar-brand" href="{{ url_for('blueprint_principal.principal') }}"><img src="{{ url_for('static', filename='img/Logo - Grupo Kato Branco.png') }}" alt="Logo KATO"></a>
+            <a class="navbar-brand" href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}"><img src="{{ url_for('static', filename='img/Logo - Grupo Kato Branco.png') }}" alt="Logo KATO"></a>
             <ul class="nav">
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}">Painel de Solicitações</a>
@@ -43,7 +43,7 @@
             <h2 class="titulo">Mais Informações</h2>
 
             <form action="{{ url_for('blueprint_painel_solicitacoes.salvar_edicao', id=solicitacao.id) }}" method="POST" class="formulario">
-                <label for="id_solicitacao_id">ID:</label>
+                <label for="id_solicitacao_id">Código:</label>
                 <input type="text" readonly id="id_solicitacao_id" name="id" value="{{ solicitacao.id }}">
 
                 <label for="empresa_revenda_id">Emp./Rev.:</label>

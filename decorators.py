@@ -2,6 +2,7 @@ from flask import redirect, url_for, flash
 from flask_login import current_user
 from functools import wraps
 
+# Define o decorador das funções: ADMIN, DIRETORIA e FUNCIONARIO
 def role_required(*roles):
     def decorators(func):
         @wraps(func)
