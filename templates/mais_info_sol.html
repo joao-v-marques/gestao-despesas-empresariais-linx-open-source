@@ -75,14 +75,14 @@
                 </select>
 
                 <label for="descricao_id">Descrição:</label>
-                <input type="text" readonly id="descricao_id" name="descricao" value="{{ solicitacao.DESCRICAO }}">
+                <textarea readonly id="descricao_id" name="descricao" rows="3">{{ solicitacao.DESCRICAO }}</textarea>
 
                 <label for="valor_id">Valor:</label>
                 <input type="text" readonly id="valor_id" name="valor" value="{{ "{:,.2f}".format(solicitacao.VALOR).replace(',',"X").replace(".", ",").replace("X", ".") }}">
 
                 {% if solicitacao.STATUS == 'REPROVADO' %}
                     <label for="motivo_reprova_id">Motivo da Reprova</label>
-                    <input type="text" readonly id="motivo_reprova_id" name="motivo_reprova" value="{{ solicitacao.MOTIVO_REPROVA }}">
+                    <textarea readonly id="motivo_reprova_id" name="motivo_reprova" rows="3">{{ solicitacao.MOTIVO_REPROVA }}</textarea>
 
                     <div id="botoes_edicao_id">
                         <button type="submit" class="btn btn-success">Salvar</button>
