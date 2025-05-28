@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
-from models.database import Solicitacoes
+from database.database import Solicitacoes
 from decorators import role_required
 
 blueprint_controle_diretoria = Blueprint('blueprint_controle_diretoria', __name__)
@@ -31,14 +31,14 @@ def mudar_status():
             solicitacao = Solicitacoes.get(Solicitacoes.id == solicitacao_id)
             solicitacao.STATUS = novo_status
             solicitacao.save()
-            flash('Solicitação Aprovada!')
+            flash('Solicitação Aprovada!', 'success')
         else:
             novo_motivo_reprova = request.form['motivo_reprova']
             solicitacao = Solicitacoes.get(Solicitacoes.id == solicitacao_id)
             solicitacao.STATUS = novo_status
             solicitacao.MOTIVO_REPROVA = novo_motivo_reprova
             solicitacao.save()
-            flash('Solicitação Reprovada!')
+            flash('Solicitação Reprovada!', 'error')
             return redirect(url_for('blueprint_controle_diretoria.controle_diretoria')) 
     
     return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))

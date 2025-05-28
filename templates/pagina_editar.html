@@ -39,7 +39,7 @@
     </header>
 
     <main>
-        <h1 class="titulo">Edição de Usuáio</h1>
+        <h1 class="titulo">Edição de Usuário</h1>
 
         <form action="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=usuario.id) }}" method="POST" class="formulario">
             <label for="usuario_id">Usuário</label>
@@ -60,7 +60,7 @@
             <label for="empresa_id">Empresa</label>
             <input type="text" name="empresa" id="empresa_id" value="{{ usuario.EMPRESA }}">
 
-            <label for="revenda_id">Funcao</label>
+            <label for="revenda_id">Revenda</label>
             <input type="text" name="revenda" id="revenda_id" value="{{ usuario.REVENDA }}">
 
             <input type="submit" value="Salvar Alterações">

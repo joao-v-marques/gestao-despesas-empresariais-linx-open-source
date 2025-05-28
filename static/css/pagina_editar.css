@@ -3,6 +3,7 @@
 :root {
     --primary-color: #1d3557;
     --secondary-color: #f1faee;
+    --input-bg: #f7fafc;
 }
 
 * {
@@ -67,13 +68,12 @@ body, html {
 }
 
 .formulario {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-    background-color: #ffffff;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .titulo {
@@ -85,34 +85,23 @@ body, html {
     letter-spacing: 1px;
 }
 
-.formulario {
-    max-width: 500px;
-    margin: 0 auto 40px auto;
-    background: #fff;
-    padding: 32px 28px 24px 28px;
-    border-radius: 12px;
-    box-shadow: 0 0 18px rgba(0,0,0,0.07);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
 .formulario label {
-    font-weight: 600;
-    color: #333;
+    display: block;
+    font-weight: bold;
+    color: var(--primary-color);
     margin-bottom: 5px;
-    margin-top: 10px;
 }
 
 .formulario input[type="text"],
 .formulario input[type="password"] {
     width: 100%;
-    padding: 10px 12px;
+    padding: 10px;
     font-size: 1rem;
-    border: 1px solid #bdbdbd;
+    border: 1px solid #ced4da;
     border-radius: 5px;
-    background: #f7fafc;
-    transition: border 0.2s;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    transition: border-color 0.3s ease;
 }
 
 .formulario input[type="text"]:focus,
@@ -123,44 +112,44 @@ body, html {
 }
 
 .formulario input[type="submit"] {
-    margin-top: 18px;
-    padding: 12px 8px;
-    background: linear-gradient(90deg, #1d3557 40%, #457b9d 100%);
-    color: #fff;
+    display: block;
+    margin: 0 auto;
+    width: 30%;
+    padding: 10px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: var(--primary-color);
     border: none;
-    border-radius: 20px;
-    font-size: 1.15rem;
-    font-weight: 700;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    box-shadow: 0 4px 16px rgba(29,53,87,0.10);
-    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
 }
 
 .formulario input[type="submit"]:hover {
-    background: linear-gradient(90deg, cornflowerblue 40%, #1d3557 100%);
-    transform: translateY(-2px) scale(1.03);
-    box-shadow: 0 8px 24px rgba(29,53,87,0.18);
-}
-
-@media (max-width: 600px) {
-    .formulario {
-        padding: 18px 8px 16px 8px;
-        max-width: 98vw;
-    }
-    .titulo {
-        font-size: 1.3rem;
-        margin: 30px 0 18px 0;
-    }
+    background-color: #0056b3;
 }
 
 .retornar {
+    display: block;
+    margin: 24px auto 0 auto;
+    padding: 8px 28px;
+    color: var(--primary-color);
+    font-weight: 500;
+    font-size: 1rem;
+    border: 2px solid var(--primary-color);
+    border-radius: 18px;
+    box-shadow: 0 2px 6px rgba(29, 53, 87, 0.07);
+    text-align: center;
     text-decoration: none;
-    color: cornflowerblue;
+    letter-spacing: 0.5px;
+    transition: background 0.2s, color 0.2s, border 0.2s;
 }
 
-.retornar:hover {
-    text-decoration: underline;
+.retornar:hover, .retornar:focus {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    opacity: 80%;
+    text-decoration: none;
 }
 
 ::-webkit-input-placeholder { color: #bdbdbd; }
