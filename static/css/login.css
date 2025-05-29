@@ -3,6 +3,12 @@
 :root {
     --primary-color: #1d3557;
     --secondary-color: #f1faee;
+    --accent-color: #a8dadc;
+    --danger-color: #e63946;
+    --input-bg: #f7fafc;
+    --input-border: #bdbdbd;
+    --input-readonly-bg: #e9ecef;
+    --input-readonly-color: #6c757d;
 }
 
 * {

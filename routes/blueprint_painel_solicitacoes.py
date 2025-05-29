@@ -19,13 +19,13 @@ def painel_solicitacoes():
                 query = query.where(Solicitacoes.STATUS == 'COMPRA')
         elif filtro == 'TODOS':
                 query = query.order_by(Solicitacoes.STATUS)
-        return render_template('painel_solicitacoes.html', solicitacoes=query, filtro=filtro, usuario_logado=current_user)
+        return render_template('painel_solicitacoes.html', solicitacoes=query, filtro=filtro, usuario_logado=current_user.USUARIO)
 
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>')
 @login_required
 def mais_info_sol(id):
         solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
-        return render_template('mais_info_sol.html', usuario_logado=current_user, solicitacao=solicitacao)
+        return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=solicitacao)
 
 
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/salvar', methods=['POST', 'GET'])
@@ -52,14 +52,14 @@ def excluir_solicitacao(id):
         solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
         if not solicitacao:
                 flash('Nenhuma Solicitação foi encontrada!', 'error')
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user))
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
         
         if request.method == 'POST':
                 solicitacao_deletada = Solicitacoes.get(Solicitacoes.id == id)
                 solicitacao_deletada.delete_instance()
                 flash('Solicitação Excluida com sucesso!', 'success')
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user))
-        return render_template('mais_info_sol.html', usuario_logado=current_user)
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
+        return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO)
 
 
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/reenviar', methods=['POST', 'GET'])

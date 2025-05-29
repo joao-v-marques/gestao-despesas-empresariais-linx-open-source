@@ -8,31 +8,57 @@
     <title>Gestão de Processos KATO - Home</title>
 </head>
 <body>
-    <header> 
-        <nav class="navbar navbar-light bg-dark px-4">
-            <a class="navbar-brand" href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}"><img src="{{ url_for('static', filename='img/Logo - Grupo Kato Branco.png') }}" alt="Logo KATO"></a>
+    <header>
+        <nav>
+            <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}" class="navbar-logo">
+                <img src="/static/img/Logo - Grupo Kato Branco.png" alt="Logo Kato Navbar">
+            </a>
+
             <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}">Painel de Solicitações</a>
+                <li class="nav-item dropdown">
+
+                    <a href="#" class="nav-link dropdown-toggle text-white" id="solicitacoesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Solicitações
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="solicitacoesDropdown">
+                        <li><a class="dropdown-item" href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}">Painel de Solicitações</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('blueprint_lancar_solicitacao.lancar_solicitacao') }}">Lançar Solcitação</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('blueprint_lancar_solicitacao.lancar_solicitacao') }}">Lançar Solicitação</a>
-                </li>
+
                 {% if current_user.FUNCAO == 'ADMIN' %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-white" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            ADMIN
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Cadastro Departamento</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Cadastro Tipo Despesa </a></li>
+                        </ul>
                     </li>
                 {% endif %}
+
                 {% if current_user.FUNCAO == 'ADMIN' or current_user.FUNCAO == 'DIRETORIA' %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Controle Diretoria</a>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-white" id="diretoriaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Diretoria
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="diretoriaDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Controle Diretoria</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Visão Geral de Solicitações</a></li>
+                        </ul>
                     </li>
                 {% endif %}
+
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{{ url_for('blueprint_principal.logout') }}">Logout</a>
                 </li>
                 <li class="user">
-                    <a class="user" href="">{{ usuario_logado }}</a>
+                    <a class="user" href="#">{{ usuario_logado }}</a>
                 </li>
             </ul>
         </nav>

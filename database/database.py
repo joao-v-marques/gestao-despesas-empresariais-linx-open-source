@@ -33,3 +33,18 @@ class Solicitacoes(Model):
 
     class Meta:
         database = db
+
+class Departamento(Model):
+    CODIGO = IntegerField(null=False, constraints=[Check('NOME <> \'\'')], unique=True)
+    DESCRICAO = CharField(null=False, constraints=[Check('NOME <> \'\'')])
+
+    class Meta:
+        database = db
+
+class Tipo_Despesa(Model):
+    CODIGO = IntegerField(null=False, constraints=[Check('NOME <> \'\'')], unique=True)
+    DESCRICAO = CharField(null=False, constraints=[Check('NOME <> \'\'')])
+
+    class Meta:
+        database = db
+
