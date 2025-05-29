@@ -9,41 +9,41 @@ db = PostgresqlDatabase(None)
 db.init(os.getenv('DATABASE_URI'))
 
 class Usuarios(UserMixin, Model):
-    USUARIO = CharField(unique=True, null=False, constraints=[Check('NOME <> \'\'')])
-    SENHA = CharField(null=False, constraints=[Check('NOME <> \'\'')])
+    USUARIO = CharField(unique=True, null=False)
+    SENHA = CharField(null=False)
     NOME = CharField()
     CPF = CharField()
-    FUNCAO = CharField(null=False, constraints=[Check('NOME <> \'\'')])
-    EMPRESA = IntegerField(null=False, constraints=[Check('NOME <> \'\'')])
-    REVENDA = IntegerField(null=False, constraints=[Check('NOME <> \'\'')])
+    FUNCAO = CharField(null=False)
+    EMPRESA = IntegerField(null=False)
+    REVENDA = IntegerField(null=False)
 
     class Meta:
         database = db
 
 class Solicitacoes(Model):
-    EMPRESA = IntegerField(null=False, constraints=[Check('NOME <> \'\'')])
-    REVENDA = IntegerField(null=False, constraints=[Check('NOME <> \'\'')])
-    USUARIO_SOLICITANTE = CharField(null=False, constraints=[Check('NOME <> \'\'')])
-    DEPARTAMENTO = CharField(null=False, constraints=[Check('NOME <> \'\'')])
-    TIPO_DESPESA = CharField(null=False, constraints=[Check('NOME <> \'\'')])
+    EMPRESA = IntegerField(null=False)
+    REVENDA = IntegerField(null=False)
+    USUARIO_SOLICITANTE = CharField(null=False)
+    DEPARTAMENTO = CharField(null=False)
+    TIPO_DESPESA = CharField(null=False)
     DESCRICAO = CharField()
-    VALOR = FloatField(null=False, constraints=[Check('NOME <> \'\'')])
-    STATUS = CharField(null=False, constraints=[Check('NOME <> \'\'')])
+    VALOR = FloatField(null=False)
+    STATUS = CharField(null=False)
     MOTIVO_REPROVA = CharField()
 
     class Meta:
         database = db
 
 class Departamento(Model):
-    CODIGO = IntegerField(null=False, constraints=[Check('NOME <> \'\'')], unique=True)
-    DESCRICAO = CharField(null=False, constraints=[Check('NOME <> \'\'')])
+    CODIGO = IntegerField(null=False)
+    DESCRICAO = CharField(null=False)
 
     class Meta:
         database = db
 
 class Tipo_Despesa(Model):
-    CODIGO = IntegerField(null=False, constraints=[Check('NOME <> \'\'')], unique=True)
-    DESCRICAO = CharField(null=False, constraints=[Check('NOME <> \'\'')])
+    CODIGO = IntegerField(null=False, unique=True)
+    DESCRICAO = CharField(null=False)
 
     class Meta:
         database = db

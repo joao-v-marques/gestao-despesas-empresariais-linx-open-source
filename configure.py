@@ -1,12 +1,13 @@
 from dotenv import load_dotenv
 from flask_login import LoginManager
-from database.database import db, Usuarios, Solicitacoes
+from database.database import db, Usuarios, Solicitacoes, Departamento, Tipo_Despesa
 from routes.blueprint_lancar_solicitacao import blueprint_lancar_solicitacao
 from routes.blueprint_gestao_usuarios import blueprint_gestao_usuarios
 from routes.blueprint_principal import blueprint_principal
 from routes.blueprint_login import blueprint_login
 from routes.blueprint_painel_solicitacoes import blueprint_painel_solicitacoes
 from routes.blueprint_controle_diretoria import blueprint_controle_diretoria
+from routes.blueprint_departamento import blueprint_departamento
 
 def config_all(app):
     config_bp(app)
@@ -14,6 +15,7 @@ def config_all(app):
     config_login(app)
 
 def config_bp(app):
+    app.register_blueprint(blueprint_departamento, url_prefix="/departamento")
     app.register_blueprint(blueprint_controle_diretoria, url_prefix="/controle-diretoria")
     app.register_blueprint(blueprint_painel_solicitacoes, url_prefix="/painel-solicitacoes")
     app.register_blueprint(blueprint_lancar_solicitacao, url_prefix="/lancar-solicitacao")
@@ -23,7 +25,7 @@ def config_bp(app):
 
 def config_db():
     db.connect()
-    db.create_tables([Usuarios, Solicitacoes])
+    db.create_tables([Usuarios, Solicitacoes, Departamento, Tipo_Despesa])
 
 def config_login(app):
     login_manager = LoginManager()
