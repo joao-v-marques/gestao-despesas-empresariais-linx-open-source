@@ -35,7 +35,7 @@
 
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Cadastro Departamento</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_departamento.departamento') }}">Cadastro Departamento</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Cadastro Tipo Despesa </a></li>
                         </ul>
                     </li>
@@ -67,14 +67,14 @@
     <main>
         <h1 class="titulo">Cadastro de Departamento</h1>
 
-        <form action="{{ url_for('blueprint_departamento.cadastrar_departamento') }}" method="POST" class="formulario">
+        <form action="{{ url_for('blueprint_departamento.cadastrar') }}" method="POST" class="formulario">
             <label for="codigo_id" class="label-codigo">Código</label>
-            <input type="text" id="codigo_id" class="input-codigo" name="codigo">
+            <input type="text" id="codigo_id" class="input-codigo" name="codigo" pattern="\d{3}" maxlength="3" minlength="3" required>
 
             <label for="descricao_id" class="label-descricao">Descrição</label>
-            <input type="text" id="descricao_id" class="label-descricao" name="descricao">
+            <input type="text" id="descricao_id" class="label-descricao" name="descricao" required>
 
-            <input type="submit" class="btn-enviar">
+            <input type="submit" class="btn-enviar" value="Cadastrar">
 
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -105,29 +105,55 @@
                             <td>{{ d.id }}</td>
                             <td>{{ d.CODIGO }}</td>
                             <td>{{ d.DESCRICAO }}</td>
-                            <td>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">Editar</button>
-                            </td>
-                            <td>
-                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Deletar</button>
-                            </td>
+                            <div class="opcoes">
+                                <td>
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ d.id }}">Editar</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ d.id }}">Deletar</button>
+                                </td>
+                            </div>
                         </tr>
 
-                        <div class="modal fade" id="deleteModal{{ u.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ u.id }}" aria-hidden="true">
+                        <div class="modal fade" id="deleteModal{{ d.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ d.id }}" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteModalLabel{{ u.id }}">Confirmar ação</h5>
+                                        <h5 class="modal-title" id="deleteModalLabel{{ d.id }}">Confirmar ação</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                     </div>
                                     <div class="modal-body">
-                                        Você tem certeza que deseja deletar o usuário <strong>{{ u.USUARIO }}</strong>?
+                                        Você tem certeza que deseja deletar o departamento <br> <strong>{{ d.CODIGO }} - {{ d.DESCRICAO }}</strong>?
                                     </div>
                                     <div class="modal-footer d-flex justify-content-end gap-2">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <form method="POST" action="{{ url_for('blueprint_gestao_usuarios.deletar_usuario', id=u.id) }}">
+                                        <form method="POST" action="{{ url_for('blueprint_departamento.deletar', id=d.id) }}">
                                             <button type="submit" class="btn btn-danger">Confirmar</button>
                                         </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="editModal{{ d.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ d.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel{{ d.id }}">Confirmar ação</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST" action="{{ url_for('blueprint_departamento.departamento') }}" class="formulario-modal">
+                                            <label for="edit_codigo_id" class="label_edit_codigo">Código</label>
+                                            <input type="text" id="edit_codigo_id" name="edit_codigo" class="input_edit_codigo">
+
+                                            <label for="edit_descricao_id" class="label_edit_descricao">Descrição</label>
+                                            <input type="text" id="edit_descricao_id" name="edit_descricao" class="input_edit_descricao">
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer d-flex justify-content-end gap-2">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger">Confirmar</button>
                                     </div>
                                 </div>
                             </div>
@@ -140,6 +166,7 @@
 
     </main>
 
+    <script src="{{ url_for('static', filename='js/departamento.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

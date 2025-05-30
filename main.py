@@ -1,6 +1,6 @@
-import os 
-from flask import Flask
+import os
 from dotenv import load_dotenv
+from flask import Flask
 from configure import config_all
 
 load_dotenv()
