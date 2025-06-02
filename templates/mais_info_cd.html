@@ -36,7 +36,7 @@
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_departamento.departamento') }}">Cadastro Departamento</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Cadastro Tipo Despesa </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_tipo_despesa.tipo_despesa') }}">Cadastro Tipo Despesa </a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -49,7 +49,7 @@
 
                         <ul class="dropdown-menu" aria-labelledby="diretoriaDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Controle Diretoria</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Visão Geral de Solicitações</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_geral_solicitacoes.geral_solicitacoes') }}">Visão Geral de Solicitações</a></li>
                         </ul>
                     </li>
                 {% endif %}

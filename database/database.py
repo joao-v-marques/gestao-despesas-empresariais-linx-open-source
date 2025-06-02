@@ -35,14 +35,14 @@ class Solicitacoes(Model):
         database = db
 
 class Departamento(Model):
-    CODIGO = IntegerField(null=False)
+    CODIGO = CharField(null=False, unique=True)
     DESCRICAO = CharField(null=False)
 
     class Meta:
         database = db
 
 class Tipo_Despesa(Model):
-    CODIGO = IntegerField(null=False, unique=True)
+    CODIGO = CharField(null=False, unique=True)
     DESCRICAO = CharField(null=False)
 
     class Meta:

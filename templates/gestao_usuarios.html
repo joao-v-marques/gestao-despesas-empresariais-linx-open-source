@@ -36,7 +36,7 @@
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_departamento.departamento') }}">Cadastro Departamento</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Cadastro Tipo Despesa </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_tipo_despesa.tipo_despesa') }}">Cadastro Tipo Despesa </a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -49,7 +49,7 @@
 
                         <ul class="dropdown-menu" aria-labelledby="diretoriaDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Controle Diretoria</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Visão Geral de Solicitações</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_geral_solicitacoes.geral_solicitacoes') }}">Visão Geral de Solicitações</a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -65,10 +65,8 @@
     </header>
 
     <main>
-        <h1 class="titulo-gestao">Gestão de Usuários</h1>
-
         <form action="{{ url_for('blueprint_gestao_usuarios.cadastrar_usuario') }}" method="POST" class="formulario">
-            <h2 class="sub-titulo">Cadastrar um usuário</h2>
+            <h2 class="titulo-cadastro">Cadastro de Usuários</h2>
 
             <label for="usuario_id" class="label-usuario">Usuario</label>
             <input type="text" id="usuario_id" name="usuario" class="input-usuario">
@@ -131,7 +129,7 @@
                         <th>Nome</th>
                         <th>CPF</th>
                         <th>Função</th>
-                        <th colspan="2" class="opcoes">Opções</th>
+                        <th colspan="2" class="th-opcoes">Opções</th>
                     </tr>
                 </thead>
                 <tbody class="tabela-body">
@@ -139,15 +137,14 @@
                         <tr>
                             <td>{{ u.id }}</td>
                             <td>{{ u.EMPRESA }}.{{ u.REVENDA }}</td>
-                            <td>{{ u.USUARIO }}</td>
+                            <td class="td-usuario">{{ u.USUARIO }}</td>
                             <td>{{ u.SENHA }}</td>
                             <td>{{ u.NOME }}</td>
                             <td>{{ u.CPF }}</td>
                             <td>{{ u.FUNCAO }}</td>
-                            <td>
+                            <td class="td-opcoes">
                                 <a href="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=u.id) }}" class="btn btn-primary">Editar</a>
-                            </td>
-                            <td>
+
                                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal{{ u.id }}">Deletar</button>
                             </td>
                         </tr>

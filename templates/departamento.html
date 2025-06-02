@@ -36,7 +36,7 @@
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_departamento.departamento') }}">Cadastro Departamento</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Cadastro Tipo Despesa </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_tipo_despesa.tipo_despesa') }}">Cadastro Tipo Despesa </a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -49,7 +49,7 @@
 
                         <ul class="dropdown-menu" aria-labelledby="diretoriaDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Controle Diretoria</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Visão Geral de Solicitações</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_geral_solicitacoes.geral_solicitacoes') }}">Visão Geral de Solicitações</a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -105,64 +105,64 @@
                             <td>{{ d.id }}</td>
                             <td>{{ d.CODIGO }}</td>
                             <td>{{ d.DESCRICAO }}</td>
-                            <div class="opcoes">
-                                <td>
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ d.id }}">Editar</button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ d.id }}">Deletar</button>
-                                </td>
-                            </div>
+                            <td class="opcao-edit">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ d.id }}">Editar</button>
+
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ d.id }}">Deletar</button>
+                            </td>
                         </tr>
-
-                        <div class="modal fade" id="deleteModal{{ d.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ d.id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteModalLabel{{ d.id }}">Confirmar ação</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Você tem certeza que deseja deletar o departamento <br> <strong>{{ d.CODIGO }} - {{ d.DESCRICAO }}</strong>?
-                                    </div>
-                                    <div class="modal-footer d-flex justify-content-end gap-2">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <form method="POST" action="{{ url_for('blueprint_departamento.deletar', id=d.id) }}">
-                                            <button type="submit" class="btn btn-danger">Confirmar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal fade" id="editModal{{ d.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ d.id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editModalLabel{{ d.id }}">Confirmar ação</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form method="POST" action="{{ url_for('blueprint_departamento.departamento') }}" class="formulario-modal">
-                                            <label for="edit_codigo_id" class="label_edit_codigo">Código</label>
-                                            <input type="text" id="edit_codigo_id" name="edit_codigo" class="input_edit_codigo">
-
-                                            <label for="edit_descricao_id" class="label_edit_descricao">Descrição</label>
-                                            <input type="text" id="edit_descricao_id" name="edit_descricao" class="input_edit_descricao">
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer d-flex justify-content-end gap-2">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="submit" class="btn btn-danger">Confirmar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
 
+            {% for d in departamento %}
+                <div class="modal fade" id="deleteModal{{ d.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ d.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel{{ d.id }}">Confirmar ação</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                Você tem certeza que deseja deletar o departamento <br> <strong>{{ d.CODIGO }} - {{ d.DESCRICAO }}</strong>?
+                            </div>
+                            <div class="modal-footer d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <form method="POST" action="{{ url_for('blueprint_departamento.deletar', id=d.id) }}">
+                                    <button type="submit" class="btn btn-danger">Confirmar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="editModal{{ d.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ d.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel{{ d.id }}">Confirmar ação</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body-edit">
+                                <form method="POST" action="{{ url_for('blueprint_departamento.editar', id=d.id) }}" class="formulario-modal">
+                                    <label for="edit_codigo_id" class="label_edit_codigo">Código</label>
+                                    <input type="text" id="edit_codigo_id" name="edit_codigo" class="input_edit_codigo" value="{{ d.CODIGO }}">
+
+                                    <label for="edit_descricao_id" class="label_edit_descricao">Descrição</label>
+                                    <input type="text" id="edit_descricao_id" name="edit_descricao" class="input_edit_descricao" value="{{ d.DESCRICAO }}">
+
+                                    <button type="submit" class="btn btn-success">Confirmar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-center gap-2">
+                                As alterações feitas não podem ser revertidas!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
 
     </main>
 

@@ -1,13 +1,16 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
-from database.database import Solicitacoes
+from database.database import Solicitacoes, Departamento, Tipo_Despesa
 
 blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name__)
 
 @blueprint_lancar_solicitacao.route('/')
 @login_required
 def lancar_solicitacao():
-    return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO)
+    departamento = Departamento.select().order_by(Departamento.CODIGO)
+    tipo_despesa = Tipo_Despesa.select().order_by(Tipo_Despesa.CODIGO)
+
+    return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO, departamento=departamento, tipo_despesa=tipo_despesa)
 
 @blueprint_lancar_solicitacao.route('/fazer-lancamento', methods=['POST', 'GET'])
 @login_required

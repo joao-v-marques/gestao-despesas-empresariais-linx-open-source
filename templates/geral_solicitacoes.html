@@ -2,10 +2,10 @@
 <html lang="pt-br">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pagina_editar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/geral_solicitacoes.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Processos KATO - Editar Usuário</title>
+    <title>Gestão de Processos KATO - Visão Geral de Solicitações</title>
 </head>
 <body>
     <header>
@@ -65,34 +65,50 @@
     </header>
 
     <main>
-        <h1 class="titulo">Edição de Usuário</h1>
+        <div class="container">
+            <h1 class="titulo">Visão Geral de Solicitações</h1>
 
-        <form action="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=usuario.id) }}" method="POST" class="formulario">
-            <label for="usuario_id">Usuário</label>
-            <input type="text" id="usuario_id" name="usuario" value="{{ usuario.USUARIO }}">
+            <div class="container-btn">
+                <form method="GET" class="formulario-btn">
+                    <button type="submit" name="filtro" value="PENDENTE" class="btn btn-outline-primary {% if filtro == 'PENDENTE' %}active{% endif %}">Pendentes</button>
+                    <button type="submit" name="filtro" value="APROVADO" class="btn btn-outline-success {% if filtro == 'APROVADO' %}active{% endif %}">Aprovados</button>
+                    <button type="submit" name="filtro" value="REPROVADO" class="btn btn-outline-danger {% if filtro == 'REPROVADO' %}active{% endif %}">Reprovados</button>
+                    <button type="submit" name="filtro" value="COMPRA" class="btn btn-outline-warning {% if filtro == 'COMPRA' %}active{% endif %}">Em Compra</button>
+                    <button type="submit" name="filtro" value="TODOS" class="btn btn-outline-secondary {% if filtro == 'TODOS' %}active{% endif %}">Todos</button>
+                </form>
+            </div>
 
-            <label for="senha_id">Senha</label>
-            <input type="password" id="senha_id" name="senha" value="{{ usuario.SENHA }}">
-
-            <label for="nome_id">Nome</label>
-            <input type="text" id="nome_id" name="nome" value="{{ usuario.NOME }}">
-
-            <label for="cpf_id">CPF</label>
-            <input type="text" id="cpf_id" name="cpf" value="{{ usuario.CPF }}">
-
-            <label for="funcao_id">Funcao</label>
-            <input type="text" name="funcao" id="funcao_id" value="{{ usuario.FUNCAO }}">
-
-            <label for="empresa_id">Empresa</label>
-            <input type="text" name="empresa" id="empresa_id" value="{{ usuario.EMPRESA }}">
-
-            <label for="revenda_id">Revenda</label>
-            <input type="text" name="revenda" id="revenda_id" value="{{ usuario.REVENDA }}">
-
-            <input type="submit" value="Salvar Alterações">
-            <a href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}" class="retornar"> <- Retornar para a Gestão de Usuários</a>
-        </form>
-
+            <table class="tabela">
+                <thead>
+                    <tr class="head-lista">
+                        <th>Código</th>
+                        <th>Emp./Rev</th>
+                        <th>Usuario</th>
+                        <th>Departamento</th>
+                        <th>Tipo da Despesa</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in solicitacoes %}
+                        <tr class="body-lista">
+                            <td>{{ s.id }}</td>
+                            <td>{{ s.EMPRESA }}.{{ s.REVENDA }}</td>
+                            <td>{{ s.USUARIO_SOLICITANTE }}</td>
+                            <td>{{ s.DEPARTAMENTO }}</td>
+                            <td>{{ s.TIPO_DESPESA }}</td>
+                            <td>{{ "{:,.2f}".format(s.VALOR).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
+                            <td>{{ s.STATUS }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="nenhuma-solicitacao">Nenhuma solicitação foi encontrada</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

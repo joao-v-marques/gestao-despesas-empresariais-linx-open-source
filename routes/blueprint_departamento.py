@@ -55,13 +55,13 @@ def deletar(id):
 @login_required
 @role_required('ADMIN')
 def editar(id):
-    departamento = Departamento.select().where(Departamento.id == id)
+    departamento = Departamento.get_or_none(Departamento.id == id)
     if not departamento:
         flash('Departamento não encontrado!', 'error')
         return redirect(url_for('blueprint_departamento.departamento'))
 
     if request.method == 'POST':
-        departamento.CODIGO =request.form['edit_codigo']
+        departamento.CODIGO = request.form['edit_codigo']
         departamento.DESCRICAO = request.form['edit_descricao']
         departamento.save()
         flash('Departamento editado com sucesso!', 'success')

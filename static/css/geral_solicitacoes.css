@@ -157,196 +157,138 @@ nav {
     }
 }
 
+.container {
+    background: #fff;
+    max-width: 1400px;
+    margin: 40px auto 60px auto;
+    padding: 32px 18px;
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.07);
+}
+
 .titulo {
     color: var(--primary-color);
     text-align: center;
-    margin-top: 28px;
     margin-bottom: 32px;
     font-weight: 700;
     letter-spacing: 1px;
 }
 
-.formulario {
-    max-width: 420px;
-    margin: 0 auto 36px auto;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(29, 53, 87, 0.08);
-    padding: 32px 28px 24px 28px;
+.container-btn {
     display: flex;
-    flex-direction: column;
-    gap: 18px;
+    justify-content: center;
+    margin-bottom: 28px;
 }
 
-.formulario label {
-    font-weight: 600;
-    color: var(--primary-color);
-    margin-bottom: 4px;
+.formulario-btn {
+    display: flex;
+    gap: 12px;
 }
 
-.formulario input[type="text"] {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid var(--input-border);
-    border-radius: 6px;
-    background: var(--input-bg);
+.btn {
     font-size: 1rem;
-    color: #222;
-    margin-bottom: 8px;
-    transition: border 0.2s, background 0.2s;
-}
-
-.formulario input[type="text"]:focus {
-    border: 1.5px solid var(--primary-color);
-    background: #e3f2fd;
-    outline: none;
-}
-
-.btn-enviar {
-    background: var(--primary-color);
-    color: var(--secondary-color);
     font-weight: 600;
-    font-size: 1rem;
-    border: none;
     border-radius: 20px;
-    padding: 9px 0;
-    margin-top: 10px;
-    transition: background 0.2s, color 0.2s;
-    box-shadow: 0 2px 8px rgba(29, 53, 87, 0.07);
-    cursor: pointer;
+    padding: 8px 22px;
+    border: none;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
-.btn-enviar:hover,
-.btn-enviar:focus {
-    background: var(--accent-color);
-    color: var(--primary-color);
-}
-
-.flashes {
-    list-style: none;
-    padding: 0;
-    margin: 12px 0 0 0;
-}
-
-.flashes li {
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin-bottom: 6px;
-    font-size: 0.97rem;
-    font-weight: 500;
-}
-
-.flash-success {
-    background: #d4edda;
-    color: #155724;
-}
-
-.flash-error {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-.container-lista {
-    background-color: #fff;
-    max-width: 1200px;
-    margin: 40px auto 60px auto;
-    padding: 28px 18px;
-    border-radius: 12px;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
-}
-
-.container-lista h1 {
-    color: var(--primary-color);
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 18px;
-    text-align: center;
+.btn.active, .btn:active {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+    border-color: var(--primary-color) !important;
 }
 
 .tabela {
     width: 100%;
     border-collapse: separate;
-    border-radius: 8px;
     border-spacing: 0;
     background: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    border-radius: 8px;
     overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
 .tabela th {
     background: var(--secondary-color);
     color: var(--primary-color);
     font-weight: 600;
-    padding: 8px 10px;
-    text-align: left;
-    letter-spacing: 0.7px;
+    padding: 14px 10px;
     border-bottom: 2px solid rgba(38, 38, 38, 0.287);
+    text-align: left;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
 }
 
-.tabela th:last-child {
-    text-align: center;
+.tabela td {
+    padding: 12px 10px;
+    background: #fff;
+    color: #222;
+    font-size: 0.98rem;
+    border-bottom: 1px solid #e5e5e5;
     vertical-align: middle;
-}
-
-.tabela td:last-child {
     transition: background 0.2s;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    gap: 30px;
 }
 
 .tabela tr:hover td {
     background: #e3f2fd;
 }
 
-.tabela td {
-    padding: 10px 8px;
-    background: #fff;
-    color: #222;
-    font-size: 0.95rem;
-    border-bottom: 1px solid #e5e5e5;
-    transition: background 0.2s;
+.nenhuma-solicitacao {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 24px 0;
+    font-size: 1.1rem;
 }
 
-.btn {
-    font-weight: 600;
-    transition: background 0.2s, color 0.2s;
-    margin-bottom: 3px;
+.head-lista th:last-child,
+.body-lista td:last-child {
+    text-align: center;
+    vertical-align: middle;
 }
 
-.formulario-modal {
-    max-width: 420px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(29, 53, 87, 0.08);
-    padding: 32px 28px 24px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+@media (max-width: 900px) {
+    .container {
+        padding: 10px 2px;
+    }
+    .tabela th, .tabela td {
+        padding: 8px 4px;
+        font-size: 0.93rem;
+    }
+    .formulario-btn {
+        flex-direction: column;
+        gap: 8px;
+    }
 }
 
-.formulario-modal label {
-    font-weight: 600;
-    color: var(--primary-color);
-    margin-bottom: 4px;
-}
-
-.formulario-modal input[type="text"] {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid var(--input-border);
-    border-radius: 6px;
-    background: var(--input-bg);
-    font-size: 1rem;
-    color: #222;
-    margin-bottom: 8px;
-    transition: border 0.2s, background 0.2s;
-}
-
-.formulario-modal input[type="text"]:focus {
-    border: 1.5px solid var(--primary-color);
-    background: #e3f2fd;
-    outline: none;
+@media (max-width: 600px) {
+    .container {
+        padding: 2px 0;
+    }
+    .tabela, .tabela thead, .tabela tbody, .tabela tr, .tabela th, .tabela td {
+        display: block;
+        width: 100%;
+    }
+    .tabela thead {
+        display: none;
+    }
+    .tabela td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        min-height: 38px;
+    }
+    .tabela td:before {
+        position: absolute;
+        left: 10px;
+        top: 8px;
+        width: 45%;
+        white-space: nowrap;
+        font-weight: 600;
+        color: var(--primary-color);
+        content: attr(data-label);
+    }
 }
