@@ -10,6 +10,7 @@ blueprint_geral_solicitacoes = Blueprint('blueprint_geral_solicitacoes', __name_
 @role_required('DIRETORIA', 'ADMIN')
 def geral_solicitacoes():
     filtro = request.args.get('filtro', 'PENDENTE')
+    usuario_solicitante = request.args.get('usuario_solicitante', '')
     query = Solicitacoes.select()
     if filtro == 'PENDENTE':
         query = query.where(Solicitacoes.STATUS == 'PENDENTE')
@@ -21,5 +22,13 @@ def geral_solicitacoes():
         query = query.where(Solicitacoes.STATUS == 'COMPRA')
     elif filtro == 'TODOS':
         query = query.order_by(Solicitacoes.STATUS)
-    return render_template('geral_solicitacoes.html', solicitacoes=query, filtro=filtro, usuario_logado=current_user.USUARIO)
+    if usuario_solicitante:
+        query = query.where(Solicitacoes.USUARIO_SOLICITANTE.contains(usuario_solicitante))
+    return render_template(
+        'geral_solicitacoes.html',
+        solicitacoes=query,
+        filtro=filtro,
+        usuario_logado=current_user.USUARIO,
+        usuario_solicitante=usuario_solicitante
+        )
 

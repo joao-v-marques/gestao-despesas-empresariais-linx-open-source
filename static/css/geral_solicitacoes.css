@@ -172,17 +172,21 @@ nav {
     margin-bottom: 32px;
     font-weight: 700;
     letter-spacing: 1px;
+    text-decoration: underline;
+}
+
+.sub-titulo {
+    color: var(--primary-color);
+    text-align: center;
+    font-weight: bold;
+    margin-top: -32.5px;
+    margin-bottom: 20px;
 }
 
 .container-btn {
     display: flex;
     justify-content: center;
     margin-bottom: 28px;
-}
-
-.formulario-btn {
-    display: flex;
-    gap: 12px;
 }
 
 .btn {
@@ -258,10 +262,52 @@ nav {
         padding: 8px 4px;
         font-size: 0.93rem;
     }
-    .formulario-btn {
-        flex-direction: column;
-        gap: 8px;
-    }
+}
+
+.pesquisa-usuario {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.input-solicitante {
+    font-size: 1rem;
+    font-weight: 400;
+    border-radius: 20px;
+    padding: 8px 16px;
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    max-width: 300px;
+    width: 100%;
+    text-transform: uppercase;
+}
+
+.input-solicitante:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(29, 53, 87, 0.2);
+    outline: none;
+}
+
+.btn-pesquisar {
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 8px 22px;
+    border: none;
+    background-color: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.btn-pesquisar:hover,
+.btn-pesquisar:focus {
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 600px) {

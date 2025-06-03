@@ -14,7 +14,7 @@
 
         <form action="{{ url_for('blueprint_login.fazer_login') }}" method="POST" class="formulario">
             <label for="usuario_id" class="label-usuario">Usuario</label>
-            <input type="text" id="usuario_id" name="usuario" class="input-usuario">
+            <input type="text" id="usuario_id" name="usuario" class="input-usuario" oninput="this.value = this.value.toUpperCase();">
 
             <label for="senha_id" class="label-senha">Senha</label>
             <input type="password" id="senha_id" name="senha" class="input-senha">

@@ -67,14 +67,22 @@
     <main>
         <div class="container">
             <h1 class="titulo">Visão Geral de Solicitações</h1>
+            <h6 class="sub-titulo">Aqui você pode visualizar as Solicitações de todos os usuários</h3>
 
             <div class="container-btn">
-                <form method="GET" class="formulario-btn">
-                    <button type="submit" name="filtro" value="PENDENTE" class="btn btn-outline-primary {% if filtro == 'PENDENTE' %}active{% endif %}">Pendentes</button>
-                    <button type="submit" name="filtro" value="APROVADO" class="btn btn-outline-success {% if filtro == 'APROVADO' %}active{% endif %}">Aprovados</button>
-                    <button type="submit" name="filtro" value="REPROVADO" class="btn btn-outline-danger {% if filtro == 'REPROVADO' %}active{% endif %}">Reprovados</button>
-                    <button type="submit" name="filtro" value="COMPRA" class="btn btn-outline-warning {% if filtro == 'COMPRA' %}active{% endif %}">Em Compra</button>
-                    <button type="submit" name="filtro" value="TODOS" class="btn btn-outline-secondary {% if filtro == 'TODOS' %}active{% endif %}">Todos</button>
+                <form method="GET" class="formulario-btn" id="filtroForm">
+                    <div class="filtros">
+                        <input type="hidden" name="filtro" id="filtroInput" value="{{ filtro }}">
+                        <button type="button" value="PENDENTE" class="btn btn-outline-primary {% if filtro == 'PENDENTE' %}active{% endif %}" onclick="setFiltro('PENDENTE')">Pendentes</button>
+                        <button type="button" value="APROVADO" class="btn btn-outline-success {% if filtro == 'APROVADO' %}active{% endif %}" onclick="setFiltro('APROVADO')">Aprovados</button>
+                        <button type="button" value="REPROVADO" class="btn btn-outline-danger {% if filtro == 'REPROVADO' %}active{% endif %}" onclick="setFiltro('REPROVADO')">Reprovados</button>
+                        <button type="button" value="COMPRA" class="btn btn-outline-warning {% if filtro == 'COMPRA' %}active{% endif %}" onclick="setFiltro('COMPRA')">Em Compra</button>
+                        <button type="button" value="TODOS" class="btn btn-outline-secondary {% if filtro == 'TODOS' %}active{% endif %}" onclick="setFiltro('TODOS')">Todos</button>
+                    </div>
+                    <div class="pesquisa-usuario">
+                        <input type="text" name="usuario_solicitante" id="usuario_solicitante_id" class="input-solicitante" value="{{ usuario_solicitante|default('') }}" placeholder="Filtrar por usuário" oninput="this.value = this.value.toUpperCase();">
+                        <button type="submit" class="btn btn-primary">Pesquisar</button>
+                    </div>
                 </form>
             </div>
 
@@ -112,5 +120,6 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/geral_solicitacoes.js') }}"></script>
 </body>
 </html>

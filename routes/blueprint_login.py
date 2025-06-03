@@ -11,7 +11,7 @@ def pagina_login():
 @blueprint_login.route('/fazer-login', methods=['POST', 'GET'])
 def fazer_login():
     if request.method == 'POST':
-        usuario_form = request.form['usuario']
+        usuario_form = request.form['usuario'].strip()
         senha_form = request.form['senha']
         
         try:

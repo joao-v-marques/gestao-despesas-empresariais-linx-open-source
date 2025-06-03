@@ -82,14 +82,14 @@
             <label for="departamento_id" class="label-departamento">Departamento</label>
             <select name="departamento" id="departamento_id" class="input-departamento">
                 {% for d in departamento %}
-                    <option value="{{ d.CODIGO }}">{{ d.CODIGO }} - {{ d.DESCRICAO }}</option>
+                    <option value="{{ d.CODIGO }} - {{ d.DESCRICAO }}">{{ d.CODIGO }} - {{ d.DESCRICAO }}</option>
                 {% endfor %}
             </select>
 
             <label for="tipo_despesa_id" class="label-tipo-despesa">Tipo Despesa</label>
             <select name="tipo_despesa" id="tipo_despesa_id" class="input-tipo-despesa">
                 {% for t in tipo_despesa %}
-                    <option value="{{ t.CODIGO }}">{{ t.CODIGO }} - {{ t.DESCRICAO }}</option>
+                    <option value="{{ t.CODIGO }} - {{ t.DESCRICAO }}">{{ t.CODIGO }} - {{ t.DESCRICAO }}</option>
                 {% endfor %}
             </select>
 
