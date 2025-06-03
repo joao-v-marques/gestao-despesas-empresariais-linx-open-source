@@ -3,3 +3,4 @@ Flask-Login==0.6.3
 python-dotenv==1.1.0
 peewee==3.18.1
 psycopg2==2.9.10
+fpdf==1.7.2

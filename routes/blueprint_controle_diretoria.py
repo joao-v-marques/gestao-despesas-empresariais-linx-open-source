@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from database.database import Solicitacoes
 from decorators import role_required
+from gerar_pdf import gerar_pdf
 
 blueprint_controle_diretoria = Blueprint('blueprint_controle_diretoria', __name__)
 
@@ -30,6 +31,8 @@ def mudar_status():
         if novo_status == 'APROVADO':
             solicitacao = Solicitacoes.get(Solicitacoes.id == solicitacao_id)
             solicitacao.STATUS = novo_status
+            pdf_path = gerar_pdf(solicitacao, current_user.USUARIO)
+            solicitacao.PDF_PATH = pdf_path
             solicitacao.save()
             flash('Solicitação Aprovada!', 'success')
         else:

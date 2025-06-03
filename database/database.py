@@ -30,6 +30,7 @@ class Solicitacoes(Model):
     VALOR = FloatField(null=False)
     STATUS = CharField(null=False)
     MOTIVO_REPROVA = CharField()
+    PDF_PATH = CharField()
 
     class Meta:
         database = db

@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
 from flask_login import login_required, current_user
-from database.database import Solicitacoes, db
+from database.database import Solicitacoes, db, Departamento, Tipo_Despesa
 
 blueprint_painel_solicitacoes = Blueprint('blueprint_painel_solicitacoes', __name__)
 
@@ -25,8 +25,18 @@ def painel_solicitacoes():
 @login_required
 def mais_info_sol(id):
         solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
-        return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=solicitacao)
+        departamento = Departamento.select().order_by(Departamento.CODIGO)
+        tipo_despesa = Tipo_Despesa.select().order_by(Tipo_Despesa.CODIGO)
+        return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=solicitacao, departamento=departamento, tipo_despesa=tipo_despesa)
 
+@blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/dowload-pdf', methods=['POST', 'GET'])
+@login_required
+def download_pdf(id):
+        solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
+        if not solicitacao or not solicitacao.PDF_PATH:
+                flash('PDF não encontrado!', 'error')
+                return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol'))
+        return send_file(solicitacao.PDF_PATH, as_attachment=True)
 
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/salvar', methods=['POST', 'GET'])
 @login_required
