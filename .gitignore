@@ -4,3 +4,6 @@ __pycache__/
 venv/
 .env
 *.log
+/dist
+main.spec
+/build
