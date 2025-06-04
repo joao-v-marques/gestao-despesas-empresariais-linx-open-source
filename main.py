@@ -10,4 +10,4 @@ app.secret_key = os.getenv('SECRET_KEY', '')
 
 config_all(app)
 
-app.run(host='0.0.0.0')
+app.run(debug=True, host='0.0.0.0')

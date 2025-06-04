@@ -65,6 +65,8 @@
 
     <main>
         <div class="container">
+            <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}" class="voltar"><- Voltar</a>
+
             <h2 class="titulo">Mais Informações</h2>
 
             <form action="{{ url_for('blueprint_painel_solicitacoes.salvar_edicao', id=solicitacao.id) }}" method="POST" class="formulario">
