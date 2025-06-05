@@ -16,9 +16,8 @@ def gerar_pdf(solicitacao, usuario_aprovador):
     pdf.cell(200, 10, txt=f"Valor: R$ {solicitacao.VALOR:.2f}", ln=True)
     pdf.cell(200, 10, txt=f"Aprovado por: {usuario_aprovador}", ln=True)
 
-    base_dir = getattr(sys, '_MEIPASS', os.path.abspath('.'))
-    pdf_dir = os.path.join(base_dir, 'static', 'pdf')
-    os.makedirs(pdf_dir, exist_ok=True)
-    pdf_path = os.path.join(pdf_dir, f"solicitacao_{solicitacao.id}.pdf")
+    base_dir = "C:/processo_despesas_kato/static/pdf"
+    os.makedirs(base_dir, exist_ok=True)
+    pdf_path = os.path.join(base_dir, f'solicitacao_{solicitacao.id}.pdf')
     pdf.output(pdf_path)
     return pdf_path

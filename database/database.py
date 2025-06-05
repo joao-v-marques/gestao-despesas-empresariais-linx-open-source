@@ -1,4 +1,4 @@
-from peewee import PostgresqlDatabase, CharField, IntegerField, Model, FloatField, Check
+from peewee import PostgresqlDatabase, CharField, IntegerField, Model, FloatField
 from dotenv import load_dotenv
 import os
 from flask_login import UserMixin

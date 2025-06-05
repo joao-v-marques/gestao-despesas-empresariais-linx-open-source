@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 from flask_login import LoginManager
 from database.database import db, Usuarios, Solicitacoes, Departamento, Tipo_Despesa
 from routes.blueprint_lancar_solicitacao import blueprint_lancar_solicitacao

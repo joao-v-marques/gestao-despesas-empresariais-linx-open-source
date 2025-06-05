@@ -21,7 +21,7 @@ def mais_info_cd(id):
     return render_template('mais_info_cd.html', usuario_logado=current_user.USUARIO, solicitacao=solicitacao)
 
 
-@blueprint_controle_diretoria.route('/mudar-status', methods=['POST'])
+@blueprint_controle_diretoria.route('/mudar-status', methods=['POST', 'GET'])
 @login_required
 @role_required('ADMIN', 'DIRETORIA')
 def mudar_status():

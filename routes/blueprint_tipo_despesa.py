@@ -19,7 +19,7 @@ def tipo_despesa():
 def cadastrar():
     if request.method == 'POST':
         codigo_form = request.form['codigo']
-        descricao_form = request.form['descricao']
+        descricao_form = request.form['descricao'].upper()
 
         if not codigo_form or not descricao_form:
             flash('Nenhum campo pode estar vazio!', 'error')
