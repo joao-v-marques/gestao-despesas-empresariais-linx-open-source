@@ -240,12 +240,6 @@ nav {
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
-.btn.active, .btn:active {
-    background-color: var(--primary-color) !important;
-    color: #fff !important;
-    border-color: var(--primary-color) !important;
-}
-
 .tabela {
     width: 100%;
     border-collapse: separate;

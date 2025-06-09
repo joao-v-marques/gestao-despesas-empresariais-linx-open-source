@@ -30,11 +30,14 @@ def troca_senha(id):
         if nova_senha_form != confirma_nova_senha_form:
             flash('As duas senhas devem ser iguais!', 'error')
             return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+        elif not nova_senha_form or not confirma_nova_senha_form:
+            flash('Por favor, insira pelo menos um caractere.', 'error')
+            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
         else:
-            usuario.SENHA = nova_senha_form.strip()
+            usuario.SENHA = nova_senha_form
             usuario.save()
             flash('Senha alterada com sucesso!', 'success')
-            logout_user() 
+            logout_user()
             return redirect(url_for('blueprint_login.fazer_login'))
 
-    return render_template('blueprint_painel_solicitacoes.painel_solicitacoes')          
+    return render_template('blueprint_painel_solicitacoes.painel_solicitacoes')

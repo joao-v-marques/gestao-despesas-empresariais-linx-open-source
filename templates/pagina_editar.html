@@ -80,10 +80,10 @@
                     <div class="modal-body">
                         <form action="{{ url_for('blueprint_principal.troca_senha', id=current_user.id  ) }}" method="POST">
                             <label for="nova_senha_id" class="label_nova_senha">Digite uma nova senha</label>
-                            <input type="text" id="nova_senha_id" name="nova_senha" class="input_nova_senha">
+                            <input type="text" id="nova_senha_id" name="nova_senha" class="input_nova_senha" required>
 
                             <label for="confirma_nova_senha_id" class="label_confirma_nova_senha">Confirme sua nova senha</label>
-                            <input type="text" id="confirma_nova_senha_id" class="input_confirma_nova_senha" name="confirma_nova_senha">
+                            <input type="text" id="confirma_nova_senha_id" class="input_confirma_nova_senha" name="confirma_nova_senha" required>
 
                             <input type="submit" class="btn btn-success" value="Confirmar">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>

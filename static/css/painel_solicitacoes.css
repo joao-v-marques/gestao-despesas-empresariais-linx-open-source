@@ -226,22 +226,6 @@ nav {
     gap: 12px;
 }
 
-.btn {
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 20px;
-    padding: 8px 22px;
-    border: none;
-    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-
-.btn.active, .btn:active {
-    background-color: var(--primary-color) !important;
-    color: #fff !important;
-    border-color: var(--primary-color) !important;
-}
-
 .tabela {
     width: 100%;
     border-collapse: separate;
@@ -294,21 +278,6 @@ nav {
     font-style: italic;
     padding: 24px 0;
     font-size: 1.1rem;
-}
-
-.btn-danger {
-    padding: 6px 16px;
-    font-size: 0.95rem;
-    border-radius: 18px;
-    font-weight: 600;
-    box-shadow: none;
-    background: #e63946;
-    transition: background 0.2s;
-}
-
-.btn-danger:hover, .btn-danger:focus {
-    background: #b71c1c;
-    color: #fff;
 }
 
 .head-lista th:last-child,
