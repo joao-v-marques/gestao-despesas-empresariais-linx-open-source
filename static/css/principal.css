@@ -114,8 +114,9 @@ nav {
     color: var(--primary-color);
 }
 
-.user {
-    padding: 5px;
+.user a {
+    margin-right: 5px;
+    padding: 7px;
     background: #f1faee;
     color: var(--primary-color);
     font-weight: 700;
@@ -125,8 +126,8 @@ nav {
     text-decoration: none;
 }
 
-.user:hover,
-.user:focus {
+.user a:hover,
+.user a:focus {
     background: var(--accent-color);
     color: var(--primary-color);
     text-decoration: none;
@@ -157,31 +158,42 @@ nav {
     }
 }
 
-.welcome {
-    text-align: center;
-    margin-top: 30px;
+.btn-troca-senha button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 50%;
+    background-color: #f1faee;
+    border: none;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-.titulo {
-    color: var(--primary-color);
-    text-align: center;
-    margin-top: 40px;
+.btn-troca-senha img {
+    width: 28px;
+    height: 28px;
+    display: block;
 }
 
-.flash-error {
-    text-align: center;
-    color: #721c24;
-    list-style: none;
+.btn-troca-senha:hover button {
+    background-color: var(--accent-color);
+    transform: scale(1.1);
+    outline: none;
 }
 
-.flash-success {
-    text-align: center;
-    color: #155724;
-    list-style: none;
+.input_nova_senha,
+.input_confirma_nova_senha {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    font-size: 1rem;
 }
 
-.flash-info {
-    text-align: center;
-    color: blue;
-    list-style: none;
+.input_nova_senha:focus,
+.input_confirma_nova_senha:focus {
+    border-color: var(--accent-color);
+    outline: none;
 }

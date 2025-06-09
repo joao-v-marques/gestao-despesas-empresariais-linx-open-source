@@ -59,10 +59,39 @@
                     <a class="nav-link text-white" href="{{ url_for('blueprint_principal.logout') }}">Logout</a>
                 </li>
                 <li class="user">
-                    <a class="user" href="#">{{ usuario_logado }}</a>
+                    <a href="#">{{ usuario_logado }}</a>
+                </li>
+
+                <li class="btn-troca-senha">
+                    <button data-bs-toggle="modal" data-bs-target="#modalTrocaSenha{{ current_user.id }}" data-toggle="tooltip" data-placement="bottom" title="Trocar Senha">
+                        <img src="{{ url_for('static', filename='img/cadeado.png') }}" alt="Cadeado Troca Senha">
+                    </button>
                 </li>
             </ul>
         </nav>
+
+        <div class="modal fade" id="modalTrocaSenha{{ current_user.id }}" tabindex="-1" aria-labelledby="modalTrocaSenha{{ current_user.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTrocaSenha{{ current_user.id }}">Troca Senha</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url_for('blueprint_principal.troca_senha', id=current_user.id  ) }}" method="POST">
+                            <label for="nova_senha_id" class="label_nova_senha">Digite uma nova senha</label>
+                            <input type="text" id="nova_senha_id" name="nova_senha" class="input_nova_senha">
+
+                            <label for="confirma_nova_senha_id" class="label_confirma_nova_senha">Confirme sua nova senha</label>
+                            <input type="text" id="confirma_nova_senha_id" class="input_confirma_nova_senha" name="confirma_nova_senha">
+
+                            <input type="submit" class="btn btn-success" value="Confirmar">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
 
     <main>        
