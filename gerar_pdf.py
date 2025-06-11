@@ -1,5 +1,4 @@
 import os
-import sys
 from fpdf import FPDF
 
 def gerar_pdf(solicitacao, usuario_aprovador):

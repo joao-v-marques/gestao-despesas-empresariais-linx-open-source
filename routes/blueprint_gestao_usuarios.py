@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, flash, url_for
 from flask_login import login_required, current_user
-from database.database import db, Usuarios
+from database.database import Usuarios
 from decorators import role_required
 
 blueprint_gestao_usuarios = Blueprint('blueprint_gestao_usuarios', __name__)
