@@ -38,7 +38,7 @@ def cadastrar_usuario():
             flash('As duas senhas inseridas não são iguais! Tente novamente.', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
         elif len(senha_form) <= 2:
-            flash('A senha deve conter no minimo 2 caracteres! Tente novamente.', 'error')
+            flash('A senha deve conter no minimo 3 caracteres! Tente novamente.', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
         elif len(cpf_form) != 14:
             flash('O CPF deve ter exatamente 11 números! tente novamente.', 'error')

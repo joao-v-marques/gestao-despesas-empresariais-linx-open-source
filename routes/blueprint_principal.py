@@ -33,6 +33,9 @@ def troca_senha(id):
         elif not nova_senha_form or not confirma_nova_senha_form:
             flash('Por favor, insira pelo menos um caractere.', 'error')
             return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+        elif len(nova_senha_form) <=2:
+            flash('A senha deve conter no minimo 3 caracteres! Tente novamente.', 'error')
+            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
         else:
             usuario.SENHA = nova_senha_form
             usuario.save()

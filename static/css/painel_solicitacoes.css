@@ -221,6 +221,16 @@ nav {
     margin-bottom: 28px;
 }
 
+.btn {
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 8px 22px;
+    border: none;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
 .formulario-btn {
     display: flex;
     gap: 12px;
