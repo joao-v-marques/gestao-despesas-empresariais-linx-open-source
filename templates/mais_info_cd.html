@@ -111,10 +111,10 @@
                 <input type="text" readonly id="usuario_solicitante_id" name="usuario_solicitante" value="{{ solicitacao.USUARIO_SOLICITANTE }}">
 
                 <label for="departamento_id">Departamento:</label>
-                <input type="text" readonly id="departamento_id" name="departamento" value="{{ solicitacao.DEPARTAMENTO }}">
+                <input type="text" readonly id="departamento_id" name="departamento" value="{{ solicitacao.CODIGO_DEPARTAMENTO.CODIGO }} - {{ solicitacao.CODIGO_DEPARTAMENTO.DESCRICAO }}">
 
                 <label for="tipo_despesa_id">Tipo da Despesa:</label>
-                <input type="text" readonly id="tipo_despesa_id" name="tipo_despesa" value="{{ solicitacao.TIPO_DESPESA }}">
+                <input type="text" readonly id="tipo_despesa_id" name="tipo_despesa" value="{{ solicitacao.CODIGO_TIPO_DESPESA.CODIGO }} - {{ solicitacao.CODIGO_TIPO_DESPESA.DESCRICAO }}">
 
                 <label for="descricao_id">Descrição:</label>
                 <input type="text" readonly id="descricao_id" name="descricao" value="{{ solicitacao.DESCRICAO }}">
@@ -161,7 +161,7 @@
 
                             <form method="POST" action="{{ url_for('blueprint_controle_diretoria.mudar_status') }}" class="modal-form">
                                 <label for="motivo_reprova_id">Descreva um motivo para a reprova</label>
-                                <input type="text" id="motivo_reprova_id" name="motivo_reprova">
+                                <input type="text" id="motivo_reprova_id" name="motivo_reprova" required>
 
                                 <input type="hidden" name="id" value="{{ solicitacao.id }}">
                                 <input type="hidden" name="status" value="REPROVADO">

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file, session
 from flask_login import login_required, current_user
 from database.database import Solicitacoes, db, Departamento, Tipo_Despesa
 
@@ -7,6 +7,8 @@ blueprint_painel_solicitacoes = Blueprint('blueprint_painel_solicitacoes', __nam
 @blueprint_painel_solicitacoes.route('/', methods=['POST', 'GET'])
 @login_required
 def painel_solicitacoes():
+        session.pop('_flashes', None)
+
         filtro = request.args.get('filtro', 'PENDENTE')
         query = Solicitacoes.select().where(Solicitacoes.USUARIO_SOLICITANTE == current_user.USUARIO)
         if filtro == 'PENDENTE':
@@ -49,7 +51,7 @@ def salvar_edicao(id):
                 
         solicitacao.CODIGO_DEPARTAMENTO = request.form['departamento']
         solicitacao.CODIGO_TIPO_DESPESA = request.form['tipo_despesa']
-        solicitacao.DESCRICAO = request.form.get('descricao')
+        solicitacao.DESCRICAO = request.form.get('descricao').strip()
         solicitacao.VALOR = float(request.form.get('valor').replace('R$', '').replace('.', '').replace(',', '.').strip())
 
         solicitacao.save() 

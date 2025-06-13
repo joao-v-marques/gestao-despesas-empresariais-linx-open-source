@@ -127,8 +127,8 @@
                                 <td>{{ s.id }}</td>
                                 <td>{{ s.EMPRESA }}.{{ s.REVENDA }}</td>
                                 <td>{{ s.USUARIO_SOLICITANTE }}</td>
-                                <td>{{ s.DEPARTAMENTO }}</td>
-                                <td>{{ s.TIPO_DESPESA }}</td>
+                                <td>{{ s.CODIGO_DEPARTAMENTO.CODIGO }} - {{ s.CODIGO_DEPARTAMENTO.DESCRICAO }}</td>
+                                <td>{{ s.CODIGO_TIPO_DESPESA.CODIGO }} - {{ s.CODIGO_TIPO_DESPESA.DESCRICAO }}</td>
                                 <td>{{ "{:,.2f}".format(s.VALOR).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
                                 <td>{{ s.STATUS }}</td>
 

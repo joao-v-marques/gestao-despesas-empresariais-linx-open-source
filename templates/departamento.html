@@ -174,7 +174,7 @@
                             <div class="modal-body-edit">
                                 <form method="POST" action="{{ url_for('blueprint_departamento.editar', id=d.CODIGO) }}" class="formulario-modal">
                                     <label for="edit_codigo_id" class="label_edit_codigo">Código</label>
-                                    <input type="text" id="edit_codigo_id" name="edit_codigo" class="input_edit_codigo" value="{{ d.CODIGO }}">
+                                    <input type="text" id="edit_codigo_id" name="edit_codigo" class="input_edit_codigo" value="{{ d.CODIGO }}" pattern="\d{3}" maxlength="3" minlength="3">
 
                                     <label for="edit_descricao_id" class="label_edit_descricao">Descrição</label>
                                     <input type="text" id="edit_descricao_id" name="edit_descricao" class="input_edit_descricao" value="{{ d.DESCRICAO }}">
