@@ -48,7 +48,7 @@ def deletar(id):
             return redirect(url_for('blueprint_departamento.departamento'))
 
 
-@blueprint_departamento.route('/editar/<int:id>', methods=['POST', 'GET'])
+@blueprint_departamento.route('/editar/<int:id>', methods=['POST'])
 @login_required
 @role_required('ADMIN')
 def editar(id):
