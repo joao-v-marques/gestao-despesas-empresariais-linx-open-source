@@ -1,4 +1,4 @@
-from peewee import PostgresqlDatabase, CharField, IntegerField, Model, FloatField
+from peewee import PostgresqlDatabase, CharField, IntegerField, Model, FloatField, ForeignKeyField
 from dotenv import load_dotenv
 import os
 from flask_login import UserMixin
@@ -20,32 +20,31 @@ class Usuarios(UserMixin, Model):
     class Meta:
         database = db
 
-class Solicitacoes(Model):
-    EMPRESA = IntegerField(null=False)
-    REVENDA = IntegerField(null=False)
-    USUARIO_SOLICITANTE = CharField(null=False)
-    DEPARTAMENTO = IntegerField(null=False)
-    TIPO_DESPESA = IntegerField(null=False)
-    DESCRICAO = CharField()
-    VALOR = FloatField(null=False)
-    STATUS = CharField(null=False)
-    MOTIVO_REPROVA = CharField()
-    PDF_PATH = CharField()
-
-    class Meta:
-        database = db
-
 class Departamento(Model):
-    CODIGO = IntegerField(null=False, unique=True)
+    CODIGO = IntegerField(primary_key=True)
     DESCRICAO = CharField(null=False)
 
     class Meta:
         database = db
 
 class Tipo_Despesa(Model):
-    CODIGO = IntegerField(null=False, unique=True)
+    CODIGO = IntegerField(primary_key=True)
     DESCRICAO = CharField(null=False)
 
     class Meta:
         database = db
 
+class Solicitacoes(Model):
+    EMPRESA = IntegerField(null=False)
+    REVENDA = IntegerField(null=False)
+    USUARIO_SOLICITANTE = CharField(null=False)
+    CODIGO_DEPARTAMENTO = ForeignKeyField(Departamento, backref='solicitacoes')
+    CODIGO_TIPO_DESPESA = ForeignKeyField(Tipo_Despesa, backref='solicitacoes')
+    DESCRICAO = CharField()
+    VALOR = FloatField(null=False)
+    STATUS = CharField(null=False)
+    MOTIVO_REPROVA = CharField()
+    PDF_PATH = CharField(null=True)
+
+    class Meta:
+        database = db

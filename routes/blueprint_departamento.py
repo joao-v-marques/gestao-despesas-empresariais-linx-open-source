@@ -13,26 +13,23 @@ def departamento():
 
     return render_template('departamento.html', usuario_logado=current_user.USUARIO, departamento=query)
 
-@blueprint_departamento.route('/cadastrar', methods=['POST', 'GET'])
+@blueprint_departamento.route('/cadastrar', methods=['POST'])
 @login_required
 @role_required('ADMIN')
 def cadastrar():
-    if request.method == 'POST':
-        codigo_form = request.form['codigo']
-        descricao_form = request.form['descricao'].upper()
+    codigo_form = request.form['codigo'].strip()
+    descricao_form = request.form['descricao'].upper().strip()
 
-        if not codigo_form or not descricao_form:
-            flash('Nenhum campo pode estar vazio!', 'error')
-            return redirect(url_for('blueprint_departamento.departamento'))
-        else:
-            Departamento.create(
-                CODIGO = codigo_form,
-                DESCRICAO = descricao_form
-            )
-            flash('Cadastro realizado com sucesso!', 'success')
-            return redirect(url_for('blueprint_departamento.departamento'))
-    
-    return redirect(url_for('blueprint_departamento.departamento'))
+    if not codigo_form or not descricao_form:
+        flash('Nenhum campo pode estar vazio!', 'error')
+        return redirect(url_for('blueprint_departamento.departamento'))
+    else:
+        Departamento.create(
+            CODIGO = codigo_form,
+            DESCRICAO = descricao_form
+        )
+        flash('Cadastro realizado com sucesso!', 'success')
+        return redirect(url_for('blueprint_departamento.departamento'))
 
 @blueprint_departamento.route('/deletar/<int:id>', methods=['POST', 'GET'])
 @login_required

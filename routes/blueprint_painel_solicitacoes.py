@@ -25,11 +25,12 @@ def painel_solicitacoes():
 @login_required
 def mais_info_sol(id):
         solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
+        select_solicitacoes = Solicitacoes.select().order_by(Solicitacoes.CODIGO_DEPARTAMENTO)
         departamento = Departamento.select().order_by(Departamento.CODIGO)
         tipo_despesa = Tipo_Despesa.select().order_by(Tipo_Despesa.CODIGO)
-        return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=solicitacao, departamento=departamento, tipo_despesa=tipo_despesa)
+        return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=solicitacao, departamento=departamento, tipo_despesa=tipo_despesa, select_solicitacoes=select_solicitacoes)
 
-@blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/dowload-pdf', methods=['POST', 'GET'])
+@blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/dowload-pdf', methods=['GET'])
 @login_required
 def download_pdf(id):
         solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
@@ -46,8 +47,8 @@ def salvar_edicao(id):
                 flash('Solicitação não foi encontrada!', 'error')
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
                 
-        solicitacao.DEPARTAMENTO = request.form.get('departamento')
-        solicitacao.TIPO_DESPESA = request.form.get('tipo_despesa')
+        solicitacao.CODIGO_DEPARTAMENTO = request.form['departamento']
+        solicitacao.CODIGO_TIPO_DESPESA = request.form['tipo_despesa']
         solicitacao.DESCRICAO = request.form.get('descricao')
         solicitacao.VALOR = float(request.form.get('valor').replace('R$', '').replace('.', '').replace(',', '.').strip())
 

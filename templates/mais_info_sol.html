@@ -113,14 +113,18 @@
                 <label for="departamento_id">Departamento:</label>
                 <select name="departamento" id="departamento_id" class="input-departamento" disabled>
                     {% for d in departamento %}
-                        <option value="{{ d.CODIGO }} - {{ d.DESCRICAO }}">{{ d.CODIGO }} - {{ d.DESCRICAO }}</option>
+                        <option value="{{ d.CODIGO }}" {% if d.CODIGO == solicitacao.CODIGO_DEPARTAMENTO.CODIGO %}selected{% endif %}>
+                            {{ d.CODIGO }} - {{ d.DESCRICAO }}
+                        </option>
                     {% endfor %}
                 </select>
 
                 <label for="tipo_despesa_id">Tipo da Despesa:</label>
                 <select name="tipo_despesa" id="tipo_despesa_id" class="input-tipo-despesa" disabled>
                     {% for t in tipo_despesa %}
-                        <option value="{{ t.CODIGO }} - {{ t.DESCRICAO }}">{{ t.CODIGO }} - {{ t.DESCRICAO }}</option>
+                        <option value="{{ t.CODIGO }}" {% if t.CODIGO == solicitacao.CODIGO_TIPO_DESPESA.CODIGO %}selected{% endif %}>
+                            {{ t.CODIGO }} - {{ t.DESCRICAO }}
+                        </option>
                     {% endfor %}
                 </select>
 

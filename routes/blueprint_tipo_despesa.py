@@ -26,8 +26,8 @@ def cadastrar():
             return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
         else:
             Tipo_Despesa.create(
-                CODIGO = codigo_form,
-                DESCRICAO = descricao_form
+                CODIGO = codigo_form.strip(),
+                DESCRICAO = descricao_form.strip()
             )
             flash('Cadastro realizado com sucesso!', 'success')
             return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
@@ -38,13 +38,13 @@ def cadastrar():
 @login_required
 @role_required('ADMIN')
 def deletar(id):
-    tipo_despesa = Tipo_Despesa.select().where(Tipo_Despesa.id == id)
+    tipo_despesa = Tipo_Despesa.select().where(Tipo_Despesa.CODIGO == id)
     if not tipo_despesa:
         flash('Tipo Despesa não foi encontrado!', 'error')
         return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
     
     if request.method == 'POST':
-        tipo_despesa_deletado = Tipo_Despesa.get(Tipo_Despesa.id == id)
+        tipo_despesa_deletado = Tipo_Despesa.get(Tipo_Despesa.CODIGO == id)
         tipo_despesa_deletado.delete_instance()
         flash('Tipo de Despesa deletado com sucesso!', 'success')
         return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
