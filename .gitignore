@@ -7,3 +7,5 @@ venv/
 /dist
 main.spec
 /build
+/database/instantclient_23_6
+/database/configs.json

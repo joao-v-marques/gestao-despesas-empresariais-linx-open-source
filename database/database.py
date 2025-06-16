@@ -1,50 +1,42 @@
-from peewee import PostgresqlDatabase, CharField, IntegerField, Model, FloatField, ForeignKeyField
-from dotenv import load_dotenv
-import os
-from flask_login import UserMixin
+import oracledb, os, logging, json
+logging.basicConfig(level=logging.INFO)
 
-load_dotenv()
+current_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(current_dir, 'configs.json')
 
-db = PostgresqlDatabase(None)
-db.init(os.getenv('DATABASE_URI'))
+with open(config_path, "r", encoding="utf-8") as file:
+    config = json.load(file)
 
-class Usuarios(UserMixin, Model):
-    USUARIO = CharField(unique=True, null=False)
-    SENHA = CharField(null=False)
-    NOME = CharField()
-    CPF = CharField()
-    FUNCAO = CharField(null=False)
-    EMPRESA = IntegerField(null=False)
-    REVENDA = IntegerField(null=False)
+def conexaoOrcl():
+    login = config['banco']['user']
+    senha = config['banco']['pass']
+    dsn =  config['banco']['dns']
+    
+    oracledb.init_oracle_client(lib_dir=config['banco']['instant_client'])
 
-    class Meta:
-        database = db
+    try:
+        connection = oracledb.connect(user=login, password=senha, dsn=dsn)
+        logging.info("Conexão com Oracle estabelecida com sucesso.")
+        return connection
+    
+    except oracledb.DatabaseError as e:
+        error, = e.args
+        logging.error(f"Erro ao conectar ao os dados do json:")
 
-class Departamento(Model):
-    CODIGO = IntegerField(primary_key=True)
-    DESCRICAO = CharField(null=False)
+conexaoOrcl()
 
-    class Meta:
-        database = db
+conn = conexaoOrcl()
+if not conn:
+    logging.error('Deu merda no conexaoOrcl')
+    raise ConnectionError('Não foi possível conectar ao Oracle.')
+cursor = conn.cursor()
 
-class Tipo_Despesa(Model):
-    CODIGO = IntegerField(primary_key=True)
-    DESCRICAO = CharField(null=False)
 
-    class Meta:
-        database = db
+cursor.execute("""
+    SELECT USUARIO, NOME FROM GER_USUARIO
+""")
 
-class Solicitacoes(Model):
-    EMPRESA = IntegerField(null=False)
-    REVENDA = IntegerField(null=False)
-    USUARIO_SOLICITANTE = CharField(null=False)
-    CODIGO_DEPARTAMENTO = ForeignKeyField(Departamento, backref='solicitacoes')
-    CODIGO_TIPO_DESPESA = ForeignKeyField(Tipo_Despesa, backref='solicitacoes')
-    DESCRICAO = CharField()
-    VALOR = FloatField(null=False)
-    STATUS = CharField(null=False)
-    MOTIVO_REPROVA = CharField()
-    PDF_PATH = CharField(null=True)
+variavel = cursor.fetchall()
+print(variavel)
 
-    class Meta:
-        database = db
+conn.close()
