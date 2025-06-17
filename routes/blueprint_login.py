@@ -22,7 +22,7 @@ def fazer_login():
         cursor, conn = abrir_cursor()
         try:
             cursor.execute(sql, valores)
-            retorno = cursor.fetchone()
+            retorno = cursor.dict_fetchone()
             logging.info(f'Resultado da consulta: {retorno}')
 
             if not retorno:
@@ -32,7 +32,7 @@ def fazer_login():
                 user = User(id=retorno[0], USUARIO=retorno[1], FUNCAO=retorno[3])
                 login_user(user)
                 flash('Login realizado com sucesso!', 'success')
-                return redirect(url_for('blueprint_principal.principal'))
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
             else:
                 flash('Senha Incorreta! Tente novamente.', 'error')
                 return redirect(url_for('blueprint_login.pagina_login'))

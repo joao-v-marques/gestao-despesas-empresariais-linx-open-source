@@ -14,7 +14,7 @@ def departamento():
         cursor, conn = abrir_cursor()
         sql = "SELECT * FROM LIU_DEPARTAMENTO ORDER BY CODIGO"
         cursor.execute(sql)
-        retorno = cursor.fetchall()
+        retorno = cursor.dict_fetchall()
     except Exception as e:
         flash('Erro interno ao realizar a consulta!', 'error')
         logging.error(f'Deu erro na consulta: {e}')

@@ -29,11 +29,18 @@ def abrir_cursor():
         logging.error('Deu merda no conexaoOrcl')
         raise ConnectionError('Não foi possível conectar ao Oracle.')
     cursor = conn.cursor()
+
+    def dict_fetchall(cursor):
+        colunas = [desc[0].lower() for desc in cursor.description]
+        return [dict(zip(colunas, row)) for row in cursor.fetchall()]
+    
+    def dict_fetchone(cursor):
+        colunas = [desc[0].lower() for desc in cursor.description]
+        row = cursor.fetchone()
+        return dict(zip(colunas, row)) if row else None
+    
+    cursor.dict_fetchall = lambda: dict_fetchall(cursor)
+    cursor.dict_fetchone = lambda: dict_fetchone(cursor)
     return cursor, conn
 
-# cursor.execute("""
-#     SELECT USUARIO, NOME FROM GER_USUARIO
-# """)
 
-# variavel = cursor.fetchall()
-# print(variavel)

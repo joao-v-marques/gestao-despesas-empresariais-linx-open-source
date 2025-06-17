@@ -14,11 +14,11 @@ def tipo_despesa():
         cursor, conn = abrir_cursor()
         sql = "SELECT * FROM LIU_TIPO_DESPESA ORDER BY CODIGO"
         cursor.execute(sql)
-        retorno = cursor.fetchall()
+        retorno = cursor.dict_fetchall()
     except Exception as e:
         flash('Erro interno ao realizar a consulta!', 'error')
         logging.error(f'Deu erro na consulta: {e}')
-        return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+        return redirect(url_for('blueprint_tipo_despesa.tipo_despesa', usuario_logado=current_user.USUARIO))
     finally:
         cursor.close()
         conn.close() 

@@ -18,7 +18,7 @@ def logout():
     logout_user()
     session.pop('_flashes', None)
     flash('Você deslogou da sua conta com sucesso!', 'success')
-    return redirect(url_for('blueprint_login.fazer_login'))
+    return redirect(url_for('blueprint_login.pagina_login'))
 
 @blueprint_principal.route('/troca-senha/<int:id>', methods=['POST', 'GET'])
 @login_required

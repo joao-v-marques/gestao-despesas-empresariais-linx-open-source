@@ -12,11 +12,11 @@ def lancar_solicitacao():
         cursor, conn = abrir_cursor()
         sql_departamento = "SELECT * FROM LIU_DEPARTAMENTO ORDER BY CODIGO"
         cursor.execute(sql_departamento)
-        retorno_departamento = cursor.fetchall()
+        retorno_departamento = cursor.dict_fetchall()
 
         sql_tipo_despesa = "SELECT * FROM LIU_TIPO_DESPESA ORDER BY CODIGO"
         cursor.execute(sql_tipo_despesa)
-        retorno_tipo_despesa = cursor.fetchall()
+        retorno_tipo_despesa = cursor.dict_fetchall()
 
         return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO, departamento=retorno_departamento, tipo_despesa=retorno_tipo_despesa)
     except Exception as e:

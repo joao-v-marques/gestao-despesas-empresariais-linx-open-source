@@ -17,23 +17,23 @@ def geral_solicitacoes():
         if filtro == 'PENDENTE':
             sql = "SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = 'PENDENTE'"
             cursor.execute(sql)
-            retorno = cursor.fetchall()
+            retorno = cursor.dict_fetchall()
         if filtro == 'APROVADO':
             sql = "SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = 'APROVADO'"
             cursor.execute(sql)
-            retorno = cursor.fetchall()
+            retorno = cursor.dict_fetchall()
         if filtro == 'REPROVADO':
             sql = "SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = 'REPROVADO'"
             cursor.execute(sql)
-            retorno = cursor.fetchall()
+            retorno = cursor.dict_fetchall()
         if filtro == 'COMPRA':
             sql = "SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = 'COMPRA'"
             cursor.execute(sql)
-            retorno = cursor.fetchall()
+            retorno = cursor.dict_fetchall()
         if filtro == 'TODOS':
             sql = "SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES ORDER BY STATUS"
             cursor.execute(sql)
-            retorno = cursor.fetchall()
+            retorno = cursor.dict_fetchall()
 
             return render_template(
                 'geral_solicitacoes.html',

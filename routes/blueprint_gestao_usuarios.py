@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template, redirect, request, flash, url_for
 from flask_login import login_required, current_user
-from database.connect_db import Usuarios
 from decorators import role_required
 from database.connect_db import abrir_cursor
-import logging
+import logging, oracledb
 
 blueprint_gestao_usuarios = Blueprint('blueprint_gestao_usuarios', __name__)
 
@@ -11,11 +10,13 @@ blueprint_gestao_usuarios = Blueprint('blueprint_gestao_usuarios', __name__)
 @login_required
 @role_required('ADMIN')
 def gestao_usuarios():
+    cursor = None
+    conn = None
     try:
         cursor, conn = abrir_cursor()
-        sql = "SELECT * FROM LIU_USUARIOS ORDER BY ID"
+        sql = "SELECT * FROM LIU_USUARIO ORDER BY ID"
         cursor.execute(sql)
-        retorno = cursor.fetchall()
+        retorno = cursor.dict_fetchall()
     except Exception as e:
                 flash('Erro interno ao realizar a consulta!', 'error')
                 logging.error(f'Deu erro na consulta: {e}')

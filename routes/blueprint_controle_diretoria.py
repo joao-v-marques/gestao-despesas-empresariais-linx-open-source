@@ -15,7 +15,7 @@ def controle_diretoria():
         cursor, conn = abrir_cursor()
         sql = "SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = 'PENDENTE'"
         cursor.execute(sql)
-        retorno = cursor.fetchall()
+        retorno = cursor.dict_fetchall()
 
         return render_template('controle_diretoria.html', query=retorno, usuario_logado=current_user.USUARIO)
     except Exception as e:    
@@ -34,7 +34,7 @@ def mais_info_cd(id):
         cursor, conn = abrir_cursor()
         sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE ID = :1'
         cursor.execute(sql, id)
-        retorno = cursor.fetchone()
+        retorno = cursor.dict_fetchone()
         return render_template('mais_info_cd.html', usuario_logado=current_user.USUARIO, solicitacao=retorno)
     except Exception as e:
         flash('Erro interno ao realizar a consulta!', 'error')

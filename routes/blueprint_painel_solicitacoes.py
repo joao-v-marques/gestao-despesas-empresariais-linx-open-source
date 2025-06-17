@@ -17,31 +17,31 @@ def painel_solicitacoes():
                         sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
                         valores = ['PENDENTE', current_user.USUARIO]
                         cursor.execute(sql, valores)
-                        retorno = cursor.fetchall()
+                        retorno = cursor.dict_fetchall()
                         
                 elif filtro == 'APROVADO':
                         sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
                         valores = ['APROVADO', current_user.USUARIO]
                         cursor.execute(sql, valores)
-                        retorno = cursor.fetchall()
+                        retorno = cursor.dict_fetchall()
 
                 elif filtro == 'REPROVADO':
                         sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
                         valores = ['REPROVADO', current_user.USUARIO]
                         cursor.execute(sql, valores)
-                        retorno = cursor.fetchall()
+                        retorno = cursor.dict_fetchall()
 
                 elif filtro == 'COMPRA':
                         sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
                         valores = ['COMPRA', current_user.USUARIO]
                         cursor.execute(sql, valores)
-                        retorno = cursor.fetchall()
+                        retorno = cursor.dict_fetchall()
 
                 elif filtro == 'TODOS':
                         sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE USUARIO_SOLICITANTE = :1'
                         valores = [current_user.USUARIO]
                         cursor.execute(sql, valores)
-                        retorno = cursor.fetchall()
+                        retorno = cursor.dict_fetchall()
                 return render_template('painel_solicitacoes.html', solicitacoes=retorno, filtro=filtro, usuario_logado=current_user.USUARIO)
         except Exception as e:
                 flash('Erro ao realizar a consulta!', 'error')
@@ -58,15 +58,15 @@ def mais_info_sol(id):
                 cursor, conn = abrir_cursor()
                 sql_solicitacao = "SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE ID = :1"
                 cursor.execute(sql_solicitacao, [id])
-                retorno_solicitacao = cursor.fetchone()
+                retorno_solicitacao = cursor.dict_fetchone()
                 
                 sql_departamento = "SELECT * FROM LIU_DEPARTAMENTO ORDER BY CODIGO"
                 cursor.execute(sql_departamento)
-                retorno_departamento = cursor.fetchall()
+                retorno_departamento = cursor.dict_fetchall()
 
                 sql_tipo_despesa = "SELECT * FROM LIU_TIPO_DESPESA ORDER BY CODIGO"
                 cursor.execute(sql_tipo_despesa)
-                retorno_tipo_despesa = cursor.fetchall()
+                retorno_tipo_despesa = cursor.dict_fetchall()
 
                 return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=retorno_solicitacao, departamento=retorno_departamento, tipo_despesa=retorno_tipo_despesa)
         except Exception as e:
@@ -84,7 +84,7 @@ def download_pdf(id):
                 cursor, conn = abrir_cursor()
                 sql = "SELECT PDF_PATH FROM LIU_SOLICITACOES WHERE ID = :1"
                 cursor.execute(sql, {id})
-                retorno = cursor.fetchone()
+                retorno = cursor.dict_fetchone()
 
                 if not retorno:
                         flash('Não foi possivel localizar o PDF!', 'error')
