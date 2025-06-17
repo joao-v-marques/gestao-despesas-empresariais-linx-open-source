@@ -1,6 +1,7 @@
+import logging
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file, session
 from flask_login import login_required, current_user
-from database.database import Solicitacoes, db, Departamento, Tipo_Despesa
+from database.connect_db import abrir_cursor
 
 blueprint_painel_solicitacoes = Blueprint('blueprint_painel_solicitacoes', __name__)
 
@@ -8,84 +9,161 @@ blueprint_painel_solicitacoes = Blueprint('blueprint_painel_solicitacoes', __nam
 @login_required
 def painel_solicitacoes():
         session.pop('_flashes', None)
-
         filtro = request.args.get('filtro', 'PENDENTE')
-        query = Solicitacoes.select().where(Solicitacoes.USUARIO_SOLICITANTE == current_user.USUARIO)
-        if filtro == 'PENDENTE':
-                query = query.where(Solicitacoes.STATUS == 'PENDENTE')
-        elif filtro == 'APROVADO':
-                query = query.where(Solicitacoes.STATUS == 'APROVADO')
-        elif filtro == 'REPROVADO':
-                query = query.where(Solicitacoes.STATUS == 'REPROVADO') 
-        elif filtro == 'COMPRA':
-                query = query.where(Solicitacoes.STATUS == 'COMPRA')
-        elif filtro == 'TODOS':
-                query = query.order_by(Solicitacoes.STATUS)
-        return render_template('painel_solicitacoes.html', solicitacoes=query, filtro=filtro, usuario_logado=current_user.USUARIO)
+
+        try:
+                cursor, conn = abrir_cursor()
+                if filtro == 'PENDENTE':
+                        sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
+                        valores = ['PENDENTE', current_user.USUARIO]
+                        cursor.execute(sql, valores)
+                        retorno = cursor.fetchall()
+                        
+                elif filtro == 'APROVADO':
+                        sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
+                        valores = ['APROVADO', current_user.USUARIO]
+                        cursor.execute(sql, valores)
+                        retorno = cursor.fetchall()
+
+                elif filtro == 'REPROVADO':
+                        sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
+                        valores = ['REPROVADO', current_user.USUARIO]
+                        cursor.execute(sql, valores)
+                        retorno = cursor.fetchall()
+
+                elif filtro == 'COMPRA':
+                        sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
+                        valores = ['COMPRA', current_user.USUARIO]
+                        cursor.execute(sql, valores)
+                        retorno = cursor.fetchall()
+
+                elif filtro == 'TODOS':
+                        sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE USUARIO_SOLICITANTE = :1'
+                        valores = [current_user.USUARIO]
+                        cursor.execute(sql, valores)
+                        retorno = cursor.fetchall()
+                return render_template('painel_solicitacoes.html', solicitacoes=retorno, filtro=filtro, usuario_logado=current_user.USUARIO)
+        except Exception as e:
+                flash('Erro ao realizar a consulta!', 'error')
+                logging.error(f'Deu erro na consulta: {e}')
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+        finally:
+                cursor.close()
+                conn.close()
 
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>')
 @login_required
 def mais_info_sol(id):
-        solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
-        select_solicitacoes = Solicitacoes.select().order_by(Solicitacoes.CODIGO_DEPARTAMENTO)
-        departamento = Departamento.select().order_by(Departamento.CODIGO)
-        tipo_despesa = Tipo_Despesa.select().order_by(Tipo_Despesa.CODIGO)
-        return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=solicitacao, departamento=departamento, tipo_despesa=tipo_despesa, select_solicitacoes=select_solicitacoes)
+        try:
+                cursor, conn = abrir_cursor()
+                sql_solicitacao = "SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE ID = :1"
+                cursor.execute(sql_solicitacao, [id])
+                retorno_solicitacao = cursor.fetchone()
+                
+                sql_departamento = "SELECT * FROM LIU_DEPARTAMENTO ORDER BY CODIGO"
+                cursor.execute(sql_departamento)
+                retorno_departamento = cursor.fetchall()
+
+                sql_tipo_despesa = "SELECT * FROM LIU_TIPO_DESPESA ORDER BY CODIGO"
+                cursor.execute(sql_tipo_despesa)
+                retorno_tipo_despesa = cursor.fetchall()
+
+                return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=retorno_solicitacao, departamento=retorno_departamento, tipo_despesa=retorno_tipo_despesa)
+        except Exception as e:
+                flash('Erro interno ao realizar a consulta!', 'error')
+                logging.error(f'Deu erro na consulta: {e}')
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+        finally:
+                cursor.close()
+                conn.close()
 
 @blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/dowload-pdf', methods=['GET'])
 @login_required
 def download_pdf(id):
-        solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
-        if not solicitacao or not solicitacao.PDF_PATH:
-                flash('PDF não encontrado!', 'error')
-                return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol'))
-        return send_file(solicitacao.PDF_PATH, as_attachment=True)
+        try:
+                cursor, conn = abrir_cursor()
+                sql = "SELECT PDF_PATH FROM LIU_SOLICITACOES WHERE ID = :1"
+                cursor.execute(sql, {id})
+                retorno = cursor.fetchone()
+
+                if not retorno:
+                        flash('Não foi possivel localizar o PDF!', 'error')
+                        return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol'))
+                else:
+                        flash('PDF localizado!', 'success')
+                        return send_file(retorno, as_attachment=True)
+        except Exception as e:
+                flash('Erro interno!', 'error')
+                logging.error(f'Deu erro na consulta: {e}')
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+        finally:
+                cursor.close()
+                conn.close()
 
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/salvar', methods=['POST', 'GET'])
 @login_required
 def salvar_edicao(id):
-        solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
-        if not solicitacao:
-                flash('Solicitação não foi encontrada!', 'error')
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
-                
-        solicitacao.CODIGO_DEPARTAMENTO = request.form['departamento']
-        solicitacao.CODIGO_TIPO_DESPESA = request.form['tipo_despesa']
-        solicitacao.DESCRICAO = request.form.get('descricao').strip()
-        solicitacao.VALOR = float(request.form.get('valor').replace('R$', '').replace('.', '').replace(',', '.').strip())
-
-        solicitacao.save() 
-        db.commit()
-        flash('Alterações realizadas com sucesso!', 'success')
-        return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
+        if request.method == 'POST':
+                novo_departamento = request.form['departamento']
+                novo_tipo_despesa = request.form['tipo_despesa']
+                novo_descricao = request.form.get('descricao').strip()
+                novo_valor = float(request.form.get('valor').replace('R$', '').replace('.', '').replace(',', '.').strip()) 
+                try:
+                        cursor, conn = abrir_cursor()
+                        sql = "UPDATE LIU_SOLICITACOES SET DEPARTAMENTO = :1, TIPO_DESPESA = :2, DESCRICAO = :3, VALOR = :4 WHERE ID = :5"
+                        valores = [novo_departamento, novo_tipo_despesa, novo_descricao, novo_valor, id]
+                        cursor.execute(sql, valores)
+                        conn.commit()
+                        flash('Alteração realizada com sucesso!', 'success')
+                        return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
+                except Exception as e:
+                        flash('Erro interno!', 'error')
+                        logging.error(f'Deu erro na consulta: {e}')
+                        return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol'))
+                finally:
+                        cursor.close()
+                        conn.close()
+        else:
+                return redirect(url_for("blueprint_painel_solicitacoes.painel_solicitacoes"))
 
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/excluir', methods=['POST', 'GET'])
 @login_required
 def excluir_solicitacao(id):
-        solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
-        if not solicitacao:
-                flash('Nenhuma Solicitação foi encontrada!', 'error')
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
-        
         if request.method == 'POST':
-                solicitacao_deletada = Solicitacoes.get(Solicitacoes.id == id)
-                solicitacao_deletada.delete_instance()
-                flash('Solicitação Excluida com sucesso!', 'success')
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
-        return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO)
-
+                try:
+                        cursor, conn = abrir_cursor()
+                        sql = "DELETE FROM LIU_SOLICITACOES WHERE ID = :1"
+                        cursor.execute(sql, [id])
+                        flash('Solitação excluida com sucesso!', 'error')
+                        return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+                except Exception as e:
+                        flash('Erro interno!', 'error')
+                        logging.error(f'Deu erro na consulta: {e}')
+                        return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
+                finally:
+                        cursor.close()
+                        conn.close()
+        else:
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
 
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/reenviar', methods=['POST', 'GET'])
 @login_required
 def reenviar_solicitacao(id):
-        solicitacao = Solicitacoes.get_or_none(Solicitacoes.id == id)
-        if not solicitacao:
-                flash('Nenhuma Solicitação foi encontrada!', 'error')
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user))
-        
         if request.method == 'POST':
-                solicitacao.STATUS = 'PENDENTE'
-                solicitacao.save()
-                flash('Solicitação Reenviada com sucesso!', 'success')
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user))
-        return render_template('painel_solicitacoes.html')
+                try:
+                        cursor, conn = abrir_cursor()
+
+                        sql = "UPDATE LIU_SOLICITACOES SET STATUS = :1 WHERE ID = :2"
+                        valores = ['PENDENTE', id]
+                        cursor.execute(sql, valores)
+                        conn.commit()
+                        return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+                except Exception as e:
+                        flash('Erro interno!', 'error')
+                        logging.error(f'Deu erro na consulta: {e}')
+                        return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+                finally:
+                        cursor.close()
+                        conn.close()
+        else:
+                return render_template('painel_solicitacoes.html')

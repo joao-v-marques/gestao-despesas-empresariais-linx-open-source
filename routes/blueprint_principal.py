@@ -1,7 +1,8 @@
+import logging
 from flask import Blueprint, render_template, url_for, redirect, flash, session, request
 from flask_login import current_user, login_required, logout_user
+from database.connect_db import abrir_cursor
 from decorators import role_required
-from database.database import Usuarios
 
 blueprint_principal = Blueprint('blueprint_principal', __name__)
 
@@ -22,25 +23,34 @@ def logout():
 @blueprint_principal.route('/troca-senha/<int:id>', methods=['POST', 'GET'])
 @login_required
 def troca_senha(id):
-    usuario = Usuarios.get_or_none(Usuarios.id == id)
-
     if request.method == 'POST':
         nova_senha_form = request.form['nova_senha'].strip()
         confirma_nova_senha_form = request.form['confirma_nova_senha'].strip()
+
         if nova_senha_form != confirma_nova_senha_form:
             flash('As duas senhas devem ser iguais!', 'error')
-            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+            return redirect(url_for('blueprint_principal.principal'))
         elif not nova_senha_form or not confirma_nova_senha_form:
-            flash('Por favor, insira pelo menos um caractere.', 'error')
-            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
-        elif len(nova_senha_form) <=2:
+            flash('Nenhum campo pode estar vazio!', 'error')
+            return redirect(url_for('blueprint_principal.principal'))
+        elif len(nova_senha_form) <= 2:
             flash('A senha deve conter no minimo 3 caracteres! Tente novamente.', 'error')
-            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+            return redirect(url_for('blueprint_principal.principal'))
         else:
-            usuario.SENHA = nova_senha_form
-            usuario.save()
-            flash('Senha alterada com sucesso!', 'success')
-            logout_user()
-            return redirect(url_for('blueprint_login.fazer_login'))
-
-    return render_template('blueprint_painel_solicitacoes.painel_solicitacoes')
+            sql = "UPDATE LIU_USUARIO SET SENHA = :1 WHERE USUARIO = :2"
+            valores = [nova_senha_form, current_user]
+            cursor, conn = abrir_cursor()
+            try:
+                cursor.execute(sql, valores)
+                logging.info('Atualizou Certin')
+                logging.info(f'Usuário atualizado com sucesso!')
+                return redirect(url_for('blueprint_principal.principal'))
+            except Exception as e:
+                logging.error(f'Erro as atualizar o usuário: {e}')
+                flash('Erro ao atualizar o usuário!', 'error')
+                return redirect(url_for('blueprint_principal.principal'))
+            finally:
+                cursor.close()
+                conn.close()
+    else:
+        return redirect(url_for('blueprint_principal.principal'))

@@ -23,20 +23,17 @@ def conexaoOrcl():
         error, = e.args
         logging.error(f"Erro ao conectar ao os dados do json:")
 
-conexaoOrcl()
+def abrir_cursor():
+    conn = conexaoOrcl()
+    if not conn:
+        logging.error('Deu merda no conexaoOrcl')
+        raise ConnectionError('Não foi possível conectar ao Oracle.')
+    cursor = conn.cursor()
+    return cursor, conn
 
-conn = conexaoOrcl()
-if not conn:
-    logging.error('Deu merda no conexaoOrcl')
-    raise ConnectionError('Não foi possível conectar ao Oracle.')
-cursor = conn.cursor()
+# cursor.execute("""
+#     SELECT USUARIO, NOME FROM GER_USUARIO
+# """)
 
-
-cursor.execute("""
-    SELECT USUARIO, NOME FROM GER_USUARIO
-""")
-
-variavel = cursor.fetchall()
-print(variavel)
-
-conn.close()
+# variavel = cursor.fetchall()
+# print(variavel)
