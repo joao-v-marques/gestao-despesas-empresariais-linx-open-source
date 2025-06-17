@@ -52,8 +52,6 @@ def cadastrar():
             finally:
                 cursor.close()
                 conn.close()
-    else:
-        return redirect(url_for('blueprint_departamento.departamento'))
 
 @blueprint_departamento.route('/deletar/<int:id>', methods=['POST'])
 @login_required
@@ -74,8 +72,6 @@ def deletar(id):
         finally:
             cursor.close()
             conn.close()
-    else:
-        return redirect(url_for('blueprint_departamento.departamento'))
 
 @blueprint_departamento.route('/editar/<int:id>', methods=['POST'])
 @login_required

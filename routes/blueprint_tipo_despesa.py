@@ -1,70 +1,79 @@
-# from flask import Blueprint, render_template, redirect, url_for, request, flash
-# from flask_login import login_required, current_user
-# from decorators import role_required
-# from database.connect_db import abrir_cursor
+from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask_login import login_required, current_user
+from decorators import role_required
+from database.connect_db import abrir_cursor
+import logging
 
-# blueprint_tipo_despesa = Blueprint('blueprint_tipo_despesa', __name__)
+blueprint_tipo_despesa = Blueprint('blueprint_tipo_despesa', __name__)
 
-# @blueprint_tipo_despesa.route('/')
-# @login_required
-# @role_required('ADMIN')
-# def tipo_despesa():
-#     query = Tipo_Despesa.select().order_by(Tipo_Despesa.CODIGO)
+@blueprint_tipo_despesa.route('/')
+@login_required
+@role_required('ADMIN')
+def tipo_despesa():
+    try:
+        cursor, conn = abrir_cursor()
+        sql = "SELECT * FROM LIU_TIPO_DESPESA ORDER BY CODIGO"
+        cursor.execute(sql)
+        retorno = cursor.fetchall()
+    except Exception as e:
+        flash('Erro interno ao realizar a consulta!', 'error')
+        logging.error(f'Deu erro na consulta: {e}')
+        return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+    finally:
+        cursor.close()
+        conn.close() 
 
-#     return render_template('tipo_despesa.html', usuario_logado=current_user.USUARIO, tipo_despesa=query)
 
-# @blueprint_tipo_despesa.route('/cadastrar', methods=['POST'])
-# @login_required
-# @role_required('ADMIN')
-# def cadastrar():
-#     if request.method == 'POST':
-#         codigo_form = request.form['codigo'].strip()
-#         descricao_form = request.form['descricao'].upper().strip()
+@blueprint_tipo_despesa.route('/cadastrar', methods=['POST'])
+@login_required
+@role_required('ADMIN')
+def cadastrar():
+    if request.method == 'POST':
+        codigo_form = request.form['codigo'].strip()
+        descricao_form = request.form['descricao'].upper().strip()
 
-#         if not codigo_form or not descricao_form:
-#             flash('Nenhum campo pode estar vazio!', 'error')
-#             return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
-#         else:
-#             Tipo_Despesa.create(
-#                 CODIGO = codigo_form.strip(),
-#                 DESCRICAO = descricao_form.strip()
-#             )
-#             flash('Cadastro realizado com sucesso!', 'success')
-#             return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
-        
-#     return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+        if not codigo_form or not descricao_form:
+            flash('Nenhum campo pode estar vazio!', 'error')
+            return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+        else:
+            try:
+                cursor, conn = abrir_cursor()
+                sql = "INSERT INTO LIU_TIPO_DESPESA (CODIGO, DESCRICAO) VALUES (:1, :2)"
+                valores = [codigo_form, descricao_form]
+                cursor.execute(sql, valores)
+                conn.commit()
+                flash('Cadastro realizado com sucesso!', 'success')
+                return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+            except Exception as e:
+                flash('Erro interno ao realizar a consulta!', 'error')
+                logging.error(f'Deu erro na consulta: {e}')
+                return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+            finally:
+                cursor.close()
+                conn.close()
 
-# @blueprint_tipo_despesa.route('/deletar/<int:id>', methods=['POST'])
-# @login_required
-# @role_required('ADMIN')
-# def deletar(id):
-#     tipo_despesa = Tipo_Despesa.get_or_none(Tipo_Despesa.CODIGO == id)
-#     if not tipo_despesa:
-#         flash('Tipo Despesa não foi encontrado!', 'error')
-#         return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
-#     else:
-#         if request.method == 'POST':
-#             tipo_despesa.delete_instance()
-#             flash('Tipo de Despesa deletado com sucesso!', 'success')
-#             return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
-#         else:
-#             return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
-    
+@blueprint_tipo_despesa.route('/deletar/<int:id>', methods=['POST'])
+@login_required
+@role_required('ADMIN')
+def deletar(id):
+    if request.method == 'POST':
+        try:
+            cursor, conn = abrir_cursor()
+            sql = "DELETE FROM LIU_TIPO_DESPESA WHERE ID = :1"
+            cursor.execute(sql, id)
+            conn.commit()
+            flash('Tipo de Despesa excluido com sucesso', 'success')
+            return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+        except Exception as e:
+                flash('Erro interno ao realizar a consulta!', 'error')
+                logging.error(f'Deu erro na consulta: {e}')
+                return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+        finally:
+            cursor.close()
+            conn.close()
 
-# @blueprint_tipo_despesa.route('/editar/<int:id>', methods=['POST', 'GET'])
-# @login_required
-# @role_required('ADMIN')
-# def editar(id):
-#     tipo_despesa = Tipo_Despesa.get_or_none(Tipo_Despesa.id == id)
-#     if not tipo_despesa:
-#         flash('Tipo Despesa não foi encontrado!', 'error')
-#         return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
-    
-#     if request.method == 'POST':
-#         tipo_despesa.CODIGO = request.form['edit_codigo']
-#         tipo_despesa.DESCRICAO = request.form['edit_descricao']
-#         tipo_despesa.save()
-#         flash('Tipo de Despesa editado com sucesso!', 'success')
-#         return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
-    
-#     return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+@blueprint_tipo_despesa.route('/editar/<int:id>', methods=['POST', 'GET'])
+@login_required
+@role_required('ADMIN')
+def editar(id):
+    return render_template('tipo_despesa.html')
