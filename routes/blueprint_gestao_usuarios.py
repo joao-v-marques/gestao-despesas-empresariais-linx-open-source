@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, redirect, request, flash, url_for
 from flask_login import login_required, current_user
 from database.connect_db import Usuarios
 from decorators import role_required
+from database.connect_db import abrir_cursor
+import logging
 
 blueprint_gestao_usuarios = Blueprint('blueprint_gestao_usuarios', __name__)
 
@@ -9,9 +11,20 @@ blueprint_gestao_usuarios = Blueprint('blueprint_gestao_usuarios', __name__)
 @login_required
 @role_required('ADMIN')
 def gestao_usuarios():
-    query = Usuarios.select().order_by(Usuarios.id)
+    try:
+        cursor, conn = abrir_cursor()
+        sql = "SELECT * FROM LIU_USUARIOS ORDER BY ID"
+        cursor.execute(sql)
+        retorno = cursor.fetchall()
+    except Exception as e:
+                flash('Erro interno ao realizar a consulta!', 'error')
+                logging.error(f'Deu erro na consulta: {e}')
+                return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))    
+    finally:
+            cursor.close()
+            conn.close()
 
-    return render_template('gestao_usuarios.html', usuario_logado=current_user.USUARIO, usuarios=query)
+    return render_template('gestao_usuarios.html', usuario_logado=current_user.USUARIO, usuarios=retorno)
 
 @blueprint_gestao_usuarios.route('/cadastrar-usuario', methods=['POST', 'GET'])
 @login_required
@@ -19,85 +32,90 @@ def gestao_usuarios():
 def cadastrar_usuario():
     if request.method == 'POST':
         usuario_form = request.form['usuario'].upper()
-        usuario_existente = Usuarios.select().where(Usuarios.USUARIO == usuario_form).exists()
-        senha_form = request.form['senha']
-        confirma_senha_form = request.form['confirma_senha']
-        nome_form = request.form['nome']
-        cpf_form = request.form['cpf']
+        # usuario_existente = Usuarios.select().where(Usuarios.USUARIO == usuario_form).exists()
+        senha_form = request.form['senha'].strip()
+        confirma_senha_form = request.form['confirma_senha'].strip()
+        nome_form = request.form['nome'].strip()
         funcao_form = request.form['funcao']
         empresa_form = request.form['empresa']
         revenda_form = request.form['revenda']
-        
+
         if len(usuario_form) <= 3:
-            flash('O usuário inserido deve ter mais de 3 caracteres! Tente novamente.', 'error')
+            flash('O usuário inserido deve ter mais de 3 caracteres!', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
-        elif usuario_existente == True:
-            flash('O usuário inserido já existe! Tente novamente.', 'error')
-            return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+        # elif usuario_existente == True:
+        #     flash('O usuário inserido já existe!')
         elif senha_form != confirma_senha_form:
-            flash('As duas senhas inseridas não são iguais! Tente novamente.', 'error')
+            flash('As duas senhas inseridas não são iguais!', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
         elif len(senha_form) <= 2:
-            flash('A senha deve conter no minimo 3 caracteres! Tente novamente.', 'error')
-            return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
-        elif len(cpf_form) != 14:
-            flash('O CPF deve ter exatamente 11 números! tente novamente.', 'error')
+            flash('A senha deve conter no minimo 3 caracteres!', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
         else:
-            flash('Cadastro realizado com sucesso!', 'success')
+            try:
+                cursor, conn = abrir_cursor()
+                sql = "INSERT INTO LIU_USUARIO (USUARIO, SENHA, NOME, FUNCAO, EMPRESA, REVENDA) VALUES (:1, :2, :3, :4, :5, :6)"
+                valores = [usuario_form, senha_form, nome_form, funcao_form, empresa_form, revenda_form]
+                cursor.execute()
+                conn.commit()
+                flash('Cadastro realizado com sucesso!', 'success')
+                return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+            except Exception as e:
+                flash('Erro interno ao realizar a consulta!', 'error')
+                logging.error(f'Deu erro na consulta: {e}')
+                return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))    
+            finally:
+                    cursor.close()
+                    conn.close()
 
-            Usuarios.create(
-                USUARIO=usuario_form,
-                SENHA=senha_form,
-                NOME=nome_form,
-                CPF=cpf_form,
-                FUNCAO=funcao_form,
-                EMPRESA=empresa_form,
-                REVENDA=revenda_form
-            )
-
-            return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
-            
-    
-    return render_template('gestao_usuarios.html', usuario_logado=current_user.USUARIO)
-
-# Rota para editar um usuário
 @blueprint_gestao_usuarios.route('/editar-usuario/<int:id>', methods=['GET', 'POST'])
 @login_required
 @role_required('ADMIN')
 def editar_usuario(id):
-    usuario = Usuarios.get_or_none(Usuarios.id == id)
-    if not usuario:
-        flash('Usuário não encontardo.', 'error')
-        return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
-    
     if request.method == 'POST':
-        usuario.USUARIO = request.form['usuario']
-        usuario.SENHA = request.form['senha']
-        usuario.NOME = request.form['nome']
-        usuario.CPF = request.form['cpf']
-        usuario.FUNCAO = request.form['funcao']
-        usuario.EMPRESA = request.form['empresa']
-        usuario.REVENDA = request.form['revenda']
-        usuario.save()
-        flash('Usuário atualizado com sucesso!', 'success')
-    return render_template('pagina_editar.html', usuario_logado=current_user.USUARIO, usuario=usuario)
+        novo_usuario = request.form['usuario']
+        novo_senha = request.fom['senha']
+        novo_nome = request.form['nome']
+        novo_funcao = request.form['funcao']
+        novo_empresa = request.form['empresa']
+        novo_revenda = request.form['revenda']
+        try:
+            cursor, conn = abrir_cursor()
+            sql = "UPDATE LIU_USUARIO SET USUARIO = :1, SENHA = :2, NOME = :3, FUNCAO = :4, EMPRESA = :5, REVENDA = :6 WHERE ID = :7"
+            valores = [novo_usuario, novo_senha, novo_nome, novo_funcao, novo_empresa, novo_revenda, id]
+            cursor.execute(sql, valores)
+            conn.commit()
+            return render_template('pagina_editar.html', usuario_logado=current_user.USUARIO)
+        except Exception as e:
+            flash('Erro interno ao realizar a consulta!', 'error')
+            logging.error(f'Deu erro na consulta: {e}')
+            return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))    
+        finally:
+                cursor.close()
+                conn.close()
 
-# Rota para deletar um usuário
 @blueprint_gestao_usuarios.route('/deletar-usuario/<int:id>', methods=['GET', 'POST'])
 @login_required
 @role_required('ADMIN')
 def deletar_usuario(id):
-    usuario = Usuarios.get_or_none(Usuarios.id == id)
-    if not usuario:
-        flash('Usuário não foi encontrado!', 'error')
-        return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
-    if current_user.id == id:
-        flash('Você não pode deletar a si mesmo enquanto estiver logado!', 'error')
-        return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
-    
     if request.method == 'POST':
-        usuario_deletado = Usuarios.get(Usuarios.id == id)
-        usuario_deletado.delete_instance()
-        flash('Usuário deletado com sucesso!', 'success')
-        return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+        if current_user.USUARIO == id:
+            flash('Você não pode deletar você mesmo!', 'error')
+            return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+        else:
+            try:
+                cursor, conn = abrir_cursor()
+                sql = "DELETE FROM LIU_USUARIO WHERE ID = :1"
+                cursor.execute(sql, id)
+                conn.commit()
+                flash('Usuário deletado com sucesso!', 'success')
+                return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+            except Exception as e:
+                flash('Erro interno ao realizar a consulta!', 'error')
+                logging.error(f'Deu erro na consulta: {e}')
+                return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))    
+            finally:
+                    cursor.close()
+                    conn.close()
+    else:
+         return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
