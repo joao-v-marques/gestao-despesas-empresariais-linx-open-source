@@ -104,7 +104,7 @@
             <label for="descricao_id" class="label-descricao">Descrição</label>
             <input type="text" id="descricao_id" class="input-descricao" name="descricao" required>
 
-            <input type="submit">
+            <input type="submit" class="btn-enviar" value="Cadastrar">
 
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -131,12 +131,12 @@
                 <tbody>
                     {% for t in tipo_despesa %}
                         <tr>
-                            <td>{{ t.CODIGO }}</td>
-                            <td>{{ t.DESCRICAO }}</td>
+                            <td>{{ t['codigo'] }}</td>
+                            <td>{{ t['descricao'] }}</td>
                             <td>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ t.CODIGO }}">Editar</button>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ t['codigo'] }}">Editar</button>
 
-                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ t.CODIGO }}">Deletar</button>
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ t['codigo'] }}">Deletar</button>
                             </td>
                         </tr>
                     {% endfor %}
@@ -144,19 +144,19 @@
             </table>
 
             {% for t in tipo_despesa %}
-                <div class="modal fade" id="deleteModal{{ t.CODIGO }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ t.CODIGO }}" aria-hidden="true">
+                <div class="modal fade" id="deleteModal{{ t['codigo'] }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ t['codigo'] }}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel{{ t.CODIGO }}">Confirmar ação</h5>
+                                <h5 class="modal-title" id="deleteModalLabel{{ t['codigo'] }}">Confirmar ação</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                             </div>
                             <div class="modal-body">
-                                Você tem certeza que deseja deletar o Tipo de Despesa <br> <strong>{{ t.CODIGO }} - {{ t.DESCRICAO }}</strong>?
+                                Você tem certeza que deseja deletar o Tipo de Despesa <br> <strong>{{ t['codigo'] }} - {{ t['codigo'] }}</strong>?
                             </div>
                             <div class="modal-footer d-flex justify-content-end gap-2">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <form method="POST" action="{{ url_for('blueprint_tipo_despesa.deletar', id=t.CODIGO) }}">
+                                <form method="POST" action="{{ url_for('blueprint_tipo_despesa.deletar', id=t['codigo']) }}">
                                     <button type="submit" class="btn btn-danger">Confirmar</button>
                                 </form>
                             </div>
@@ -165,20 +165,20 @@
                 </div>
 
 
-                <div class="modal fade" id="editModal{{ t.CODIGO }}" tabindex="-1" aria-labelledby="editModalLabel{{ t.CODIGO }}" aria-hidden="true">
+                <div class="modal fade" id="editModal{{ t['codigo'] }}" tabindex="-1" aria-labelledby="editModalLabel{{ t['codigo'] }}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editModalLabel{{ t.CODIGO }}">Confirmar ação</h5>
+                                <h5 class="modal-title" id="editModalLabel{{ t['codigo'] }}">Confirmar ação</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                             </div>
                             <div class="modal-body-edit">
-                                <form method="POST" action="{{ url_for('blueprint_tipo_despesa.editar', id=t.CODIGO) }}" class="formulario-modal">
+                                <form method="POST" action="{{ url_for('blueprint_tipo_despesa.editar', id=t['codigo']) }}" class="formulario-modal">
                                     <label for="edit_codigo_id" class="label_edit_codigo">Código</label>
-                                    <input type="text" id="edit_codigo_id" name="edit_codigo" class="input_edit_codigo" value="{{ t.CODIGO }}">
+                                    <input type="text" id="edit_codigo_id" name="edit_codigo" class="input_edit_codigo" value="{{ t['codigo'] }}">
 
                                     <label for="edit_descricao_id" class="label_edit_descricao">Descrição</label>
-                                    <input type="text" id="edit_descricao_id" name="edit_descricao" class="input_edit_descricao" value="{{ t.DESCRICAO }}">
+                                    <input type="text" id="edit_descricao_id" name="edit_descricao" class="input_edit_descricao" value="{{ t['codigo'] }}">
 
                                     <button type="submit" class="btn btn-success">Confirmar</button>
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

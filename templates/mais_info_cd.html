@@ -102,34 +102,34 @@
 
             <form action="#" method="POST" class="formulario">
                 <label for="id_solicitacao_id">Código:</label>
-                <input type="text" readonly id="id_solicitacao_id" name="id" value="{{ solicitacao.id }}">
+                <input type="text" readonly id="id_solicitacao_id" name="id" value="{{ solicitacao['id'] }}">
 
                 <label for="empresa_revenda_id">Emp./Rev.:</label>
-                <input type="text" readonly id="empresa_revenda_id" name="empresa_revenda" value="{{ solicitacao.EMPRESA }}.{{ solicitacao.REVENDA }}">
+                <input type="text" readonly id="empresa_revenda_id" name="empresa_revenda" value="{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}">
 
                 <label for="usuario_solicitante_id">Usuário Solicitante:</label>
-                <input type="text" readonly id="usuario_solicitante_id" name="usuario_solicitante" value="{{ solicitacao.USUARIO_SOLICITANTE }}">
+                <input type="text" readonly id="usuario_solicitante_id" name="usuario_solicitante" value="{{ solicitacao['usuario_solicitante'] }}">
 
                 <label for="departamento_id">Departamento:</label>
-                <input type="text" readonly id="departamento_id" name="departamento" value="{{ solicitacao.CODIGO_DEPARTAMENTO.CODIGO }} - {{ solicitacao.CODIGO_DEPARTAMENTO.DESCRICAO }}">
+                <input type="text" readonly id="departamento_id" name="departamento" value="{{ solicitacao['departamento_codigo'] }} - {{ solicitacao['departamento_descricao'] }}">
 
                 <label for="tipo_despesa_id">Tipo da Despesa:</label>
-                <input type="text" readonly id="tipo_despesa_id" name="tipo_despesa" value="{{ solicitacao.CODIGO_TIPO_DESPESA.CODIGO }} - {{ solicitacao.CODIGO_TIPO_DESPESA.DESCRICAO }}">
+                <input type="text" readonly id="tipo_despesa_id" name="tipo_despesa" value="{{ solicitacao['tipo_despesa_codigo'] }} - {{ solicitacao['tipo_despesa_descricao'] }}">
 
                 <label for="descricao_id">Descrição:</label>
-                <input type="text" readonly id="descricao_id" name="descricao" value="{{ solicitacao.DESCRICAO }}">
+                <input type="text" readonly id="descricao_id" name="descricao" value="{{ solicitacao['descricao'] }}">
 
                 <label for="valor_id">Valor:</label>
-                <input type="text" readonly id="valor_id" name="valor" value="R$ {{ "{:,.2f}".format(solicitacao.VALOR).replace(',',"X").replace(".", ",").replace("X", ".") }}">
+                <input type="text" readonly id="valor_id" name="valor" value="R$ {{ "{:,.2f}".format(solicitacao['valor']).replace(',',"X").replace(".", ",").replace("X", ".") }}">
             </form>
 
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal{{ solicitacao.id }}">Aprovar</button>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal{{ solicitacao['id'] }}">Aprovar</button>
 
-            <div class="modal fade" id="confirmModal{{ solicitacao.id }}" tabindex="-1" aria-labelledby="confirmModalLabel{{ solicitacao.id }}" aria-hidden="true">
+            <div class="modal fade" id="confirmModal{{ solicitacao['id'] }}" tabindex="-1" aria-labelledby="confirmModalLabel{{ solicitacao['id'] }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="confirmModalLabel{{ solicitacao.id }}">Confirmar ação</h5>
+                            <h5 class="modal-title" id="confirmModalLabel{{ solicitacao['id'] }}">Confirmar ação</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                         </div>
                         <div class="modal-body">
@@ -137,8 +137,8 @@
                         </div>
                         <div class="modal-footer d-flex justify-content-end gap-2">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <form method="POST" action="{{ url_for('blueprint_controle_diretoria.mudar_status') }}">
-                                <input type="hidden" name="id" value="{{ solicitacao.id }}">
+                            <form method="POST" action="{{ url_for('blueprint_controle_diretoria.mudar_status', id=solicitacao['id']) }}">
+                                <input type="hidden" name="id" value="{{ solicitacao['id'] }}">
                                 <input type="hidden" name="status" value="APROVADO">
                                 <input type="submit" value="Aprovar" class="btn btn-success">
                             </form>
@@ -147,23 +147,23 @@
                 </div>
             </div>
 
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalReprovar{{ solicitacao.id }}">Reprovar</button>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalReprovar{{ solicitacao['id'] }}">Reprovar</button>
 
-            <div class="modal fade" id="modalReprovar{{ solicitacao.id }}" tabindex="-1" aria-labelledby="modalReprovarLabel{{ solicitacao.id }}" aria-hidden="true">
+            <div class="modal fade" id="modalReprovar{{ solicitacao['id'] }}" tabindex="-1" aria-labelledby="modalReprovarLabel{{ solicitacao['id'] }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalReprovarLabel{{ solicitacao.id }}">Confirmar ação</h5>
+                            <h5 class="modal-title" id="modalReprovarLabel{{ solicitacao['id'] }}">Confirmar ação</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                         </div>
                         <div class="modal-body">
                             Você tem certeza que deseja <b>REPROVAR</b> essa solicitação?
 
-                            <form method="POST" action="{{ url_for('blueprint_controle_diretoria.mudar_status') }}" class="modal-form">
+                            <form method="POST" action="{{ url_for('blueprint_controle_diretoria.mudar_status', id=solicitacao['id']) }}" class="modal-form">
                                 <label for="motivo_reprova_id">Descreva um motivo para a reprova</label>
                                 <input type="text" id="motivo_reprova_id" name="motivo_reprova" required>
 
-                                <input type="hidden" name="id" value="{{ solicitacao.id }}">
+                                <input type="hidden" name="id" value="{{ solicitacao['id'] }}">
                                 <input type="hidden" name="status" value="REPROVADO">
 
                                 <div class="botoes">

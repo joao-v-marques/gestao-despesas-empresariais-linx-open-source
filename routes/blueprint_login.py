@@ -28,8 +28,8 @@ def fazer_login():
             if not retorno:
                 flash('Usuário não encontrado!', 'error')
                 return redirect(url_for('blueprint_login.pagina_login'))
-            if retorno[2] == senha_form:
-                user = User(id=retorno[0], USUARIO=retorno[1], FUNCAO=retorno[3])
+            if retorno['senha'] == senha_form:
+                user = User(id=retorno['id'], USUARIO=retorno['usuario'], FUNCAO=retorno['funcao'])
                 login_user(user)
                 flash('Login realizado com sucesso!', 'success')
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))

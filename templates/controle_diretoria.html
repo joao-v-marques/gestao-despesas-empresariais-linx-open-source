@@ -113,15 +113,15 @@
                 <tbody>
                     {% for solicitacao in query %}
                         <tr class="body-lista">
-                            <td>{{ solicitacao.id }}</td>
-                            <td>{{ solicitacao.EMPRESA }}.{{ solicitacao.REVENDA }}</td>
-                            <td>{{ solicitacao.USUARIO_SOLICITANTE }}</td>
-                            <td>{{ solicitacao.CODIGO_DEPARTAMENTO.CODIGO }} - {{ solicitacao.CODIGO_DEPARTAMENTO.DESCRICAO }}</td>
-                            <td>{{ solicitacao.CODIGO_TIPO_DESPESA.CODIGO }} - {{ solicitacao.CODIGO_TIPO_DESPESA.DESCRICAO }}</td>
-                            <td>{{ "{:,.2f}".format(solicitacao.VALOR).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
-                            <td>{{ solicitacao.STATUS }}</td>
+                            <td>{{ solicitacao['id'] }}</td>
+                            <td>{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}</td>
+                            <td>{{ solicitacao['usuario_solicitante'] }}</td>
+                            <td>{{ solicitacao['departamento'] }} - {{ solicitacao['departamento'] }}</td>
+                            <td>{{ solicitacao['tipo_despesa'] }} - {{ solicitacao['tipo_despesa'] }}</td>
+                            <td>{{ "{:,.2f}".format(solicitacao['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
+                            <td>{{ solicitacao['status'] }}</td>
 
-                            <td><a href="{{ url_for('blueprint_controle_diretoria.mais_info_cd', id=solicitacao.id) }}" class="btn btn-primary">Mais Informações</a></td>
+                            <td><a href="{{ url_for('blueprint_controle_diretoria.mais_info_cd', id=solicitacao['id']) }}" class="btn btn-primary">Mais Informações</a></td>
                         </tr>
                     {% else %}
                         <tr>

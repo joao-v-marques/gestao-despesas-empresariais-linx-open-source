@@ -32,8 +32,29 @@ def controle_diretoria():
 def mais_info_cd(id):
     try:
         cursor, conn = abrir_cursor()
-        sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE ID = :1'
-        cursor.execute(sql, id)
+        sql = """
+        SELECT 
+            s.ID,
+            s.EMPRESA,
+            s.REVENDA,
+            s.USUARIO_SOLICITANTE,
+            d.CODIGO AS DEPARTAMENTO_CODIGO,
+            d.DESCRICAO AS DEPARTAMENTO_DESCRICAO,
+            t.CODIGO AS TIPO_DESPESA_CODIGO,
+            t.DESCRICAO AS TIPO_DESPESA_DESCRICAO,
+            s.DESCRICAO,
+            s.VALOR,
+            s.STATUS 
+        FROM 
+            LIU_SOLICITACOES s
+        JOIN
+            LIU_DEPARTAMENTO d ON s.DEPARTAMENTO = d.CODIGO
+        JOIN
+            LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
+        WHERE 
+            s.ID = :1
+        """
+        cursor.execute(sql, [id])
         retorno = cursor.dict_fetchone()
         return render_template('mais_info_cd.html', usuario_logado=current_user.USUARIO, solicitacao=retorno)
     except Exception as e:
@@ -44,17 +65,17 @@ def mais_info_cd(id):
         cursor.close()
         conn.close()
 
-@blueprint_controle_diretoria.route('/mudar-status', methods=['POST', 'GET'])
+@blueprint_controle_diretoria.route('/mudar-status/<int:id>', methods=['POST', 'GET'])
 @login_required
 @role_required('ADMIN', 'DIRETORIA')
-def mudar_status():
+def mudar_status(id):
     if request.method == 'POST':
         novo_status = request.form['status']
         if novo_status == 'APROVADO':
             try:
                 cursor, conn = abrir_cursor()
                 sql = "UPDATE LIU_SOLICITACOES SET STATUS = 'APROVADO' WHERE ID = :1"
-                cursor.execute(sql, id)
+                cursor.execute(sql, [id])
                 conn.commit()
                 flash('Solicitação Aprovada!', 'success')
                 return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
@@ -69,7 +90,7 @@ def mudar_status():
             try:
                 cursor, conn = abrir_cursor()
                 sql = "UPDATE LIU_SOLICITACOES SET STATUS = 'REPROVADO' WHERE ID = :1"
-                cursor.execute(sql, id)
+                cursor.execute(sql, [id])
                 conn.commit()
                 flash('Solicitação Reprovada!', 'success')
                 return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
@@ -85,4 +106,4 @@ def mudar_status():
             return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
 
     else:
-        return render_template('')
+        return render_template('controle_diretoria.html')

@@ -131,13 +131,13 @@
                 <tbody>
                     {% for s in solicitacoes %}
                         <tr class="body-lista">
-                            <td>{{ s.id }}</td>
-                            <td>{{ s.EMPRESA }}.{{ s.REVENDA }}</td>
-                            <td>{{ s.USUARIO_SOLICITANTE }}</td>
-                            <td>{{ s.DEPARTAMENTO }}</td>
-                            <td>{{ s.TIPO_DESPESA }}</td>
-                            <td>{{ "{:,.2f}".format(s.VALOR).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
-                            <td>{{ s.STATUS }}</td>
+                            <td>{{ s['id'] }}</td>
+                            <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
+                            <td>{{ s['usuario_solicitante'] }}</td>
+                            <td>{{ s['departamento'] }}</td>
+                            <td>{{ s['tipo_desepesa'] }}</td>
+                            <td>{{ "{:,.2f}".format(s['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
+                            <td>{{ s['status'] }}</td>
                         </tr>
                     {% else %}
                         <tr>

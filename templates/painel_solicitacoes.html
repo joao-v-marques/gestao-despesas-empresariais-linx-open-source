@@ -124,15 +124,15 @@
                 <tbody>
                         {% for s in solicitacoes %}
                             <tr class="body-lista">
-                                <td>{{ s.id }}</td>
-                                <td>{{ s.EMPRESA }}.{{ s.REVENDA }}</td>
-                                <td>{{ s.USUARIO_SOLICITANTE }}</td>
-                                <td>{{ s.CODIGO_DEPARTAMENTO.CODIGO }} - {{ s.CODIGO_DEPARTAMENTO.DESCRICAO }}</td>
-                                <td>{{ s.CODIGO_TIPO_DESPESA.CODIGO }} - {{ s.CODIGO_TIPO_DESPESA.DESCRICAO }}</td>
-                                <td>{{ "{:,.2f}".format(s.VALOR).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
-                                <td>{{ s.STATUS }}</td>
+                                <td>{{ s['id'] }}</td>
+                                <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
+                                <td>{{ s['usuario_solicitante'] }}</td>
+                                <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>
+                                <td>{{ s['tipo_despesa_codigo'] }} - {{ s['tipo_despesa_descricao'] }}</td>
+                                <td>{{ "{:,.2f}".format(s['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
+                                <td>{{ s['status'] }}</td>
 
-                                <td><a href="{{ url_for('blueprint_painel_solicitacoes.mais_info_sol', id=s.id) }}" class="btn btn-primary">Mais Informações</a></td>
+                                <td><a href="{{ url_for('blueprint_painel_solicitacoes.mais_info_sol', id=s['id']) }}" class="btn btn-primary">Mais Informações</a></td>
                             </tr>
                         {% else %}
                             <tr>

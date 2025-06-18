@@ -23,6 +23,8 @@ def tipo_despesa():
         cursor.close()
         conn.close() 
 
+    return render_template('tipo_despesa.html', usuario_logado=current_user.USUARIO, tipo_despesa=retorno)
+
 
 @blueprint_tipo_despesa.route('/cadastrar', methods=['POST'])
 @login_required

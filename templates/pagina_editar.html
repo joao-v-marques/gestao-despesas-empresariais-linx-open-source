@@ -97,27 +97,24 @@
     <main>
         <h1 class="titulo">Edição de Usuário</h1>
 
-        <form action="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=usuario.id) }}" method="POST" class="formulario">
+        <form action="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=usuario['id']) }}" method="POST" class="formulario">
             <label for="usuario_id">Usuário</label>
-            <input type="text" id="usuario_id" name="usuario" value="{{ usuario.USUARIO }}">
+            <input type="text" id="usuario_id" name="usuario" value="{{ usuario['usuario'] }}">
 
             <label for="senha_id">Senha</label>
-            <input type="password" id="senha_id" name="senha" value="{{ usuario.SENHA }}">
+            <input type="password" id="senha_id" name="senha" value="{{ usuario['senha'] }}">
 
             <label for="nome_id">Nome</label>
-            <input type="text" id="nome_id" name="nome" value="{{ usuario.NOME }}">
-
-            <label for="cpf_id">CPF</label>
-            <input type="text" id="cpf_id" name="cpf" value="{{ usuario.CPF }}">
+            <input type="text" id="nome_id" name="nome" value="{{ usuario['nome'] }}">
 
             <label for="funcao_id">Funcao</label>
-            <input type="text" name="funcao" id="funcao_id" value="{{ usuario.FUNCAO }}">
+            <input type="text" name="funcao" id="funcao_id" value="{{ usuario['funcao'] }}">
 
             <label for="empresa_id">Empresa</label>
-            <input type="text" name="empresa" id="empresa_id" value="{{ usuario.EMPRESA }}">
+            <input type="text" name="empresa" id="empresa_id" value="{{ usuario['empresa'] }}">
 
             <label for="revenda_id">Revenda</label>
-            <input type="text" name="revenda" id="revenda_id" value="{{ usuario.REVENDA }}">
+            <input type="text" name="revenda" id="revenda_id" value="{{ usuario['revenda'] }}">
 
             <input type="submit" value="Salvar Alterações">
             <a href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}" class="retornar"> <- Retornar para a Gestão de Usuários</a>

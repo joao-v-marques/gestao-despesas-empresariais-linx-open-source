@@ -50,15 +50,15 @@ def fazer_lancamento():
         try:
             cursor, conn = abrir_cursor()
             sql = "INSERT INTO LIU_SOLICITACOES (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS, MOTIVO_REPROVA, PDF_PATH) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)"
-            valores = [empresa_form, revenda_form, current_user.USUARIO, departamento_form, tipo_despesa_form, descricao_form, valor_form, 'PENDENTE', None, None]
+            valores = [empresa_form, revenda_form, current_user.USUARIO, departamento_form, tipo_despesa_form, descricao_form, valor_float, 'PENDENTE', '', '']
             cursor.execute(sql, valores)
             conn.commit()
             flash('Cadastro realizado com sucesso!', 'success')
-            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
+            return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao', usuario_logado=current_user.USUARIO))
         except Exception as e:
                 flash('Erro interno ao realizar a consulta!', 'error')
                 logging.error(f'Deu erro na consulta: {e}')
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+                return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
         finally:
                 cursor.close()
                 conn.close()

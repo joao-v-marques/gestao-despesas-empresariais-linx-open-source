@@ -13,35 +13,36 @@ def painel_solicitacoes():
 
         try:
                 cursor, conn = abrir_cursor()
-                if filtro == 'PENDENTE':
-                        sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
-                        valores = ['PENDENTE', current_user.USUARIO]
-                        cursor.execute(sql, valores)
-                        retorno = cursor.dict_fetchall()
-                        
-                elif filtro == 'APROVADO':
-                        sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
-                        valores = ['APROVADO', current_user.USUARIO]
-                        cursor.execute(sql, valores)
-                        retorno = cursor.dict_fetchall()
+                base_sql = base_sql = """
+            SELECT 
+                s.ID, 
+                s.EMPRESA, 
+                s.REVENDA, 
+                s.USUARIO_SOLICITANTE, 
+                d.CODIGO AS DEPARTAMENTO_CODIGO, 
+                d.DESCRICAO AS DEPARTAMENTO_DESCRICAO, 
+                t.CODIGO AS TIPO_DESPESA_CODIGO, 
+                t.DESCRICAO AS TIPO_DESPESA_DESCRICAO, 
+                s.VALOR, 
+                s.STATUS
+            FROM 
+                LIU_SOLICITACOES s
+            JOIN 
+                LIU_DEPARTAMENTO d ON s.DEPARTAMENTO = d.CODIGO
+            JOIN 
+                LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
+        """
+                
+                if filtro != 'TODOS':
+                        sql = base_sql + " WHERE s.STATUS = :1 AND s.USUARIO_SOLICITANTE = :2"
+                        valores = [filtro, current_user.USUARIO]
+                else:
+                    sql = base_sql + " WHERE s.USUARIO_SOLICITANTE = :1"
+                    valores = [current_user.USUARIO]
 
-                elif filtro == 'REPROVADO':
-                        sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
-                        valores = ['REPROVADO', current_user.USUARIO]
-                        cursor.execute(sql, valores)
-                        retorno = cursor.dict_fetchall()
+                cursor.execute(sql, valores)
+                retorno = cursor.dict_fetchall()
 
-                elif filtro == 'COMPRA':
-                        sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = :1 AND USUARIO_SOLICITANTE = :2'
-                        valores = ['COMPRA', current_user.USUARIO]
-                        cursor.execute(sql, valores)
-                        retorno = cursor.dict_fetchall()
-
-                elif filtro == 'TODOS':
-                        sql = 'SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE USUARIO_SOLICITANTE = :1'
-                        valores = [current_user.USUARIO]
-                        cursor.execute(sql, valores)
-                        retorno = cursor.dict_fetchall()
                 return render_template('painel_solicitacoes.html', solicitacoes=retorno, filtro=filtro, usuario_logado=current_user.USUARIO)
         except Exception as e:
                 flash('Erro ao realizar a consulta!', 'error')
@@ -81,17 +82,17 @@ def mais_info_sol(id):
 @login_required
 def download_pdf(id):
         try:
-                cursor, conn = abrir_cursor()
-                sql = "SELECT PDF_PATH FROM LIU_SOLICITACOES WHERE ID = :1"
-                cursor.execute(sql, {id})
-                retorno = cursor.dict_fetchone()
+            cursor, conn = abrir_cursor()
+            sql = "SELECT PDF_PATH FROM LIU_SOLICITACOES WHERE ID = :1"
+            cursor.execute(sql, [id])
+            retorno = cursor.dict_fetchone()
 
-                if not retorno:
-                        flash('Não foi possivel localizar o PDF!', 'error')
-                        return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol'))
-                else:
-                        flash('PDF localizado!', 'success')
-                        return send_file(retorno, as_attachment=True)
+            if not retorno:
+                flash('Não foi possivel localizar o PDF!', 'error')
+                return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol'))
+            else:
+                flash('PDF localizado!', 'success')
+                return send_file(retorno, as_attachment=True)
         except Exception as e:
                 flash('Erro interno!', 'error')
                 logging.error(f'Deu erro na consulta: {e}')
@@ -131,20 +132,21 @@ def salvar_edicao(id):
 def excluir_solicitacao(id):
         if request.method == 'POST':
                 try:
-                        cursor, conn = abrir_cursor()
-                        sql = "DELETE FROM LIU_SOLICITACOES WHERE ID = :1"
-                        cursor.execute(sql, [id])
-                        flash('Solitação excluida com sucesso!', 'error')
-                        return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+                    cursor, conn = abrir_cursor()
+                    sql = "DELETE FROM LIU_SOLICITACOES WHERE ID = :1"
+                    cursor.execute(sql, [id])
+                    conn.commit()
+                    flash('Solitação excluida com sucesso!', 'error')
+                    return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
                 except Exception as e:
-                        flash('Erro interno!', 'error')
-                        logging.error(f'Deu erro na consulta: {e}')
-                        return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
+                    flash('Erro interno!', 'error')
+                    logging.error(f'Deu erro na consulta: {e}')
+                    return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
                 finally:
-                        cursor.close()
-                        conn.close()
+                    cursor.close()
+                    conn.close()
         else:
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
 
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/reenviar', methods=['POST', 'GET'])
 @login_required
