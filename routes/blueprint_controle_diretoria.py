@@ -74,10 +74,19 @@ def mudar_status(id):
         if novo_status == 'APROVADO':
             try:
                 cursor, conn = abrir_cursor()
-                sql = "UPDATE LIU_SOLICITACOES SET STATUS = 'APROVADO' WHERE ID = :1"
-                cursor.execute(sql, [id])
+
+                sql_select = "SELECT * FROM LIU_SOLICITACOES WHERE ID = :1"
+                cursor.execute(sql_select, [id])
+                solicitacao = cursor.dict_fetchone()
+
+                pdf_path = gerar_pdf(solicitacao, current_user.USUARIO)
+
+                sql_aprovado = "UPDATE LIU_SOLICITACOES SET STATUS = 'APROVADO', PDF_PATH = :1 WHERE ID = :2"
+                valores = [pdf_path, id]
+                cursor.execute(sql_aprovado, valores)
                 conn.commit()
-                flash('Solicitação Aprovada!', 'success')
+
+                flash('Solicitação Aprovada e PDF gerado com sucesso!', 'success')
                 return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
             except Exception as e:
                 flash('Erro interno ao realizar a consulta!', 'error')

@@ -58,18 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (form) {
-        form.addEventListener('submit', function(event) {
-            // Intercepta o submit padrão
-            event.preventDefault();
-            // Remove o disabled dos selects
+        form.addEventListener('submit', function() {
+            // Remove o disabled dos selects antes do submit
             selects.forEach(select => select.disabled = false);
-            // Agora envia o formulário manualmente
-            form.submit();
-            // (Opcional) Volta para visualização após submit
-            inputs.forEach(input => input.setAttribute('readonly', true));
-            selects.forEach(select => select.disabled = true);
-            if (botoesVisualizacao) botoesVisualizacao.style.display = 'block';
-            if (botoesEdicao) botoesEdicao.style.display = 'none';
+            // O submit padrão do HTML será executado normalmente
         });
     }
 });
