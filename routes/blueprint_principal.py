@@ -23,6 +23,7 @@ def logout():
 @blueprint_principal.route('/troca-senha/<int:id>', methods=['POST', 'GET'])
 @login_required
 def troca_senha(id):
+    session.pop('_flashes', None)
     if request.method == 'POST':
         nova_senha_form = request.form['nova_senha'].strip()
         confirma_nova_senha_form = request.form['confirma_nova_senha'].strip()

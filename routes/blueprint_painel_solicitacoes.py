@@ -110,8 +110,6 @@ def salvar_edicao(id):
                 novo_descricao = request.form.get('descricao').strip()
                 novo_valor = float(request.form.get('valor').replace('R$', '').replace('.', '').replace(',', '.').strip())
                 
-                logging.info(f'Valores: DEP: {novo_departamento} / DESP: {novo_tipo_despesa} / DESC: {novo_descricao} / VAL: {novo_valor} / ID: {id}')
-
                 if len(novo_departamento) != 3:
                        flash('O departamento deve ter exatamente 3 caracteres!')
                        return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))

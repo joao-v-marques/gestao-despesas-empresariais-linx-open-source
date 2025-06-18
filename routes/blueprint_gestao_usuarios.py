@@ -33,7 +33,6 @@ def gestao_usuarios():
 def cadastrar_usuario():
     if request.method == 'POST':
         usuario_form = request.form['usuario'].upper()
-        # usuario_existente = Usuarios.select().where(Usuarios.USUARIO == usuario_form).exists()
         senha_form = request.form['senha'].strip()
         confirma_senha_form = request.form['confirma_senha'].strip()
         nome_form = request.form['nome'].strip()
@@ -44,8 +43,6 @@ def cadastrar_usuario():
         if len(usuario_form) <= 3:
             flash('O usuário inserido deve ter mais de 3 caracteres!', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
-        # elif usuario_existente == True:
-        #     flash('O usuário inserido já existe!')
         elif senha_form != confirma_senha_form:
             flash('As duas senhas inseridas não são iguais!', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
@@ -57,7 +54,7 @@ def cadastrar_usuario():
                 cursor, conn = abrir_cursor()
                 sql = "INSERT INTO LIU_USUARIO (USUARIO, SENHA, NOME, FUNCAO, EMPRESA, REVENDA) VALUES (:1, :2, :3, :4, :5, :6)"
                 valores = [usuario_form, senha_form, nome_form, funcao_form, empresa_form, revenda_form]
-                cursor.execute()
+                cursor.execute(sql, valores)
                 conn.commit()
                 flash('Cadastro realizado com sucesso!', 'success')
                 return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
@@ -69,17 +66,27 @@ def cadastrar_usuario():
                     cursor.close()
                     conn.close()
 
-@blueprint_gestao_usuarios.route('/editar-usuario/<int:id>', methods=['GET', 'POST'])
+@blueprint_gestao_usuarios.route('/pag-editar/<int:id>')
+@login_required
+@role_required('ADMIN')
+def pagina_editar(id):
+    return render_template('pagina_editar.html', id=id)
+
+@blueprint_gestao_usuarios.route('/editar-usuario/<int:id>', methods=['POST'])
 @login_required
 @role_required('ADMIN')
 def editar_usuario(id):
-    if request.method == 'POST':
-        novo_usuario = request.form['usuario']
-        novo_senha = request.fom['senha']
-        novo_nome = request.form['nome']
-        novo_funcao = request.form['funcao']
-        novo_empresa = request.form['empresa']
-        novo_revenda = request.form['revenda']
+    novo_usuario = request.form['usuario']
+    novo_senha = request.fom['senha']
+    confirma_senha = request.form['confirma_senha']
+    novo_nome = request.form['nome']
+    novo_funcao = request.form['funcao']
+    novo_empresa = request.form['empresa']
+    novo_revenda = request.form['revenda']
+    if novo_senha != confirma_senha:
+        flash('As senhas não são iguais!')
+        return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+    else:
         try:
             cursor, conn = abrir_cursor()
             sql = "UPDATE LIU_USUARIO SET USUARIO = :1, SENHA = :2, NOME = :3, FUNCAO = :4, EMPRESA = :5, REVENDA = :6 WHERE ID = :7"

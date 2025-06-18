@@ -110,9 +110,6 @@
             <label for="nome_id" class="label-nome">Nome</label>
             <input type="text" id="nome_id" name="nome" class="input-nome">
 
-            <label for="cpf_id" class="label-cpf">CPF</label>
-            <input type="text" id="cpf_id" name="cpf" class="input-cpf">
-
             <label for="funcao_id" class="label-funcao">Função</label>
             <select name="funcao" id="funcao_id" class="input-funcao">
                 <option value="FUNCIONARIO">FUNCIONARIO</option>
@@ -171,17 +168,55 @@
                             <td>{{ u['nome'] }}</td>
                             <td>{{ u['funcao'] }}</td>
                             <td class="td-opcoes">
-                                <a href="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=u['id']) }}" class="btn btn-primary">Editar</a>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ u['id'] }}">Editar</button>
 
-                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal{{ u['id'] }}">Deletar</button>
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ u['id'] }}">Deletar</button>
                             </td>
                         </tr>
 
-                        <div class="modal fade" id="confirmModal{{ u['id'] }}" tabindex="-1" aria-labelledby="confirmModalLabel{{ u['id'] }}" aria-hidden="true">
+                        <div class="modal fade" id="editModal{{ current_user.id }}" tabindex="-1" aria-labelledby="editModal{{ current_user.id }}" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="confirmModalLabel{{ u['id'] }}">Confirmar ação</h5>
+                                        <h5 class="modal-title" id="editModal{{ current_user.id }}">Editar Usuário</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=u.id) }}" method="POST">
+                                            <label for="usuario_id" class="label-usuario">Novo Usuário</label>
+                                            <input type="text" id="usuario_id" name="usuario" class="input-usuario">
+
+                                            <label for="senha_id" class="label-senha">Nova Senha</label>
+                                            <input type="password" id="senha_id" name="senha" class="input-senha">
+
+                                            <label for="confirma_senha_id" class="label-confirma-senha">Confirme a senha</label>
+                                            <input type="password" id="confirma_senha_id" name="confirma_senha" class="input-confirma-senha">
+
+                                            <label for="nome_id" class="label-nome">Novo Nome</label>
+                                            <input type="text" id="nome_id" name="nome" class="input-nome">
+
+                                            <label for="funcao_id" class="label-funcao">Nova Função</label>
+                                            <input type="text" id="funcao_id" name="funcao" class="input-funcao">
+
+                                            <label for="empresa_id" class="label-empresa">Nova Empresa</label>
+                                            <input type="text" id="empresa_id" name="empresa" class="input-empresa">
+
+                                            <label for="revenda_id" class="label-revenda">Nova Revenda</label>
+                                            <input type="text" id="revenda_id" name="revenda" class="input-revenda">
+                                            
+                                            <input type="submit" class="btn btn-success" value="Confirmar">
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="deleteModal{{ u['id'] }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ u['id'] }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel{{ u['id'] }}">Confirmar ação</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                     </div>
                                     <div class="modal-body">
