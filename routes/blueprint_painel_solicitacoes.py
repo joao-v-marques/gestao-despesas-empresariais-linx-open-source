@@ -5,7 +5,7 @@ from database.connect_db import abrir_cursor
 
 blueprint_painel_solicitacoes = Blueprint('blueprint_painel_solicitacoes', __name__)
 
-@blueprint_painel_solicitacoes.route('/', methods=['POST', 'GET'])
+@blueprint_painel_solicitacoes.route('/')
 @login_required
 def painel_solicitacoes():
         session.pop('_flashes', None)
@@ -101,75 +101,68 @@ def download_pdf(id):
                 cursor.close()
                 conn.close()
 
-@blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/salvar', methods=['POST', 'GET'])
+@blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/salvar', methods=['POST'])
 @login_required
 def salvar_edicao(id):
-        if request.method == 'POST':
-                novo_departamento = request.form['departamento']
-                novo_tipo_despesa = request.form['tipo_despesa']
-                novo_descricao = request.form.get('descricao').strip()
-                novo_valor = float(request.form.get('valor').replace('R$', '').replace('.', '').replace(',', '.').strip())
-                
-                if len(novo_departamento) != 3:
-                       flash('O departamento deve ter exatamente 3 caracteres!')
-                       return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
-                elif len(novo_tipo_despesa) != 4:
-                       flash('O Tipo de Despesa deve ter exatamente 4 caracteres!')
-                       return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
-                else:
-                    try:
-                        cursor, conn = abrir_cursor()
-                        sql = """
-                                UPDATE 
-                                    LIU_SOLICITACOES
-                                SET 
-                                    DEPARTAMENTO = :1,
-                                    TIPO_DESPESA = :2,
-                                    DESCRICAO = :3,
-                                    VALOR = :4 
-                                WHERE 
-                                    ID = :5
-                                """
-                        valores = [novo_departamento, novo_tipo_despesa, novo_descricao, novo_valor, id]
-                        cursor.execute(sql, valores)
-                        conn.commit()
-                        flash('Alteração realizada com sucesso!', 'success')
-                        return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', ixd=id))
-                    except Exception as e:
-                        flash('Erro interno!', 'error')
-                        logging.error(f'Deu erro na consulta: {e}')
-                        return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
-                    finally:
-                        cursor.close()
-                        conn.close()
-        else:
-            return redirect(url_for("blueprint_painel_solicitacoes.painel_solicitacoes"))
-
-@blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/excluir', methods=['POST', 'GET'])
-@login_required
-def excluir_solicitacao(id):
-        if request.method == 'POST':
+            novo_departamento = request.form['departamento']
+            novo_tipo_despesa = request.form['tipo_despesa']
+            novo_descricao = request.form.get('descricao').strip()
+            novo_valor = float(request.form.get('valor').replace('R$', '').replace('.', '').replace(',', '.').strip())
+            
+            if len(novo_departamento) != 3:
+                    flash('O departamento deve ter exatamente 3 caracteres!')
+                    return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
+            elif len(novo_tipo_despesa) != 4:
+                    flash('O Tipo de Despesa deve ter exatamente 4 caracteres!')
+                    return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
+            else:
                 try:
                     cursor, conn = abrir_cursor()
-                    sql = "DELETE FROM LIU_SOLICITACOES WHERE ID = :1"
-                    cursor.execute(sql, [id])
+                    sql = """
+                            UPDATE 
+                                LIU_SOLICITACOES
+                            SET 
+                                DEPARTAMENTO = :1,
+                                TIPO_DESPESA = :2,
+                                DESCRICAO = :3,
+                                VALOR = :4 
+                            WHERE 
+                                ID = :5
+                            """
+                    valores = [novo_departamento, novo_tipo_despesa, novo_descricao, novo_valor, id]
+                    cursor.execute(sql, valores)
                     conn.commit()
-                    flash('Solitação excluida com sucesso!', 'error')
-                    return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+                    flash('Alteração realizada com sucesso!', 'success')
+                    return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', ixd=id))
                 except Exception as e:
                     flash('Erro interno!', 'error')
                     logging.error(f'Deu erro na consulta: {e}')
-                    return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
+                    return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
                 finally:
                     cursor.close()
                     conn.close()
-        else:
-            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+        
+@blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/excluir', methods=['POST'])
+@login_required
+def excluir_solicitacao(id):
+            try:
+                cursor, conn = abrir_cursor()
+                sql = "DELETE FROM LIU_SOLICITACOES WHERE ID = :1"
+                cursor.execute(sql, [id])
+                conn.commit()
+                flash('Solitação excluida com sucesso!', 'error')
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+            except Exception as e:
+                flash('Erro interno!', 'error')
+                logging.error(f'Deu erro na consulta: {e}')
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
+            finally:
+                cursor.close()
+                conn.close()
 
-@blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/reenviar', methods=['POST', 'GET'])
+@blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/reenviar', methods=['POST'])
 @login_required
 def reenviar_solicitacao(id):
-        if request.method == 'POST':
                 try:
                         cursor, conn = abrir_cursor()
 
@@ -185,5 +178,3 @@ def reenviar_solicitacao(id):
                 finally:
                         cursor.close()
                         conn.close()
-        else:
-                return render_template('painel_solicitacoes.html')

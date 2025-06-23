@@ -26,7 +26,7 @@ def controle_diretoria():
         cursor.close()
         conn.close()
 
-@blueprint_controle_diretoria.route('/mais-info/<int:id>', methods=['POST', 'GET'])
+@blueprint_controle_diretoria.route('/mais-info/<int:id>')
 @login_required
 @role_required('ADMIN', 'DIRETORIA')
 def mais_info_cd(id):
@@ -65,54 +65,50 @@ def mais_info_cd(id):
         cursor.close()
         conn.close()
 
-@blueprint_controle_diretoria.route('/mudar-status/<int:id>', methods=['POST', 'GET'])
+@blueprint_controle_diretoria.route('/mudar-status/<int:id>', methods=['POST'])
 @login_required
 @role_required('ADMIN', 'DIRETORIA')
 def mudar_status(id):
-    if request.method == 'POST':
-        novo_status = request.form['status']
-        if novo_status == 'APROVADO':
-            try:
-                cursor, conn = abrir_cursor()
+    novo_status = request.form['status']
+    if novo_status == 'APROVADO':
+        try:
+            cursor, conn = abrir_cursor()
 
-                sql_select = "SELECT * FROM LIU_SOLICITACOES WHERE ID = :1"
-                cursor.execute(sql_select, [id])
-                solicitacao = cursor.dict_fetchone()
+            sql_select = "SELECT * FROM LIU_SOLICITACOES WHERE ID = :1"
+            cursor.execute(sql_select, [id])
+            solicitacao = cursor.dict_fetchone()
 
-                pdf_path = gerar_pdf(solicitacao, current_user.USUARIO)
+            pdf_path = gerar_pdf(solicitacao, current_user.USUARIO)
 
-                sql_aprovado = "UPDATE LIU_SOLICITACOES SET STATUS = 'APROVADO', PDF_PATH = :1 WHERE ID = :2"
-                valores = [pdf_path, id]
-                cursor.execute(sql_aprovado, valores)
-                conn.commit()
+            sql_aprovado = "UPDATE LIU_SOLICITACOES SET STATUS = 'APROVADO', PDF_PATH = :1 WHERE ID = :2"
+            valores = [pdf_path, id]
+            cursor.execute(sql_aprovado, valores)
+            conn.commit()
 
-                flash('Solicitação Aprovada e PDF gerado com sucesso!', 'success')
-                return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
-            except Exception as e:
-                flash('Erro interno ao realizar a consulta!', 'error')
-                logging.error(f'Deu erro na consulta: {e}')
-                return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
-            finally:
-                cursor.close()
-                conn.close()
-        elif novo_status == 'REPROVADO':
-            try:
-                cursor, conn = abrir_cursor()
-                sql = "UPDATE LIU_SOLICITACOES SET STATUS = 'REPROVADO' WHERE ID = :1"
-                cursor.execute(sql, [id])
-                conn.commit()
-                flash('Solicitação Reprovada!', 'success')
-                return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
-            except Exception as e:
-                flash('Erro interno ao realizar a consulta!', 'error')
-                logging.error(f'Deu erro na consulta: {e}')
-                return redirect(url_for('blueprint_controle_diretoria.mais_info_cd'))
-            finally:
-                cursor.close()
-                conn.close()
-        else:
-            flash('Status inválido!', 'error')
+            flash('Solicitação Aprovada e PDF gerado com sucesso!', 'success')
             return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
-
+        except Exception as e:
+            flash('Erro interno ao realizar a consulta!', 'error')
+            logging.error(f'Deu erro na consulta: {e}')
+            return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
+        finally:
+            cursor.close()
+            conn.close()
+    elif novo_status == 'REPROVADO':
+        try:
+            cursor, conn = abrir_cursor()
+            sql = "UPDATE LIU_SOLICITACOES SET STATUS = 'REPROVADO' WHERE ID = :1"
+            cursor.execute(sql, [id])
+            conn.commit()
+            flash('Solicitação Reprovada!', 'success')
+            return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
+        except Exception as e:
+            flash('Erro interno ao realizar a consulta!', 'error')
+            logging.error(f'Deu erro na consulta: {e}')
+            return redirect(url_for('blueprint_controle_diretoria.mais_info_cd'))
+        finally:
+            cursor.close()
+            conn.close()
     else:
-        return render_template('controle_diretoria.html')
+        flash('Status inválido!', 'error')
+        return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))

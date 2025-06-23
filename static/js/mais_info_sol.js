@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (botoesEdicao) {
         botoesEdicao.style.display = 'none';
     }
-
+    
     if (btnEditar) {
         btnEditar.addEventListener('click', function() {
             // Salva valores originais
