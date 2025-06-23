@@ -125,7 +125,7 @@
 
             <label for="revenda_id" class="label-revenda">Revenda</label>
             <select name="revenda" id="revenda_id">
-
+                <!-- A Revenda é preenchida dinamicamente pelo JS -->
             </select>
 
             <input type="submit" class="botao-enviar" value="Cadastrar Usuario">
@@ -173,67 +173,78 @@
                                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ u['id'] }}">Deletar</button>
                             </td>
                         </tr>
-
-                        <div class="modal fade" id="editModal{{ current_user.id }}" tabindex="-1" aria-labelledby="editModal{{ current_user.id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editModal{{ current_user.id }}">Editar Usuário</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=u.id) }}" method="POST">
-                                            <label for="usuario_id" class="label-usuario">Novo Usuário</label>
-                                            <input type="text" id="usuario_id" name="usuario" class="input-usuario">
-
-                                            <label for="senha_id" class="label-senha">Nova Senha</label>
-                                            <input type="password" id="senha_id" name="senha" class="input-senha">
-
-                                            <label for="confirma_senha_id" class="label-confirma-senha">Confirme a senha</label>
-                                            <input type="password" id="confirma_senha_id" name="confirma_senha" class="input-confirma-senha">
-
-                                            <label for="nome_id" class="label-nome">Novo Nome</label>
-                                            <input type="text" id="nome_id" name="nome" class="input-nome">
-
-                                            <label for="funcao_id" class="label-funcao">Nova Função</label>
-                                            <input type="text" id="funcao_id" name="funcao" class="input-funcao">
-
-                                            <label for="empresa_id" class="label-empresa">Nova Empresa</label>
-                                            <input type="text" id="empresa_id" name="empresa" class="input-empresa">
-
-                                            <label for="revenda_id" class="label-revenda">Nova Revenda</label>
-                                            <input type="text" id="revenda_id" name="revenda" class="input-revenda">
-                                            
-                                            <input type="submit" class="btn btn-success" value="Confirmar">
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal fade" id="deleteModal{{ u['id'] }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ u['id'] }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteModalLabel{{ u['id'] }}">Confirmar ação</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Você tem certeza que deseja deletar o usuário <strong>{{ u['usuario'] }}</strong>?
-                                    </div>
-                                    <div class="modal-footer d-flex justify-content-end gap-2">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <form method="POST" action="{{ url_for('blueprint_gestao_usuarios.deletar_usuario', id=u['id']) }}">
-                                            <button type="submit" class="btn btn-danger">Confirmar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     {% endfor %}
                 </tbody>
             </table>
+
+            {% for u in usuarios %}
+                <div class="modal fade" id="editModal{{ u['id'] }}" tabindex="-1" aria-labelledby="editModal{{ u['id'] }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModal{{ u['id'] }}">Editar Usuário</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=u['id']) }}" method="POST" class="formulario-modal">
+                                    <label for="usuario_id_edit_{{ u['id'] }}" class="label-usuario">Usuário</label>
+                                    <input type="text" id="usuario_id_edit_{{ u['id'] }}" name="usuario" class="input-usuario" value="{{ u['usuario'] }}" required>
+
+                                    <label for="senha_id_edit_{{ u['id'] }}" class="label-senha">Senha</label>
+                                    <input type="password" id="senha_id_edit_{{ u['id'] }}" name="senha" class="input-senha" value="{{ u['senha'] }}" required>
+
+                                    <label for="confirma_senha_id_edit_{{ u['id'] }}" class="label-confirma-senha">Confirme a senha</label>
+                                    <input type="password" id="confirma_senha_id_edit_{{ u['id'] }}" name="confirma_senha" class="input-confirma-senha" value="{{ u['senha'] }}" required>
+
+                                    <label for="nome_id_edit_{{ u['id'] }}" class="label-nome">Nome</label>
+                                    <input type="text" id="nome_id_edit_{{ u['id'] }}" name="nome" class="input-nome" value="{{ u['nome'] }}" required>
+
+                                    <label for="funcao_id_edit_{{ u['id'] }}" class="label-funcao">Função</label>
+                                    <select name="funcao" id="funcao_id_edit_{{ u['id'] }}">
+                                        <option value="FUNCIONARIO" {% if u['funcao'] == "FUNCIONARIO" %}selected{%endif%}>FUNCIONARIO</option>
+                                        <option value="DIRETORIA" {% if u['funcao'] == "DIRETORIA" %}selected{%endif%}>DIRETORIA</option>
+                                        <option value="ADMIN" {% if u['funcao'] == "ADMIN" %}selected{%endif%}>ADMIN</option>
+                                    </select>
+
+                                    <label for="empresa_id_edit_{{ u['id'] }}" class="label-empresa">Empresa</label>
+                                    <select name="empresa" id="empresa_id_edit_{{ u['id'] }}" data-revenda="{{ u['revenda'] }}">
+                                        <option value="1" {% if u['empresa'] == '1' %}selected{% endif %}>1</option>
+                                        <option value="4" {% if u['empresa'] == '4' %}selected{% endif %}>4</option>
+                                    </select>
+
+                                    <label for="revenda_id_edit_{{ u['id'] }}" class="label-revenda">Revenda</label>
+                                    <select name="revenda" id="revenda_id_edit_{{ u['id'] }}">
+                                        <!-- Preenchido via JS -->
+                                    </select>
+                                    
+                                    <input type="submit" class="btn btn-success" value="Confirmar">
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="deleteModal{{ u['id'] }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ u['id'] }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel{{ u['id'] }}">Confirmar ação</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                Você tem certeza que deseja deletar o usuário <strong>{{ u['usuario'] }}</strong>?
+                            </div>
+                            <div class="modal-footer d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <form method="POST" action="{{ url_for('blueprint_gestao_usuarios.deletar_usuario', id=u['id']) }}">
+                                    <button type="submit" class="btn btn-danger">Confirmar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </main>
 
