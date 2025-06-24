@@ -35,5 +35,24 @@
             {% endwith %}
         </form>
     </div>
+
+    <script>
+        function setFaviconBasedOnTheme() {
+            const darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const favicon = document.querySelector("link[rel~='icon']") || document.createElement('link');
+            favicon.rel = 'icon';
+            favicon.href = darkMode ? '/static/img/favicon_branca.png' : '/static/img/favicon_preta.png';
+
+            // Remove favicon antigo e adiciona o novo
+            document.head.querySelectorAll("link[rel~='icon']").forEach(el => el.remove());
+            document.head.appendChild(favicon);
+        }
+
+        // Chamada inicial
+        setFaviconBasedOnTheme();
+
+        // Escuta mudanças no tema
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setFaviconBasedOnTheme);
+    </script>
 </body>
 </html>
