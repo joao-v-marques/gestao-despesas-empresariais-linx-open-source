@@ -12,8 +12,8 @@ def painel_solicitacoes():
         filtro = request.args.get('filtro', 'PENDENTE')
 
         try:
-                cursor, conn = abrir_cursor()
-                base_sql = base_sql = """
+            cursor, conn = abrir_cursor()
+            base_sql = """
             SELECT 
                 s.ID, 
                 s.EMPRESA, 
@@ -33,17 +33,17 @@ def painel_solicitacoes():
                 LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
         """
                 
-                if filtro != 'TODOS':
-                        sql = base_sql + " WHERE s.STATUS = :1 AND s.USUARIO_SOLICITANTE = :2"
-                        valores = [filtro, current_user.USUARIO]
-                else:
-                    sql = base_sql + " WHERE s.USUARIO_SOLICITANTE = :1"
-                    valores = [current_user.USUARIO]
+            if filtro != 'TODOS':
+                sql = base_sql + " WHERE s.STATUS = :1 AND s.USUARIO_SOLICITANTE = :2"
+                valores = [filtro, current_user.USUARIO]
+            else:
+                sql = base_sql + " WHERE s.USUARIO_SOLICITANTE = :1"
+                valores = [current_user.USUARIO]
 
-                cursor.execute(sql, valores)
-                retorno = cursor.dict_fetchall()
+            cursor.execute(sql, valores)
+            retorno = cursor.dict_fetchall()
 
-                return render_template('painel_solicitacoes.html', solicitacoes=retorno, filtro=filtro, usuario_logado=current_user.USUARIO)
+            return render_template('painel_solicitacoes.html', solicitacoes=retorno, filtro=filtro, usuario_logado=current_user.USUARIO)
         except Exception as e:
                 flash('Erro ao realizar a consulta!', 'error')
                 logging.error(f'Deu erro na consulta: {e}')

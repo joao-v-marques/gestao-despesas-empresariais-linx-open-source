@@ -9,4 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
             descricaoInput.value = descricaoInput.value.toUpperCase();
         });
     }
+
+    // Bloqueia qualquer caractere não numérico nos campos de código (cadastro e edição)
+    ['codigo_id', 'edit_codigo_id'].forEach(function(id) {
+        document.querySelectorAll('#' + id).forEach(function(input) {
+            input.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+        });
+    });
 });

@@ -51,12 +51,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Força letras maiúsculas e só permite letras no campo de usuário dos modais de edição
+// Força letras maiúsculas no campo de usuário dos modais de edição, sem bloquear números ou outros caracteres
+
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('input[id^="usuario_id_edit_"]').forEach(function(input) {
         input.addEventListener('input', function(e) {
-            // Só letras, transforma em maiúsculo
-            this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '').toUpperCase();
+            this.value = this.value.toUpperCase();
         });
     });
 });

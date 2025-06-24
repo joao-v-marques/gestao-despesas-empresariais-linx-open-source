@@ -70,6 +70,7 @@ def mais_info_cd(id):
 @role_required('ADMIN', 'DIRETORIA')
 def mudar_status(id):
     novo_status = request.form['status']
+    motivo_reprova = request.form['motivo_reprova']
     if novo_status == 'APROVADO':
         try:
             cursor, conn = abrir_cursor()
@@ -97,15 +98,16 @@ def mudar_status(id):
     elif novo_status == 'REPROVADO':
         try:
             cursor, conn = abrir_cursor()
-            sql = "UPDATE LIU_SOLICITACOES SET STATUS = 'REPROVADO' WHERE ID = :1"
-            cursor.execute(sql, [id])
+            sql = "UPDATE LIU_SOLICITACOES SET STATUS = 'REPROVADO', MOTIVO_REPROVA = :1 WHERE ID = :2"
+            valores = [motivo_reprova, id]
+            cursor.execute(sql, valores)
             conn.commit()
             flash('Solicitação Reprovada!', 'success')
             return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
         except Exception as e:
             flash('Erro interno ao realizar a consulta!', 'error')
             logging.error(f'Deu erro na consulta: {e}')
-            return redirect(url_for('blueprint_controle_diretoria.mais_info_cd'))
+            return redirect(url_for('blueprint_controle_diretoria.mais_info_cd', id=id))
         finally:
             cursor.close()
             conn.close()

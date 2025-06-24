@@ -126,6 +126,7 @@
                         <th>Tipo da Despesa</th>
                         <th>Valor</th>
                         <th>Status</th>
+                        <th>Opções</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -134,10 +135,11 @@
                             <td>{{ s['id'] }}</td>
                             <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
                             <td>{{ s['usuario_solicitante'] }}</td>
-                            <td>{{ s['departamento'] }}</td>
-                            <td>{{ s['tipo_desepesa'] }}</td>
+                            <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>
+                            <td>{{ s['tipo_despesa_codigo'] }} - {{ s['tipo_despesa_descricao'] }}</td>
                             <td>{{ "{:,.2f}".format(s['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
                             <td>{{ s['status'] }}</td>
+                            <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#infoModal{{ s['id'] }}">Expandir</button></td>
                         </tr>
                     {% else %}
                         <tr>
@@ -146,6 +148,51 @@
                     {% endfor %}
                 </tbody>
             </table>
+
+            {% for s in solicitacoes %}
+                <div class="modal fade" id="infoModal{{ s['id'] }}" tabindex="-1" aria-labelledby="infoModalLabel{{ s['id'] }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="infoModalLabel{{ s['id'] }}">Confirmar ação</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body-edit">
+                                <form method="POST" action="#" class="formulario-modal">
+                                    <label for="id_id">ID</label>
+                                    <input type="text" id="id_id" readonly value="{{ s['id'] }}">
+
+                                    <label for="empresa_id">Emp./Rev.</label>
+                                    <input type="text" id="empresa_id" readonly value="{{ s['empresa'] }}.{{ s['revenda'] }}">
+
+                                    <label for="usuario_id">Usuário</label>
+                                    <input type="text" id="usuario_id" readonly value="{{ s['usuario_solicitante'] }}">
+
+                                    <label for="departamento_id">Departamento</label>
+                                    <input type="text" id="departamento_id" readonly value="{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}">
+
+                                    <label for="tipo_despesa_id">Tipo da Despesa</label>
+                                    <input type="text" id="tipo_despesa_id" readonly value="{{ s['tipo_despesa_codigo'] }} - {{ s['departamento_descricao'] }}">
+
+                                    <label for="descricao_id">Descrição</label>
+                                    <textarea id="descricao_id" readonly>{{ s['descricao'] }}</textarea>
+
+                                    <label for="valor_id">Valor</label>
+                                    <input type="text" id="valor_id" readonly value="R${{ s['valor'] }}">
+
+                                    <label for="status_id">Status</label>
+                                    <input type="text" id="status_id" readonly value="{{ s['status'] }}">
+
+                                    {% if s['status'] == 'REPROVADO' %}
+                                        <label for="motivo_reprova_id">Motivo Reprova</label>
+                                        <textarea name="motivo_reprova" id="motivo_reprova_id">{{ s['motivo_reprova'] }}</textarea>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </main>
 

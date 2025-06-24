@@ -61,8 +61,8 @@ def deletar(id):
     if request.method == 'POST':
         try:
             cursor, conn = abrir_cursor()
-            sql = "DELETE FROM LIU_TIPO_DESPESA WHERE ID = :1"
-            cursor.execute(sql, id)
+            sql = "DELETE FROM LIU_TIPO_DESPESA WHERE CODIGO = :1"
+            cursor.execute(sql, [id])
             conn.commit()
             flash('Tipo de Despesa excluido com sucesso', 'success')
             return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
@@ -78,4 +78,31 @@ def deletar(id):
 @login_required
 @role_required('ADMIN')
 def editar(id):
-    return render_template('tipo_despesa.html')
+    novo_codigo = request.form['edit_codigo'].strip()
+    novo_descricao = request.form['edit_descricao'].strip()
+
+    if len(novo_codigo) != 4:
+        flash('O código deve ter 4 caracteres!')
+        return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+    else:
+        try:
+            cursor, conn = abrir_cursor()
+            sql_check = "SELECT COUNT(*) FROM LIU_TIPO_DESPESA WHERE CODIGO = :1"
+            cursor.execute(sql_check, [novo_codigo])
+            existe = cursor.fetchone()[0]
+            if existe:
+                flash('Já existe um tipo de despesa com esse código!', 'error')
+                return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+            else:
+                sql = "UPDATE LIU_TIPO_DESPESA SET CODIGO = :1, DESCRICAO = :2 WHERE CODIGO = :3"
+                valores = [novo_codigo, novo_descricao, id]
+                cursor.execute(sql, valores)
+                conn.commit()
+                return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+        except Exception as e:
+            flash('Erro interno ao realizar a consulta!', 'error')
+            logging.error(f'Deu erro na consulta: {e}')
+            return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
+        finally:
+            cursor.close()
+            conn.close()

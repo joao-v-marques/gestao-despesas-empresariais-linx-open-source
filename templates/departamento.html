@@ -99,7 +99,7 @@
 
         <form action="{{ url_for('blueprint_departamento.cadastrar') }}" method="POST" class="formulario">
             <label for="codigo_id" class="label-codigo">Código</label>
-            <input type="text" id="codigo_id" class="input-codigo" name="codigo" pattern="\d{3}" maxlength="3" minlength="3" required>
+            <input type="text" id="codigo_id" class="input-codigo" name="codigo" pattern="\d{3}" maxlength="3" minlength="3" required inputmode="numeric">
 
             <label for="descricao_id" class="label-descricao">Descrição</label>
             <input type="text" id="descricao_id" class="input-descricao" name="descricao" required>
@@ -134,7 +134,7 @@
                             <td>{{ d['codigo'] }}</td>
                             <td>{{ d['descricao'] }}</td>
                             <td class="opcao-edit">
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ d['codigo'] }}">Editar</button>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ d['codigo'] }}">Expandir</button>
 
                                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ d['codigo'] }}">Deletar</button>
                             </td>
@@ -174,10 +174,10 @@
                             <div class="modal-body-edit">
                                 <form method="POST" action="{{ url_for('blueprint_departamento.editar', id=d['codigo']) }}" class="formulario-modal">
                                     <label for="edit_codigo_id" class="label_edit_codigo">Código</label>
-                                    <input type="text" id="edit_codigo_id" name="edit_codigo" class="input_edit_codigo" value="{{ d['codigo'] }}" pattern="\d{3}" maxlength="3" minlength="3">
+                                    <input type="text" id="edit_codigo_id" name="edit_codigo" class="input_edit_codigo" value="{{ d['codigo'] }}" pattern="\d{3}" maxlength="3" minlength="3" inputmode="numeric">
 
                                     <label for="edit_descricao_id" class="label_edit_descricao">Descrição</label>
-                                    <input type="text" id="edit_descricao_id" name="edit_descricao" class="input_edit_descricao" value="{{ d['codigo'] }}">
+                                    <input type="text" id="edit_descricao_id" name="edit_descricao" class="input_edit_descricao" value="{{ d['descricao'] }}">
 
                                     <button type="submit" class="btn btn-success">Confirmar</button>
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
