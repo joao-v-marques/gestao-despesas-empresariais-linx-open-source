@@ -10,6 +10,8 @@ blueprint_painel_solicitacoes = Blueprint('blueprint_painel_solicitacoes', __nam
 def painel_solicitacoes():
         session.pop('_flashes', None)
         filtro = request.args.get('filtro', 'PENDENTE')
+        sort_by = request.args.get('sort_by', 'ID').upper()
+        sort_dir = request.args.get('sort_dir', 'ASC').upper()
 
         try:
             cursor, conn = abrir_cursor()
@@ -40,10 +42,27 @@ def painel_solicitacoes():
                 sql = base_sql + " WHERE s.USUARIO_SOLICITANTE = :1"
                 valores = [current_user.USUARIO]
 
+            colunas_permitidas = [
+                   'ID', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'TIPO_DESPESA_CODIGO', 'TIPO_DESPESA_DESCRICAO', 'VALOR', 'STATUS'
+            ]
+
+            if sort_by not in colunas_permitidas:
+                   sort_by = 'ID'
+            if sort_dir not in ['ASC', 'DESC']:
+                   sort_dir = 'ASC'
+
+            sql += f"ORDER BY {sort_by} {sort_dir}"
+
             cursor.execute(sql, valores)
             retorno = cursor.dict_fetchall()
 
-            return render_template('painel_solicitacoes.html', solicitacoes=retorno, filtro=filtro, usuario_logado=current_user.USUARIO)
+            return render_template('painel_solicitacoes.html',
+                                    solicitacoes=retorno,
+                                    filtro=filtro,
+                                    usuario_logado=current_user.USUARIO,
+                                    sort_by=sort_by,
+                                    sort_dir=sort_dir
+                                    )
         except Exception as e:
                 flash('Erro ao realizar a consulta!', 'error')
                 logging.error(f'Deu erro na consulta: {e}')

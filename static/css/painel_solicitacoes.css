@@ -249,15 +249,24 @@ nav {
     background: var(--secondary-color);
     color: var(--primary-color);
     font-weight: 600;
-    padding: 14px 10px;
     border-bottom: 2px solid rgba(38, 38, 38, 0.287);
     text-align: left;
     font-size: 1.05rem;
     letter-spacing: 0.5px;
 }
 
+.tabela th a {
+    text-decoration: none;
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    font-weight: 600;
+    text-align: left;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+}
+
 .tabela td {
-    padding: 12px 10px;
+    padding: 12px;
     background: #fff;
     color: #222;
     font-size: 0.98rem;

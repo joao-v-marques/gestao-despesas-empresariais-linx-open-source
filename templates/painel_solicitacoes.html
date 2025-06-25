@@ -111,13 +111,91 @@
             <table class="tabela">
                 <thead>
                     <tr class="head-lista">
-                        <th>Código</th>
-                        <th>Emp./Rev.</th>
-                        <th>Usuario</th>
-                        <th>Departamento</th>
-                        <th>Tipo da Despesa</th>
-                        <th>Valor</th>
-                        <th>Status</th>
+                        {% set new_dir = 'asc' if sort_dir|lower == 'desc' else 'desc' %}
+                        <th><a href="?filtro={{ filtro }}&sort_by=ID&sort_dir={{ new_dir }}">
+                            Código
+                            {% if sort_by == 'ID' %}
+                                <span class="seta-ordenacao">
+                                    {% if sort_dir|lower == 'asc' %}
+                                        ↑
+                                    {% else %}
+                                        ↓
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?filtro={{ filtro }}&sort_by=EMPRESA&sort_dir={{ new_dir }}">
+                            Emp./Rev.
+                            {% if sort_by == 'EMPRESA' %}
+                                <span class="seta-ordenacao">
+                                    {% if sort_dir|lower == 'asc' %}
+                                        ↑
+                                    {% else %}
+                                        ↓
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?filtro={{ filtro }}&sort_by=USUARIO_SOLICITANTE&sort_dir={{ new_dir }}">
+                            Usuário
+                            {% if sort_by == 'USUARIO_SOLICITANTE' %}
+                                <span class="seta-ordenacao">
+                                    {% if sort_dir|lower == 'asc' %}
+                                        ↑
+                                    {% else %}
+                                        ↓
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?filtro={{ filtro }}&sort_by=DEPARTAMENTO_DESCRICAO&sort_dir={{ new_dir }}">
+                            Departamento
+                            {% if sort_by == 'DEPARTAMENTO_DESCRICAO' %}
+                                <span class="seta-ordenacao">
+                                    {% if sort_dir|lower == 'asc' %}
+                                        ↑
+                                    {% else %}
+                                        ↓
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?filtro={{ filtro }}&sort_by=TIPO_DESPESA_DESCRICAO&sort_dir={{ new_dir }}">
+                            Tipo Desp.
+                            {% if sort_by == 'TIPO_DESPESA_DESCRICAO' %}
+                                <span class="seta-ordenacao">
+                                    {% if sort_dir|lower == 'asc' %}
+                                        ↑
+                                    {% else %}
+                                        ↓
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?filtro={{ filtro }}&sort_by=VALOR&sort_dir={{ new_dir }}">
+                            Valor
+                            {% if sort_by == 'VALOR' %}
+                                <span class="seta-ordenacao">
+                                    {% if sort_dir|lower == 'asc' %}
+                                        ↑
+                                    {% else %}
+                                        ↓
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?filtro={{ filtro }}&sort_by=STATUS&sort_dir={{ new_dir }}">
+                            Status
+                            {% if sort_by == 'STATUS' %}
+                                <span class="seta-ordenacao">
+                                    {% if sort_dir|lower == 'asc' %}
+                                        ↑
+                                    {% else %}
+                                        ↓
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </a></th>
                         <th>Opções</th>
                     </tr>
                 </thead>
