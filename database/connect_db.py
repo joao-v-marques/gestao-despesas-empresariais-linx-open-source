@@ -21,7 +21,7 @@ def conexaoOrcl():
     
     except oracledb.DatabaseError as e:
         error, = e.args
-        logging.error(f"Erro ao conectar ao os dados do json:")
+        logging.error(f"Erro ao conectar ao os dados do json: {error}")
 
 def abrir_cursor():
     conn = conexaoOrcl()

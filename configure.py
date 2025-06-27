@@ -37,7 +37,7 @@ def config_login(app):
 
     @login_manager.user_loader
     def load_user(user_id):
-        sql = "SELECT ID, USUARIO, FUNCAO FROM LIU_USUARIO WHERE ID = :1"
+        sql = "SELECT ID, USUARIO, FUNCAO, NOME FROM LIU_USUARIO WHERE ID = :1"
         valores = [user_id]
 
         cursor, conn = abrir_cursor()
@@ -45,7 +45,7 @@ def config_login(app):
             cursor.execute(sql, valores)
             resultado = cursor.fetchone()
             if resultado:
-                return User(id=resultado[0], USUARIO=resultado[1], FUNCAO=resultado[2])
+                return User(id=resultado[0], USUARIO=resultado[1], FUNCAO=resultado[2], NOME=resultado[3])
             else:
                 return None
         except Exception as e:

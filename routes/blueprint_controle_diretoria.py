@@ -93,8 +93,8 @@ def mudar_status(id):
         try:
             cursor, conn = abrir_cursor()
 
-            sql_select = "SELECT * FROM LIU_SOLICITACOES WHERE ID = :1"
-            cursor.execute(sql_select, [id])
+            sql_solicitacao = "SELECT * FROM LIU_SOLICITACOES WHERE ID = :1"
+            cursor.execute(sql_solicitacao, [id])
             solicitacao = cursor.dict_fetchone()
 
             pdf_path = gerar_pdf(solicitacao, current_user.USUARIO)
@@ -104,10 +104,35 @@ def mudar_status(id):
             cursor.execute(sql_aprovado, valores)
             conn.commit()
 
+            sql_max_processo = "SELECT MAX(NRO_PROCESSO) FROM FAT_PROCESSO_DESPESA"
+            cursor.execute(sql_max_processo)
+            max_processo = cursor.fetchone()[0]
+
+            if max_processo is None:
+                proximo_numero_processo = 1
+            else:
+                proximo_numero_processo = max_processo + 1
+
+            sql_inserir = "INSERT INTO FAT_PROCESSO_DESPESA (EMPRESA, REVENDA, NRO_PROCESSO, DESCRICAO, VAL_PROCESSO, SITUACAO, USUARIO, DEPARTAMENTO) VALUES (:1, :2, :3, :4, :5, :6, :7, :8)"
+            valores_inserir = [
+                solicitacao['empresa'],
+                solicitacao['revenda'],
+                proximo_numero_processo,
+                f"{solicitacao['descricao']}. Aprovado por: {current_user.NOME}",
+                solicitacao['valor'],
+                'A',
+                1,
+                solicitacao['departamento']
+                ]
+            cursor.execute(sql_inserir, valores_inserir)
+            conn.commit()
+            
+            logging.info(f'Entrou a solicitação! Empresa: {solicitacao['empresa']}, Revenda: {solicitacao['revenda']}, Descrição: {solicitacao['descricao']}, Valor: {solicitacao['valor']}, Situação: A, Usuario_autorizante: 1, Departamento: {solicitacao['departamento']}')
             flash('Solicitação Aprovada e PDF gerado com sucesso!', 'success')
             return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
         except Exception as e:
             flash(f'Erro interno ao realizar a consulta: {e}', 'error')
+            logging.error(f'Erro ao realizar a consulta: {e}')
             return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
         finally:
             cursor.close()

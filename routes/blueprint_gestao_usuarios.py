@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, redirect, request, flash, url_for
 from flask_login import login_required, current_user
 from decorators import role_required
 from database.connect_db import abrir_cursor
-import logging
 
 blueprint_gestao_usuarios = Blueprint('blueprint_gestao_usuarios', __name__)
 
