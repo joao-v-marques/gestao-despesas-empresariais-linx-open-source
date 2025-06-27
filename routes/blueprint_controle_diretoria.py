@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash 
 from flask_login import login_required, current_user
 from decorators import role_required
 from gerar_pdf import gerar_pdf
@@ -13,7 +13,28 @@ blueprint_controle_diretoria = Blueprint('blueprint_controle_diretoria', __name_
 def controle_diretoria():
     try:
         cursor, conn = abrir_cursor()
-        sql = "SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE STATUS = 'PENDENTE'"
+        sql = """
+        SELECT
+            s.ID,
+            s.EMPRESA,
+            s.REVENDA,
+            s.USUARIO_SOLICITANTE,
+            d.CODIGO AS DEPARTAMENTO_CODIGO,
+            d.DESCRICAO  AS DEPARTAMENTO_DESCRICAO,
+            t.CODIGO AS TIPO_DESPESA_CODIGO,
+            t.DESCRICAO AS TIPO_DESPESA_DESCRICAO,
+            s.VALOR,
+            s.STATUS
+        FROM
+            LIU_SOLICITACOES s
+        JOIN
+            LIU_DEPARTAMENTO d ON s.DEPARTAMENTO = d.CODIGO
+        JOIN
+            LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
+        WHERE
+            s.STATUS = 'PENDENTE'
+        """
+
         cursor.execute(sql)
         retorno = cursor.dict_fetchall()
 
@@ -70,7 +91,6 @@ def mais_info_cd(id):
 @role_required('ADMIN', 'DIRETORIA')
 def mudar_status(id):
     novo_status = request.form['status']
-    motivo_reprova = request.form['motivo_reprova']
     if novo_status == 'APROVADO':
         try:
             cursor, conn = abrir_cursor()
@@ -96,6 +116,7 @@ def mudar_status(id):
             cursor.close()
             conn.close()
     elif novo_status == 'REPROVADO':
+        motivo_reprova = request.form['motivo_reprova']
         try:
             cursor, conn = abrir_cursor()
             sql = "UPDATE LIU_SOLICITACOES SET STATUS = 'REPROVADO', MOTIVO_REPROVA = :1 WHERE ID = :2"

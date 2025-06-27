@@ -2,10 +2,7 @@ __pycache__/
 *.py[cod]
 *.pyc
 venv/
-.env
 *.log
 /dist
 main.spec
 /build
-/database/instantclient_23_6
-/database/configs.json
