@@ -16,8 +16,7 @@ def departamento():
         cursor.execute(sql)
         retorno = cursor.dict_fetchall()
     except Exception as e:
-        flash('Erro interno ao realizar a consulta!', 'error')
-        logging.error(f'Deu erro na consulta: {e}')
+        flash(f'Erro interno ao realizar a consulta: {e}', 'error')
         return redirect(url_for('blueprint_controle_diretoria.mais_info_cd'))
     finally:
         cursor.close()
@@ -52,8 +51,7 @@ def cadastrar():
                 flash('Cadastro realizado com sucesso!', 'success')
                 return redirect(url_for('blueprint_departamento.departamento'))
         except Exception as e:
-            flash('Erro interno ao realizar a consulta!', 'error')
-            logging.error(f'Deu erro na consulta: {e}')
+            flash(f'Erro interno ao realizar a consulta: {e}', 'error')
             return redirect(url_for('blueprint_departamento.departamento'))
         finally:
             cursor.close()
@@ -102,10 +100,8 @@ def editar(id):
                 conn.commit()
                 return redirect(url_for('blueprint_departamento.departamento'))
         except Exception as e:
-            flash('Erro interno ao realizar a consulta!', 'error')
-            logging.error(f'Deu erro na consulta: {e}')
+            flash(f'Erro interno ao realizar a consulta: {e}', 'error')
             return redirect(url_for('blueprint_departamento.departamento'))
         finally:
             cursor.close()
             conn.close()
-

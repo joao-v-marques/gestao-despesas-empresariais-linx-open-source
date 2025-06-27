@@ -64,8 +64,7 @@ def painel_solicitacoes():
                                     sort_dir=sort_dir
                                     )
         except Exception as e:
-                flash('Erro ao realizar a consulta!', 'error')
-                logging.error(f'Deu erro na consulta: {e}')
+                flash(f'Erro ao realizar a consulta: {e}', 'error')
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
         finally:
                 cursor.close()
@@ -90,8 +89,7 @@ def mais_info_sol(id):
 
             return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=retorno_solicitacao, departamento=retorno_departamento, tipo_despesa=retorno_tipo_despesa)
         except Exception as e:
-                flash('Erro interno ao realizar a consulta!', 'error')
-                logging.error(f'Deu erro na consulta: {e}')
+                flash(f'Erro interno ao realizar a consulta: {e}', 'error')
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
         finally:
                 cursor.close()
@@ -113,8 +111,7 @@ def download_pdf(id):
                 flash('PDF localizado!', 'success')
                 return send_file(retorno['pdf_path'], as_attachment=True)
         except Exception as e:
-                flash('Erro interno!', 'error')
-                logging.error(f'Deu erro na consulta: {e}')
+                flash(f'Erro interno: {e}', 'error')
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
         finally:
                 cursor.close()
@@ -154,8 +151,7 @@ def salvar_edicao(id):
                     flash('Alteração realizada com sucesso!', 'success')
                     return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', ixd=id))
                 except Exception as e:
-                    flash('Erro interno!', 'error')
-                    logging.error(f'Deu erro na consulta: {e}')
+                    flash(f'Erro na consulta: {e}', 'error')
                     return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
                 finally:
                     cursor.close()
@@ -172,8 +168,7 @@ def excluir_solicitacao(id):
                 flash('Solitação excluida com sucesso!', 'error')
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
             except Exception as e:
-                flash('Erro interno!', 'error')
-                logging.error(f'Deu erro na consulta: {e}')
+                flash('Erro na consulta: {e}', 'error')
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
             finally:
                 cursor.close()
@@ -183,17 +178,16 @@ def excluir_solicitacao(id):
 @login_required
 def reenviar_solicitacao(id):
                 try:
-                        cursor, conn = abrir_cursor()
+                    cursor, conn = abrir_cursor()
 
-                        sql = "UPDATE LIU_SOLICITACOES SET STATUS = :1 WHERE ID = :2"
-                        valores = ['PENDENTE', [id]]
-                        cursor.execute(sql, valores)
-                        conn.commit()
-                        return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+                    sql = "UPDATE LIU_SOLICITACOES SET STATUS = :1 WHERE ID = :2"
+                    valores = ['PENDENTE', [id]]
+                    cursor.execute(sql, valores)
+                    conn.commit()
+                    return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
                 except Exception as e:
-                        flash('Erro interno!', 'error')
-                        logging.error(f'Deu erro na consulta: {e}')
-                        return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+                    flash(f'Erro na consulta: {e}', 'error')
+                    return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
                 finally:
-                        cursor.close()
-                        conn.close()
+                    cursor.close()
+                    conn.close()

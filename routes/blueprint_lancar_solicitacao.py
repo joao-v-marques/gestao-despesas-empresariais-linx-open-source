@@ -20,12 +20,11 @@ def lancar_solicitacao():
 
         return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO, departamento=retorno_departamento, tipo_despesa=retorno_tipo_despesa)
     except Exception as e:
-                flash('Erro interno ao realizar a consulta!', 'error')
-                logging.error(f'Deu erro na consulta: {e}')
-                return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))    
+        flash(f'Erro interno ao realizar a consulta: {e}', 'error')
+        return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))    
     finally:
-            cursor.close()
-            conn.close()
+        cursor.close()
+        conn.close()
 
 @blueprint_lancar_solicitacao.route('/fazer-lancamento', methods=['POST'])
 @login_required
@@ -56,8 +55,7 @@ def fazer_lancamento():
             flash('Cadastro realizado com sucesso!', 'success')
             return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao', usuario_logado=current_user.USUARIO))
         except Exception as e:
-                flash('Erro interno ao realizar a consulta!', 'error')
-                logging.error(f'Deu erro na consulta: {e}')
+                flash(f'Erro interno ao realizar a consulta: {e}', 'error')
                 return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
         finally:
                 cursor.close()

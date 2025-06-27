@@ -67,8 +67,7 @@ def deletar(id):
             flash('Tipo de Despesa excluido com sucesso', 'success')
             return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
         except Exception as e:
-                flash('Erro interno ao realizar a consulta!', 'error')
-                logging.error(f'Deu erro na consulta: {e}')
+                flash(f'Erro interno ao realizar a consulta: {e}', 'error')
                 return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
         finally:
             cursor.close()
@@ -100,8 +99,7 @@ def editar(id):
                 conn.commit()
                 return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
         except Exception as e:
-            flash('Erro interno ao realizar a consulta!', 'error')
-            logging.error(f'Deu erro na consulta: {e}')
+            flash(f'Erro interno ao realizar a consulta: {e}', 'error')
             return redirect(url_for('blueprint_tipo_despesa.tipo_despesa'))
         finally:
             cursor.close()

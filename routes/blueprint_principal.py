@@ -42,12 +42,10 @@ def troca_senha(id):
         cursor, conn = abrir_cursor()
         try:
             cursor.execute(sql, valores)
-            logging.info('Atualizou Certin')
-            logging.info(f'Usuário atualizado com sucesso!')
+            flash('Usuário atualizado com sucesso!', 'success')
             return redirect(url_for('blueprint_principal.principal'))
         except Exception as e:
-            logging.error(f'Erro as atualizar o usuário: {e}')
-            flash('Erro ao atualizar o usuário!', 'error')
+            flash(f'Erro ao atualizar o usuário: {e}', 'error')
             return redirect(url_for('blueprint_principal.principal'))
         finally:
             cursor.close()

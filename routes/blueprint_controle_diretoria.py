@@ -40,8 +40,7 @@ def controle_diretoria():
 
         return render_template('controle_diretoria.html', query=retorno, usuario_logado=current_user.USUARIO)
     except Exception as e:    
-        flash('Erro interno ao realizar a consulta!', 'error')
-        logging.error(f'Deu erro na consulta: {e}')
+        flash(f'Erro interno ao realizar a consulta: {e}', 'error')
         return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
     finally:
         cursor.close()
@@ -79,8 +78,7 @@ def mais_info_cd(id):
         retorno = cursor.dict_fetchone()
         return render_template('mais_info_cd.html', usuario_logado=current_user.USUARIO, solicitacao=retorno)
     except Exception as e:
-        flash('Erro interno ao realizar a consulta!', 'error')
-        logging.error(f'Deu erro na consulta: {e}')
+        flash(f'Erro interno ao realizar a consulta: {e}', 'error')
         return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
     finally:
         cursor.close()
@@ -109,8 +107,7 @@ def mudar_status(id):
             flash('Solicitação Aprovada e PDF gerado com sucesso!', 'success')
             return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
         except Exception as e:
-            flash('Erro interno ao realizar a consulta!', 'error')
-            logging.error(f'Deu erro na consulta: {e}')
+            flash(f'Erro interno ao realizar a consulta: {e}', 'error')
             return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
         finally:
             cursor.close()
@@ -126,8 +123,7 @@ def mudar_status(id):
             flash('Solicitação Reprovada!', 'success')
             return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
         except Exception as e:
-            flash('Erro interno ao realizar a consulta!', 'error')
-            logging.error(f'Deu erro na consulta: {e}')
+            flash(f'Erro interno ao realizar a consulta: {e}', 'error')
             return redirect(url_for('blueprint_controle_diretoria.mais_info_cd', id=id))
         finally:
             cursor.close()

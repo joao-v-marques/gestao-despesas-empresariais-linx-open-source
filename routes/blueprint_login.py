@@ -22,7 +22,6 @@ def fazer_login():
     try:
         cursor.execute(sql, valores)
         retorno = cursor.dict_fetchone()
-        logging.info(f'Resultado da consulta: {retorno}')
 
         if not retorno:
             flash('Usuário não encontrado!', 'error')
@@ -36,8 +35,7 @@ def fazer_login():
             flash('Senha Incorreta! Tente novamente.', 'error')
             return redirect(url_for('blueprint_login.pagina_login'))
     except Exception as e:
-        logging.error(f'Erro ao executar a consulta: {e}')
-        flash('Erro interno ao realizar a consulta!', 'error')
+        flash(f'Erro interno ao realizar a consulta: {e}', 'error')
         return redirect(url_for('blueprint_login.pagina_login'))
     finally:
         cursor.close()
