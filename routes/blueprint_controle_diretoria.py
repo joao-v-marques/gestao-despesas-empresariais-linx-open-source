@@ -127,7 +127,6 @@ def mudar_status(id):
             cursor.execute(sql_inserir, valores_inserir)
             conn.commit()
             
-            logging.info(f'Entrou a solicitação! Empresa: {solicitacao['empresa']}, Revenda: {solicitacao['revenda']}, Descrição: {solicitacao['descricao']}, Valor: {solicitacao['valor']}, Situação: A, Usuario_autorizante: 1, Departamento: {solicitacao['departamento']}')
             flash('Solicitação Aprovada e PDF gerado com sucesso!', 'success')
             return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
         except Exception as e:
