@@ -51,7 +51,6 @@ def busca_fornecedor(codigo):
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
-
 @blueprint_lancar_solicitacao.route('/fazer-lancamento', methods=['POST'])
 @login_required
 def fazer_lancamento():
