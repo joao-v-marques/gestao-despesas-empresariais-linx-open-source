@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from decorators import role_required
 from gerar_pdf import gerar_pdf
 from database.connect_db import abrir_cursor
+from datetime import datetime
 import logging
 
 blueprint_controle_diretoria = Blueprint('blueprint_controle_diretoria', __name__)
@@ -99,8 +100,8 @@ def mudar_status(id):
 
             pdf_path = gerar_pdf(solicitacao, current_user.USUARIO)
 
-            sql_aprovado = "UPDATE LIU_SOLICITACOES SET STATUS = 'APROVADO', PDF_PATH = :1 WHERE ID = :2"
-            valores = [pdf_path, id]
+            sql_aprovado = "UPDATE LIU_SOLICITACOES SET STATUS = 'APROVADO', PDF_PATH = :1, USUARIO_AUTORIZANTE = :2 WHERE ID = :3"
+            valores = [pdf_path, current_user.CODIGO_APOLLO, id]
             cursor.execute(sql_aprovado, valores)
             conn.commit()
 
@@ -112,17 +113,22 @@ def mudar_status(id):
                 proximo_numero_processo = 1
             else:
                 proximo_numero_processo = max_processo + 1
+            
+            data_atual = datetime.now()
 
-            sql_inserir = "INSERT INTO FAT_PROCESSO_DESPESA (EMPRESA, REVENDA, NRO_PROCESSO, DESCRICAO, VAL_PROCESSO, SITUACAO, USUARIO, DEPARTAMENTO) VALUES (:1, :2, :3, :4, :5, :6, :7, :8)"
+            sql_inserir = "INSERT INTO FAT_PROCESSO_DESPESA (EMPRESA, REVENDA, NRO_PROCESSO, DTA_EMISSAO, DESCRICAO, VAL_PROCESSO, SITUACAO, USUARIO, DEPARTAMENTO, USUARIO_AUTORIZANTE, CLIENTE) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)"
             valores_inserir = [
                 solicitacao['empresa'],
                 solicitacao['revenda'],
                 proximo_numero_processo,
+                data_atual,
                 f"{solicitacao['descricao']}. Aprovado por: {current_user.NOME}",
                 solicitacao['valor'],
                 'A',
-                1,
-                solicitacao['departamento']
+                solicitacao['usuario_solicitante'],
+                solicitacao['departamento'],
+                current_user.CODIGO_APOLLO,
+                solicitacao['fornecedor']
                 ]
             cursor.execute(sql_inserir, valores_inserir)
             conn.commit()

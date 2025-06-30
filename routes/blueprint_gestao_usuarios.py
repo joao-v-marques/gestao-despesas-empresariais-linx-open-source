@@ -29,6 +29,7 @@ def gestao_usuarios():
 @login_required
 @role_required('ADMIN')
 def cadastrar_usuario():
+    cod_apollo_form = request.form['cod_apollo'].strip()
     usuario_form = request.form['usuario'].upper()
     senha_form = request.form['senha'].strip()
     confirma_senha_form = request.form['confirma_senha'].strip()
@@ -49,8 +50,16 @@ def cadastrar_usuario():
     else:
         try:
             cursor, conn = abrir_cursor()
-            sql = "INSERT INTO LIU_USUARIO (USUARIO, SENHA, NOME, FUNCAO, EMPRESA, REVENDA) VALUES (:1, :2, :3, :4, :5, :6)"
-            valores = [usuario_form, senha_form, nome_form, funcao_form, empresa_form, revenda_form]
+            sql = "INSERT INTO LIU_USUARIO (USUARIO, SENHA, NOME, FUNCAO, EMPRESA, REVENDA, CODIGO_APOLLO) VALUES (:1, :2, :3, :4, :5, :6, :7)"
+            valores = [
+                usuario_form,
+                senha_form,
+                nome_form,
+                funcao_form,
+                empresa_form,
+                revenda_form,
+                cod_apollo_form
+                ]
             cursor.execute(sql, valores)
             conn.commit()
             flash('Cadastro realizado com sucesso!', 'success')

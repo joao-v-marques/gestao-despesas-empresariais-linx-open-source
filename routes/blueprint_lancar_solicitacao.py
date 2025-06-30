@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 from database.connect_db import abrir_cursor
+
 import logging
+
 
 blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name__)
 
@@ -26,6 +28,25 @@ def lancar_solicitacao():
         cursor.close()
         conn.close()
 
+@blueprint_lancar_solicitacao.route('/fornecedor/<int:codigo>')
+@login_required
+def busca_fornecedor(codigo):
+    try:
+        cursor, conn = abrir_cursor()
+        sql_busca_fornecedor = "SELECT NOME FROM FAT_CLIENTE WHERE CLIENTE = :1" 
+        cursor.execute(sql_busca_fornecedor, [codigo])
+        retorno = cursor.dict_fetchone()
+        conn.close()
+
+        if retorno:
+            return jsonify(retorno)
+        else:
+            return jsonify({"NOME": None}), 404
+
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+
 @blueprint_lancar_solicitacao.route('/fazer-lancamento', methods=['POST'])
 @login_required
 def fazer_lancamento():
@@ -35,6 +56,7 @@ def fazer_lancamento():
     tipo_despesa_form = request.form['tipo_despesa'].strip()
     descricao_form = request.form['descricao'].strip()
     valor_form = request.form['valor']
+    fornecedor_form = request.form['fornecedor']
 
     try:
         valor_float = float(valor_form.replace('R$', ''))
@@ -48,8 +70,20 @@ def fazer_lancamento():
     else:
         try:
             cursor, conn = abrir_cursor()
-            sql = "INSERT INTO LIU_SOLICITACOES (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS, MOTIVO_REPROVA, PDF_PATH) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)"
-            valores = [empresa_form, revenda_form, current_user.USUARIO, departamento_form, tipo_despesa_form, descricao_form, valor_float, 'PENDENTE', '', '']
+            sql = "INSERT INTO LIU_SOLICITACOES (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, FORNECEDOR, STATUS, MOTIVO_REPROVA, PDF_PATH) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)"
+            valores = [
+                empresa_form,
+                revenda_form,
+                current_user.CODIGO_APOLLO,
+                departamento_form,
+                tipo_despesa_form,
+                descricao_form,
+                valor_float,
+                fornecedor_form,
+                'PENDENTE',
+                '',
+                ''
+                ]
             cursor.execute(sql, valores)
             conn.commit()
             flash('Cadastro realizado com sucesso!', 'success')

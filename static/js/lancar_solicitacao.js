@@ -70,3 +70,21 @@ document.addEventListener('DOMContentLoaded', function () {
         valorInput.value = valorFloat; // Atualiza o valor do campo para enviar como float
     });
 });
+
+document.getElementById('codigo_fornecedor_id').addEventListener('input', function () {
+    const codigo = this.value;
+
+    if (codigo !== '') {
+        fetch(`/lancar-solicitacao/fornecedor/${codigo}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('descricao_fornecedor_id').value = data.nome || 'Fornecedor não encontrado';
+            })
+            .catch(error => {
+                console.error('Erro ao buscar fornecedor:', error);
+                document.getElementById('descricao_fornecedor_id').value = 'Erro na busca';
+            });
+    } else {
+        document.getElementById('descricao_fornecedor_id').value = '';
+    }
+});

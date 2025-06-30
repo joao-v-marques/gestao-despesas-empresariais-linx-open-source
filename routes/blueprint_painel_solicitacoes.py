@@ -37,10 +37,10 @@ def painel_solicitacoes():
                 
             if filtro != 'TODOS':
                 sql = base_sql + " WHERE s.STATUS = :1 AND s.USUARIO_SOLICITANTE = :2"
-                valores = [filtro, current_user.USUARIO]
+                valores = [filtro, current_user.CODIGO_APOLLO]
             else:
                 sql = base_sql + " WHERE s.USUARIO_SOLICITANTE = :1"
-                valores = [current_user.USUARIO]
+                valores = [current_user.CODIGO_APOLLO]
 
             colunas_permitidas = [
                    'ID', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'TIPO_DESPESA_CODIGO', 'TIPO_DESPESA_DESCRICAO', 'VALOR', 'STATUS'

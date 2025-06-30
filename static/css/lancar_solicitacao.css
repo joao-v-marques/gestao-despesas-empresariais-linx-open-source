@@ -261,6 +261,22 @@ nav {
     background-color: #0056b3;
 }
 
+.container-fornecedor {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.container-fornecedor .input-fornecedor {
+    width: 25%;
+}
+
+.container-fornecedor .mostrar-fornecedor {
+    background: var(--input-readonly-bg);
+    color: var(--input-readonly-color);
+    cursor: not-allowed;
+}
+
 .flash-messages {
     max-width: 600px;
     margin: 20px auto;
