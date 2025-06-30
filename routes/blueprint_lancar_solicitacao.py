@@ -12,8 +12,12 @@ blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name_
 def lancar_solicitacao():
     try:
         cursor, conn = abrir_cursor()
-        sql_departamento = "SELECT * FROM LIU_DEPARTAMENTO ORDER BY CODIGO"
-        cursor.execute(sql_departamento)
+        sql_departamento = "SELECT DEPARTAMENTO, NOME FROM GER_DEPARTAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 ORDER BY DEPARTAMENTO"
+        valores = [
+            current_user.EMPRESA,
+            current_user.REVENDA
+        ]
+        cursor.execute(sql_departamento, valores)
         retorno_departamento = cursor.dict_fetchall()
 
         sql_tipo_despesa = "SELECT * FROM LIU_TIPO_DESPESA ORDER BY CODIGO"
@@ -23,6 +27,7 @@ def lancar_solicitacao():
         return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO, departamento=retorno_departamento, tipo_despesa=retorno_tipo_despesa)
     except Exception as e:
         flash(f'Erro interno ao realizar a consulta: {e}', 'error')
+        logging.error(f'Erro: {e}')
         return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))    
     finally:
         cursor.close()

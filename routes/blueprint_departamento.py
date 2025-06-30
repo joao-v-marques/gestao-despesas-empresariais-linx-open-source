@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from decorators import role_required
 from database.connect_db import abrir_cursor
-import logging
 
 blueprint_departamento = Blueprint('blueprint_departamento', __name__)
 

@@ -1,4 +1,3 @@
-import logging
 from flask import Blueprint, request, redirect, url_for, render_template, flash, session
 from flask_login import login_user
 from database.connect_db import abrir_cursor
@@ -16,7 +15,7 @@ def fazer_login():
     usuario_form = request.form['usuario'].strip()
     senha_form = request.form['senha']
     
-    sql = "SELECT ID, USUARIO, SENHA, NOME, FUNCAO, CODIGO_APOLLO FROM LIU_USUARIO WHERE USUARIO = :1"
+    sql = "SELECT ID, USUARIO, SENHA, NOME, FUNCAO, CODIGO_APOLLO, EMPRESA, REVENDA FROM LIU_USUARIO WHERE USUARIO = :1"
     valores = [usuario_form]
     cursor, conn = abrir_cursor()
     try:
@@ -27,7 +26,7 @@ def fazer_login():
             flash('Usuário não encontrado!', 'error')
             return redirect(url_for('blueprint_login.pagina_login'))
         if retorno['senha'] == senha_form:
-            user = User(id=retorno['id'], USUARIO=retorno['usuario'], FUNCAO=retorno['funcao'], NOME=retorno['nome'], CODIGO_APOLLO=retorno['codigo_apollo'])
+            user = User(id=retorno['id'], USUARIO=retorno['usuario'], FUNCAO=retorno['funcao'], NOME=retorno['nome'], CODIGO_APOLLO=retorno['codigo_apollo'], EMPRESA=retorno['empresa'], REVENDA=retorno['revenda'])
             login_user(user)
             flash('Login realizado com sucesso!', 'success')
             return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))

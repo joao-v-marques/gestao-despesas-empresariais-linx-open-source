@@ -36,7 +36,6 @@
 
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blueprint_departamento.departamento') }}">Cadastro Departamento</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_tipo_despesa.tipo_despesa') }}">Cadastro Tipo Despesa </a></li>
                         </ul>
                     </li>
@@ -118,7 +117,7 @@
             <label for="departamento_id" class="label-departamento">Departamento</label>
             <select name="departamento" id="departamento_id" class="input-departamento">
                 {% for d in departamento %}
-                    <option value="{{ d['codigo'] }}">{{ d['codigo'] }} - {{ d['descricao'] }}</option>
+                    <option value="{{ d['departamento'] }}">{{ d['departamento'] }} - {{ d['nome'] }}</option>
                 {% endfor %}
             </select>
 
