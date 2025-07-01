@@ -112,8 +112,8 @@
                 <label for="departamento_id">Departamento:</label>
                 <select name="departamento" id="departamento_id" class="input-departamento" disabled>
                     {% for d in departamento %}
-                        <option value="{{ d['codigo'] }}" {% if d['codigo'] == solicitacao['departamento'] %}selected{% endif %}>
-                            {{ d['codigo'] }} - {{ d['descricao'] }}
+                        <option value="{{ d['departamento'] }}" {% if d['departamento'] == solicitacao['nome'] %}selected{% endif %}>
+                            {{ d['departamento'] }} - {{ d['nome'] }}
                         </option>
                     {% endfor %}
                 </select>

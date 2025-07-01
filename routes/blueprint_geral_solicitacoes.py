@@ -14,13 +14,13 @@ def geral_solicitacoes():
     try:
         cursor, conn = abrir_cursor()
         base_sql = """
-        SELECT
+        SELECT DISTINCT
             s.ID,
             s.EMPRESA,
             s.REVENDA,
-            s.USUARIO_SOLICITANTE,
-            d.CODIGO AS DEPARTAMENTO_CODIGO,
-            d.DESCRICAO AS DEPARTAMENTO_DESCRICAO,
+            u.LOGIN AS USUARIO_SOLICITANTE,
+            d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
+            d.NOME AS DEPARTAMENTO_DESCRICAO,
             t.CODIGO AS TIPO_DESPESA_CODIGO,
             t.DESCRICAO AS TIPO_DESPESA_DESCRICAO,
             s.VALOR,
@@ -30,9 +30,11 @@ def geral_solicitacoes():
         FROM
             LIU_SOLICITACOES s
         JOIN
-            LIU_DEPARTAMENTO d ON s.DEPARTAMENTO = d.CODIGO
+            GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
         JOIN
             LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
+        JOIN
+            GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
         """
         
         if filtro != 'TODOS':

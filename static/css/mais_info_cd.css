@@ -275,6 +275,23 @@ nav {
     grid-column: 1 / 3;
 }
 
+.formulario textarea#descricao_id {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 1rem;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    background: var(--input-bg);
+    color: #333;
+    resize: vertical;
+    min-height: 60px;
+    box-sizing: border-box;
+    grid-column: 1 / 3;
+    transition: border 0.2s, background 0.2s;
+    margin-bottom: 2px;
+    white-space: pre-line;
+}
+
 .modal-form {
     display: flex;
     flex-direction: column;

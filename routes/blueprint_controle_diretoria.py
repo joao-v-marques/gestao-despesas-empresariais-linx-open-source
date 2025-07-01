@@ -19,19 +19,21 @@ def controle_diretoria():
             s.ID,
             s.EMPRESA,
             s.REVENDA,
-            s.USUARIO_SOLICITANTE,
-            d.CODIGO AS DEPARTAMENTO_CODIGO,
-            d.DESCRICAO  AS DEPARTAMENTO_DESCRICAO,
+            u.LOGIN AS USUARIO_SOLICITANTE,
+            d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
+            d.NOME  AS DEPARTAMENTO_DESCRICAO,
             t.CODIGO AS TIPO_DESPESA_CODIGO,
             t.DESCRICAO AS TIPO_DESPESA_DESCRICAO,
             s.VALOR,
             s.STATUS
         FROM
             LIU_SOLICITACOES s
-        JOIN
-            LIU_DEPARTAMENTO d ON s.DEPARTAMENTO = d.CODIGO
+        JOIN 
+            GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
         JOIN
             LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
+        JOIN
+            GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
         WHERE
             s.STATUS = 'PENDENTE'
         """
@@ -42,6 +44,7 @@ def controle_diretoria():
         return render_template('controle_diretoria.html', query=retorno, usuario_logado=current_user.USUARIO)
     except Exception as e:    
         flash(f'Erro interno ao realizar a consulta: {e}', 'error')
+        logging.error(e)
         return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
     finally:
         cursor.close()
@@ -58,9 +61,9 @@ def mais_info_cd(id):
             s.ID,
             s.EMPRESA,
             s.REVENDA,
-            s.USUARIO_SOLICITANTE,
-            d.CODIGO AS DEPARTAMENTO_CODIGO,
-            d.DESCRICAO AS DEPARTAMENTO_DESCRICAO,
+            u.LOGIN AS USUARIO_SOLICITANTE,
+            d.DEPARTAMENTO AS DEPARTAMENTO,
+            d.NOME AS NOME,
             t.CODIGO AS TIPO_DESPESA_CODIGO,
             t.DESCRICAO AS TIPO_DESPESA_DESCRICAO,
             s.DESCRICAO,
@@ -68,10 +71,12 @@ def mais_info_cd(id):
             s.STATUS 
         FROM 
             LIU_SOLICITACOES s
-        JOIN
-            LIU_DEPARTAMENTO d ON s.DEPARTAMENTO = d.CODIGO
+        JOIN 
+            GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
         JOIN
             LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
+        JOIN
+            GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
         WHERE 
             s.ID = :1
         """

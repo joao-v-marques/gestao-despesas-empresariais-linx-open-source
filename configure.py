@@ -8,7 +8,6 @@ from routes.blueprint_principal import blueprint_principal
 from routes.blueprint_login import blueprint_login
 from routes.blueprint_painel_solicitacoes import blueprint_painel_solicitacoes
 from routes.blueprint_controle_diretoria import blueprint_controle_diretoria
-from routes.blueprint_departamento import blueprint_departamento
 from routes.blueprint_tipo_despesa import blueprint_tipo_despesa
 from routes.blueprint_geral_solicitacoes import blueprint_geral_solicitacoes
 
@@ -17,7 +16,6 @@ def config_all(app):
     config_login(app)
 
 def config_bp(app):
-    app.register_blueprint(blueprint_departamento, url_prefix="/departamento")
     app.register_blueprint(blueprint_controle_diretoria, url_prefix="/controle-diretoria")
     app.register_blueprint(blueprint_painel_solicitacoes, url_prefix="/painel-solicitacoes")
     app.register_blueprint(blueprint_lancar_solicitacao, url_prefix="/lancar-solicitacao")

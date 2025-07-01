@@ -2,6 +2,7 @@ from flask import Blueprint, request, redirect, url_for, render_template, flash,
 from flask_login import login_user
 from database.connect_db import abrir_cursor
 from database.models import User
+import logging
 
 blueprint_login = Blueprint('blueprint_login', __name__)
 
@@ -35,6 +36,7 @@ def fazer_login():
             return redirect(url_for('blueprint_login.pagina_login'))
     except Exception as e:
         flash(f'Erro interno ao realizar a consulta: {e}', 'error')
+        logging.error(f'Erro: {e}')
         return redirect(url_for('blueprint_login.pagina_login'))
     finally:
         cursor.close()

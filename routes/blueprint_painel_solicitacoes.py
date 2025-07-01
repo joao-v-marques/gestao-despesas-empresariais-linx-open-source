@@ -16,13 +16,13 @@ def painel_solicitacoes():
         try:
             cursor, conn = abrir_cursor()
             base_sql = """
-            SELECT 
-                s.ID, 
+            SELECT DISTINCT
+                s.ID,
                 s.EMPRESA, 
                 s.REVENDA, 
-                s.USUARIO_SOLICITANTE, 
-                d.CODIGO AS DEPARTAMENTO_CODIGO, 
-                d.DESCRICAO AS DEPARTAMENTO_DESCRICAO, 
+                u.LOGIN AS USUARIO_SOLICITANTE, 
+                d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO, 
+                d.NOME AS DEPARTAMENTO_DESCRICAO, 
                 t.CODIGO AS TIPO_DESPESA_CODIGO, 
                 t.DESCRICAO AS TIPO_DESPESA_DESCRICAO, 
                 s.VALOR, 
@@ -30,9 +30,11 @@ def painel_solicitacoes():
             FROM 
                 LIU_SOLICITACOES s
             JOIN 
-                LIU_DEPARTAMENTO d ON s.DEPARTAMENTO = d.CODIGO
+                GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
             JOIN 
                 LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
+            JOIN
+                GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
         """
                 
             if filtro != 'TODOS':
@@ -65,7 +67,8 @@ def painel_solicitacoes():
                                     )
         except Exception as e:
                 flash(f'Erro ao realizar a consulta: {e}', 'error')
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+                logging.error(f'erro: {e}')
+                return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
         finally:
                 cursor.close()
                 conn.close()
@@ -75,11 +78,33 @@ def painel_solicitacoes():
 def mais_info_sol(id):
         try:
             cursor, conn = abrir_cursor()
-            sql_solicitacao = "SELECT ID, EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, STATUS FROM LIU_SOLICITACOES WHERE ID = :1"
+            sql_solicitacao = """SELECT
+                                    s.ID,
+                                    s.EMPRESA,
+                                    s.REVENDA,
+                                    u.LOGIN AS USUARIO_SOLICITANTE,
+                                    d.DEPARTAMENTO AS CODIGO,
+                                    d.NOME AS NOME,
+                                    t.CODIGO AS CODIGO,
+                                    t.DESCRICAO AS CODIGO,
+                                    s.DESCRICAO AS DESCRICAO,
+                                    s.VALOR,
+                                    s.STATUS
+                                FROM
+                                    LIU_SOLICITACOES s
+                                JOIN 
+                                    GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+                                JOIN 
+                                    LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
+                                JOIN
+                                    GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+                                WHERE 
+                                    ID = :1
+                                    """
             cursor.execute(sql_solicitacao, [id])
             retorno_solicitacao = cursor.dict_fetchone()
                 
-            sql_departamento = "SELECT * FROM LIU_DEPARTAMENTO ORDER BY CODIGO"
+            sql_departamento = "SELECT * FROM GER_DEPARTAMENTO ORDER BY DEPARTAMENTO"
             cursor.execute(sql_departamento)
             retorno_departamento = cursor.dict_fetchall()
 
@@ -90,6 +115,7 @@ def mais_info_sol(id):
             return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=retorno_solicitacao, departamento=retorno_departamento, tipo_despesa=retorno_tipo_despesa)
         except Exception as e:
                 flash(f'Erro interno ao realizar a consulta: {e}', 'error')
+                logging.info(f'{e}')
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
         finally:
                 cursor.close()
