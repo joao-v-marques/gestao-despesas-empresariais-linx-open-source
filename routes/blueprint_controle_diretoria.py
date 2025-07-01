@@ -15,7 +15,7 @@ def controle_diretoria():
     try:
         cursor, conn = abrir_cursor()
         sql = """
-        SELECT
+        SELECT DISTINCT
             s.ID,
             s.EMPRESA,
             s.REVENDA,
