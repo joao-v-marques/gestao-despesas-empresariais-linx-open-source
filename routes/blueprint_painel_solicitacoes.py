@@ -10,7 +10,7 @@ blueprint_painel_solicitacoes = Blueprint('blueprint_painel_solicitacoes', __nam
 def painel_solicitacoes():
         session.pop('_flashes', None)
         filtro = request.args.get('filtro', 'PENDENTE')
-        sort_by = request.args.get('sort_by', 'ID').upper()
+        sort_by = request.args.get('sort_by', 'ID').upper() 
         sort_dir = request.args.get('sort_dir', 'ASC').upper()
 
         try:
