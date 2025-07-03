@@ -20,11 +20,7 @@ def lancar_solicitacao():
         cursor.execute(sql_departamento, valores)
         retorno_departamento = cursor.dict_fetchall()
 
-        sql_tipo_despesa = "SELECT * FROM LIU_TIPO_DESPESA ORDER BY CODIGO"
-        cursor.execute(sql_tipo_despesa)
-        retorno_tipo_despesa = cursor.dict_fetchall()
-
-        return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO, departamento=retorno_departamento, tipo_despesa=retorno_tipo_despesa)
+        return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO, departamento=retorno_departamento)
     except Exception as e:
         flash(f'Erro interno ao realizar a consulta: {e}', 'error')
         logging.error(f'Erro: {e}')
@@ -57,7 +53,6 @@ def fazer_lancamento():
     empresa_form = request.form['empresa']
     revenda_form = request.form['revenda']
     departamento_form = request.form['departamento'].strip()
-    tipo_despesa_form = request.form['tipo_despesa'].strip()
     descricao_form = request.form['descricao'].strip()
     valor_form = request.form['valor']
     fornecedor_form = request.form['fornecedor']
@@ -74,13 +69,12 @@ def fazer_lancamento():
     else:
         try:
             cursor, conn = abrir_cursor()
-            sql = "INSERT INTO LIU_SOLICITACOES (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, TIPO_DESPESA, DESCRICAO, VALOR, FORNECEDOR, STATUS, MOTIVO_REPROVA, PDF_PATH) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)"
+            sql = "INSERT INTO LIU_SOLICITACOES (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, DESCRICAO, VALOR, FORNECEDOR, STATUS, MOTIVO_REPROVA, PDF_PATH) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)"
             valores = [
                 empresa_form,
                 revenda_form,
                 current_user.CODIGO_APOLLO,
                 departamento_form,
-                tipo_despesa_form,
                 descricao_form,
                 valor_float,
                 fornecedor_form,

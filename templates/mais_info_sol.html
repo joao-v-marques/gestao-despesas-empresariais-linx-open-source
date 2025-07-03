@@ -36,7 +36,6 @@
 
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blueprint_tipo_despesa.tipo_despesa') }}">Cadastro Tipo Despesa </a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -152,6 +151,8 @@
                     <button type="button" class="btn btn-primary" id="btn-editar">Editar</button>
                     <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalReenviar{{ solicitacao['id'] }}" style="margin-left: 285px;">Reenviar</button>
                 {% elif solicitacao['status'] == 'APROVADO' %}
+                    <a href="{{ url_for('blueprint_painel_solicitacoes.download_pdf', id=solicitacao['id']) }}" class="btn btn-info">Baixar PDF</a>
+                {% elif solicitacao['status'] == 'ENCERRADO' %}
                     <a href="{{ url_for('blueprint_painel_solicitacoes.download_pdf', id=solicitacao['id']) }}" class="btn btn-info">Baixar PDF</a>
                 {% endif %}
             </div>

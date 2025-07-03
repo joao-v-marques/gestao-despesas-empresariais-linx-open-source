@@ -36,7 +36,6 @@
 
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_gestao_usuarios.gestao_usuarios') }}">Gestão de Usuários</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blueprint_tipo_despesa.tipo_despesa') }}">Cadastro Tipo Despesa </a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -98,10 +97,10 @@
 
         <form action="{{ url_for('blueprint_lancar_solicitacao.fazer_lancamento') }}" method="POST" class="formulario">
             <label for="codigo_fornecedor_id" class="label-fornecedor">Cód. Fornecedor</label>
-        <div class="container-fornecedor">
-            <input type="text" name="fornecedor" id="codigo_fornecedor_id" class="input-fornecedor">
-            <input type="text" class="mostrar-fornecedor" id="descricao_fornecedor_id" readonly>
-        </div>
+            <div class="container-fornecedor">
+                <input type="text" name="fornecedor" id="codigo_fornecedor_id" class="input-fornecedor">
+                <input type="text" class="mostrar-fornecedor" id="descricao_fornecedor_id" readonly>
+            </div>
 
             <label for="empresa_id" class="label-empresa">Empresa</label>
             <select name="empresa" id="empresa_id">
@@ -118,13 +117,6 @@
             <select name="departamento" id="departamento_id" class="input-departamento">
                 {% for d in departamento %}
                     <option value="{{ d['departamento'] }}">{{ d['departamento'] }} - {{ d['nome'] }}</option>
-                {% endfor %}
-            </select>
-
-            <label for="tipo_despesa_id" class="label-tipo-despesa">Tipo Despesa</label>
-            <select name="tipo_despesa" id="tipo_despesa_id" class="input-tipo-despesa">
-                {% for t in tipo_despesa %}
-                    <option value="{{ t['codigo'] }}">{{ t['codigo'] }} - {{ t['descricao'] }}</option>
                 {% endfor %}
             </select>
 
