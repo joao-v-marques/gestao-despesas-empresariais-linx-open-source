@@ -104,7 +104,10 @@
                     <button type="submit" name="filtro" value="ENCERRADO" class="btn btn-outline-warning {% if filtro == 'ENCERRADO' %}active{% endif %}">Encerrados</button>
                     <button type="submit" name="filtro" value="TODOS" class="btn btn-outline-secondary {% if filtro == 'TODOS' %}active{% endif %}">Todos</button>
                 </form>
-                <a href="{{ url_for('blueprint_painel_solicitacoes.download_relatorio') }}">Download Relatório</a>
+                
+                <div class="relatorio">
+                    <a href="{{ url_for('blueprint_painel_solicitacoes.download_relatorio') }}" class="logo-excel"><img src="{{ url_for('static', filename='img/logo_excel.png') }}" alt="Logo do Excel para Relatórios"></a>
+                </div>
             </div>
 
             <table class="tabela">
