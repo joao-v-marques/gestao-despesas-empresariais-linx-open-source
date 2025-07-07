@@ -231,17 +231,33 @@ nav {
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
-.formulario-btn {
-    margin-right: 20px;
+.relatorio {
+    display: flex;
+    align-items: center;
+    margin-left: 16px;
+    position: relative;
 }
 
 .logo-excel {
-    padding: 5.5px;
+    display: inline-block;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffffff 30%, #565656a5 80%);
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(33, 195, 94, 0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
 }
 
 .logo-excel img {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
+    display: block;
+    transition: 0.3s;
+}
+
+.logo-excel:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 16px rgba(20, 112, 55, 0.25);
 }
 
 .formulario-btn {

@@ -95,7 +95,7 @@ def mais_info_sol(id):
                                 WHERE 
                                     ID = :1
                                     """
-            cursor.execute(sql_solicitacao, id)
+            cursor.execute(sql_solicitacao, [id])
             retorno_solicitacao = cursor.dict_fetchone()
                 
             sql_departamento = "SELECT * FROM GER_DEPARTAMENTO ORDER BY DEPARTAMENTO"
@@ -176,8 +176,6 @@ def download_relatorio():
     finally:
         cursor.close()
         conn.close()
-          
-
 
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/salvar', methods=['POST'])
 @login_required
@@ -238,12 +236,16 @@ def reenviar_solicitacao(id):
                     cursor, conn = abrir_cursor()
 
                     sql = "UPDATE LIU_SOLICITACOES SET STATUS = :1 WHERE ID = :2"
-                    valores = ['PENDENTE', [id]]
+                    valores = [
+                        'PENDENTE',
+                        id
+                        ]
                     cursor.execute(sql, valores)
                     conn.commit()
                     return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
                 except Exception as e:
                     flash(f'Erro na consulta: {e}', 'error')
+                    logging.info(e)
                     return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
                 finally:
                     cursor.close()
