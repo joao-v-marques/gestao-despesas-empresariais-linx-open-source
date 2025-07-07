@@ -89,7 +89,7 @@ def editar_usuario(id):
         try:
             cursor, conn = abrir_cursor()
             sql = "UPDATE LIU_USUARIO SET USUARIO = :1, SENHA = :2, NOME = :3, FUNCAO = :4, EMPRESA = :5, REVENDA = :6 WHERE ID = :7"
-            valores = [novo_usuario, novo_senha, novo_nome, novo_funcao, novo_empresa, novo_revenda, [id]]
+            valores = [novo_usuario, novo_senha, novo_nome, novo_funcao, novo_empresa, novo_revenda, id]
             cursor.execute(sql, valores)
             conn.commit()
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))

@@ -241,7 +241,7 @@ nav {
 .logo-excel {
     display: inline-block;
     border-radius: 50%;
-    background: linear-gradient(135deg, #ffffff 30%, #565656a5 80%);
+    background: linear-gradient(135deg, #565656a5 50%, #ffffff 80%);
     padding: 10px;
     box-shadow: 0 2px 8px rgba(33, 195, 94, 0.15);
     transition: transform 0.2s, box-shadow 0.2s;
