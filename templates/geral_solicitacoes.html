@@ -108,6 +108,9 @@
                         <button type="button" value="TODOS" class="btn btn-outline-secondary {% if filtro == 'TODOS' %}active{% endif %}" onclick="setFiltro('TODOS')">Todos</button>
                     </div>
                 </form>
+                <div class="relatorio">
+                    <a href="{{ url_for('blueprint_painel_solicitacoes.download_relatorio') }}" class="logo-excel"><img src="{{ url_for('static', filename='img/logo_excel.png') }}" alt="Logo do Excel para Relatórios"></a>
+                </div>
             </div>
 
             <table class="tabela">
@@ -117,7 +120,6 @@
                         <th>Emp./Rev</th>
                         <th>Usuario</th>
                         <th>Departamento</th>
-                        <th>Tipo da Despesa</th>
                         <th>Valor</th>
                         <th>Status</th>
                         <th>Opções</th>
@@ -147,7 +149,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="infoModalLabel{{ s['id'] }}">Confirmar ação</h5>
+                                <h5 class="modal-title" id="infoModalLabel{{ s['id'] }}">Visualização da Solicitação</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                             </div>
                             <div class="modal-body-edit">

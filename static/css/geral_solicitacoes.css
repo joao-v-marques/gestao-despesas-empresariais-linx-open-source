@@ -226,6 +226,7 @@ nav {
 .container-btn {
     display: flex;
     justify-content: center;
+    align-items: center;
     margin-bottom: 28px;
 }
 
@@ -254,7 +255,7 @@ nav {
     color: var(--primary-color);
     font-weight: 600;
     padding: 14px 0px;
-    border: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
     text-align: center;
     font-size: 1.05rem;
     letter-spacing: 0.5px;
@@ -264,9 +265,6 @@ nav {
     padding: 12px;
     background: #fff;
     font-size: 0.98rem;
-    border-bottom: 1px solid #e5e5e5;
-    border-right: 1px solid #e5e5e5;
-    border-left: 1px solid #e5e5e5;
     vertical-align: middle;
     transition: background 0.2s;
 }
@@ -281,6 +279,35 @@ nav {
     font-style: italic;
     padding: 24px 0;
     font-size: 1.1rem;
+}
+
+.relatorio {
+    display: flex;
+    align-items: center;
+    margin-left: 16px;
+    position: relative;
+}
+
+.logo-excel {
+    display: inline-block;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #565656a5 50%, #ffffff 80%);
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(33, 195, 94, 0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.logo-excel img {
+    width: 36px;
+    height: 36px;
+    display: block;
+    transition: 0.3s;
+}
+
+.logo-excel:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 16px rgba(20, 112, 55, 0.25);
 }
 
 .head-lista th:last-child,
