@@ -104,6 +104,7 @@
                     <button type="submit" name="filtro" value="ENCERRADO" class="btn btn-outline-warning {% if filtro == 'ENCERRADO' %}active{% endif %}">Encerrados</button>
                     <button type="submit" name="filtro" value="TODOS" class="btn btn-outline-secondary {% if filtro == 'TODOS' %}active{% endif %}">Todos</button>
                 </form>
+                <a href="{{ url_for('blueprint_painel_solicitacoes.download_relatorio') }}">Download Relatório</a>
             </div>
 
             <table class="tabela">
@@ -158,18 +159,6 @@
                                 </span>
                             {% endif %}
                         </a></th>
-                        <th><a href="?filtro={{ filtro }}&sort_by=TIPO_DESPESA_DESCRICAO&sort_dir={{ new_dir }}">
-                            Tipo Desp.
-                            {% if sort_by == 'TIPO_DESPESA_DESCRICAO' %}
-                                <span class="seta-ordenacao">
-                                    {% if sort_dir|lower == 'asc' %}
-                                        ↑
-                                    {% else %}
-                                        ↓
-                                    {% endif %}
-                                </span>
-                            {% endif %}
-                        </a></th>
                         <th><a href="?filtro={{ filtro }}&sort_by=VALOR&sort_dir={{ new_dir }}">
                             Valor
                             {% if sort_by == 'VALOR' %}
@@ -204,7 +193,6 @@
                                 <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
                                 <td>{{ s['usuario_solicitante'] }}</td>
                                 <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>
-                                <td>{{ s['tipo_despesa_codigo'] }} - {{ s['tipo_despesa_descricao'] }}</td>
                                 <td>{{ "{:,.2f}".format(s['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
                                 <td>{{ s['status'] }}</td>
 

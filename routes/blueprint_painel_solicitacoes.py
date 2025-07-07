@@ -1,4 +1,6 @@
 import logging
+from datetime import date
+from gerar_relatorio import gerar_relatorio
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file, session
 from flask_login import login_required, current_user
 from database.connect_db import abrir_cursor
@@ -23,16 +25,12 @@ def painel_solicitacoes():
                 u.LOGIN AS USUARIO_SOLICITANTE, 
                 d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO, 
                 d.NOME AS DEPARTAMENTO_DESCRICAO, 
-                t.CODIGO AS TIPO_DESPESA_CODIGO, 
-                t.DESCRICAO AS TIPO_DESPESA_DESCRICAO, 
                 s.VALOR, 
                 s.STATUS
             FROM 
                 LIU_SOLICITACOES s
             JOIN 
                 GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
-            JOIN 
-                LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
             JOIN
                 GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
         """
@@ -45,7 +43,7 @@ def painel_solicitacoes():
                 valores = [current_user.CODIGO_APOLLO]
 
             colunas_permitidas = [
-                   'ID', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'TIPO_DESPESA_CODIGO', 'TIPO_DESPESA_DESCRICAO', 'VALOR', 'STATUS'
+                   'ID', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'VALOR', 'STATUS'
             ]
 
             if sort_by not in colunas_permitidas:
@@ -85,8 +83,6 @@ def mais_info_sol(id):
                                     u.LOGIN AS USUARIO_SOLICITANTE,
                                     d.DEPARTAMENTO AS CODIGO,
                                     d.NOME AS NOME,
-                                    t.CODIGO AS CODIGO,
-                                    t.DESCRICAO AS CODIGO,
                                     s.DESCRICAO AS DESCRICAO,
                                     s.VALOR,
                                     s.STATUS
@@ -94,25 +90,19 @@ def mais_info_sol(id):
                                     LIU_SOLICITACOES s
                                 JOIN 
                                     GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
-                                JOIN 
-                                    LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
                                 JOIN
                                     GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
                                 WHERE 
                                     ID = :1
                                     """
-            cursor.execute(sql_solicitacao, [id])
+            cursor.execute(sql_solicitacao, id)
             retorno_solicitacao = cursor.dict_fetchone()
                 
             sql_departamento = "SELECT * FROM GER_DEPARTAMENTO ORDER BY DEPARTAMENTO"
             cursor.execute(sql_departamento)
             retorno_departamento = cursor.dict_fetchall()
 
-            sql_tipo_despesa = "SELECT * FROM LIU_TIPO_DESPESA ORDER BY CODIGO"
-            cursor.execute(sql_tipo_despesa)
-            retorno_tipo_despesa = cursor.dict_fetchall()
-
-            return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=retorno_solicitacao, departamento=retorno_departamento, tipo_despesa=retorno_tipo_despesa)
+            return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=retorno_solicitacao, departamento=retorno_departamento)
         except Exception as e:
                 flash(f'Erro interno ao realizar a consulta: {e}', 'error')
                 logging.info(f'{e}')
@@ -121,7 +111,7 @@ def mais_info_sol(id):
                 cursor.close()
                 conn.close()
 
-@blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/dowload-pdf', methods=['GET'])
+@blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/download-pdf', methods=['GET'])
 @login_required
 def download_pdf(id):
         try:
@@ -143,19 +133,61 @@ def download_pdf(id):
                 cursor.close()
                 conn.close()
 
+@blueprint_painel_solicitacoes.route('/download-relatorio', methods=['GET'])
+@login_required
+def download_relatorio():
+    try:
+        cursor, conn = abrir_cursor()
+        sql = """
+        SELECT
+            s.ID,
+            s.EMPRESA,
+            s.REVENDA,
+            u.LOGIN AS USUARIO_SOLICITANTE,
+            d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
+            d.NOME AS DEPARTAMENTO_DESCRICAO,
+            s.VALOR,
+            s.STATUS
+        FROM
+            LIU_SOLICITACOES s
+        JOIN
+            GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+        JOIN
+            GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+    """   
+        cursor.execute(sql)
+
+        dados = cursor.fetchall()
+        colunas = [desc[0] for desc in cursor.description]
+
+        dia_atual = date.today()
+        dia_formatado = dia_atual.strftime("%d_%m_%Y")
+
+        caminho = f"static/relatorios/relatorio_solicitacoes_{dia_formatado}.xlsx"
+
+        gerar_relatorio(dados, colunas, caminho)
+
+        return send_file(caminho, as_attachment=True)
+    
+    except Exception as e:
+            flash(f'Erro na consulta: {e}', 'error')
+            logging.error(f"Erro na consulta: {e}")
+            return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
+    finally:
+        cursor.close()
+        conn.close()
+          
+
+
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/salvar', methods=['POST'])
 @login_required
 def salvar_edicao(id):
             novo_departamento = request.form['departamento']
-            novo_tipo_despesa = request.form['tipo_despesa']
             novo_descricao = request.form.get('descricao').strip()
             novo_valor = float(request.form.get('valor').replace('R$', '').replace('.', '').replace(',', '.').strip())
             
             if len(novo_departamento) != 3:
                     flash('O departamento deve ter exatamente 3 caracteres!')
-                    return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
-            elif len(novo_tipo_despesa) != 4:
-                    flash('O Tipo de Despesa deve ter exatamente 4 caracteres!')
                     return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
             else:
                 try:
@@ -165,13 +197,12 @@ def salvar_edicao(id):
                                 LIU_SOLICITACOES
                             SET 
                                 DEPARTAMENTO = :1,
-                                TIPO_DESPESA = :2,
-                                DESCRICAO = :3,
-                                VALOR = :4 
+                                DESCRICAO = :2,
+                                VALOR = :3 
                             WHERE 
-                                ID = :5
+                                ID = :4
                             """
-                    valores = [novo_departamento, novo_tipo_despesa, novo_descricao, novo_valor, id]
+                    valores = [novo_departamento, novo_descricao, novo_valor, id]
                     cursor.execute(sql, valores)
                     conn.commit()
                     flash('Alteração realizada com sucesso!', 'success')

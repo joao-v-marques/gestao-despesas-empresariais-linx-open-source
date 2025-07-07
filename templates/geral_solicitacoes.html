@@ -130,7 +130,6 @@
                             <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
                             <td>{{ s['usuario_solicitante'] }}</td>
                             <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>
-                            <td>{{ s['tipo_despesa_codigo'] }} - {{ s['tipo_despesa_descricao'] }}</td>
                             <td>{{ "{:,.2f}".format(s['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
                             <td>{{ s['status'] }}</td>
                             <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#infoModal{{ s['id'] }}">Expandir</button></td>
@@ -164,9 +163,6 @@
 
                                     <label for="departamento_id">Departamento</label>
                                     <input type="text" id="departamento_id" readonly value="{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}">
-
-                                    <label for="tipo_despesa_id">Tipo da Despesa</label>
-                                    <input type="text" id="tipo_despesa_id" readonly value="{{ s['tipo_despesa_codigo'] }} - {{ s['departamento_descricao'] }}">
 
                                     <label for="descricao_id">Descrição</label>
                                     <textarea id="descricao_id" readonly>{{ s['descricao'] }}</textarea>

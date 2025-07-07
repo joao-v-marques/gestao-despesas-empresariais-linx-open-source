@@ -10,7 +10,6 @@ def gerar_pdf(solicitacao, usuario_aprovador):
     pdf.cell(200, 10, txt=f"Empresa/Revenda: {solicitacao['empresa']}.{solicitacao['revenda']}", ln=True)
     pdf.cell(200, 10, txt=f"Usuário Solicitante: {solicitacao['usuario_solicitante']}", ln=True)
     pdf.cell(200, 10, txt=f"Departamento: {solicitacao['departamento']}", ln=True)
-    pdf.cell(200, 10, txt=f"Tipo de Despesa: {solicitacao['tipo_despesa']}", ln=True)
     pdf.cell(200, 10, txt=f"Descrição: {solicitacao['descricao']}", ln=True)
     pdf.cell(200, 10, txt=f"Valor: R$ {solicitacao['valor']:.2f}", ln=True)
     pdf.cell(200, 10, txt=f"Aprovado por: {usuario_aprovador}", ln=True)

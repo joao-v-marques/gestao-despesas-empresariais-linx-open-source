@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputs = form.querySelectorAll('input[type="text"], textarea');
     const selects = [
         document.getElementById('departamento_id'),
-        document.getElementById('tipo_despesa_id')
     ];
 
     let valoresOriginais = {};

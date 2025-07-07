@@ -21,8 +21,6 @@ def geral_solicitacoes():
             u.LOGIN AS USUARIO_SOLICITANTE,
             d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
             d.NOME AS DEPARTAMENTO_DESCRICAO,
-            t.CODIGO AS TIPO_DESPESA_CODIGO,
-            t.DESCRICAO AS TIPO_DESPESA_DESCRICAO,
             s.VALOR,
             s.DESCRICAO,
             s.MOTIVO_REPROVA,
@@ -31,8 +29,6 @@ def geral_solicitacoes():
             LIU_SOLICITACOES s
         JOIN
             GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
-        JOIN
-            LIU_TIPO_DESPESA t ON s.TIPO_DESPESA = t.CODIGO
         JOIN
             GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
         """

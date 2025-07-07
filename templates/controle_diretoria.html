@@ -101,7 +101,6 @@
                         <th>Emp./Rev.</th>
                         <th>Usuario</th>
                         <th>Departamento</th>
-                        <th>Tipo da Despesa</th>
                         <th>Valor</th>
                         <th>Status</th>
                         <th class="opcoes">Opções</th>
@@ -114,7 +113,6 @@
                             <td>{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}</td>
                             <td>{{ solicitacao['usuario_solicitante'] }}</td>
                             <td>{{ solicitacao['departamento_codigo'] }} - {{ solicitacao['departamento_descricao'] }}</td>
-                            <td>{{ solicitacao['tipo_despesa_codigo'] }} - {{ solicitacao['tipo_despesa_descricao'] }}</td>
                             <td>{{ "{:,.2f}".format(solicitacao['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
                             <td>{{ solicitacao['status'] }}</td>
 

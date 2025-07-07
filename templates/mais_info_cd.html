@@ -111,9 +111,6 @@
                 <label for="departamento_id">Departamento:</label>
                 <input type="text" readonly id="departamento_id" name="departamento" value="{{ solicitacao['departamento'] }} - {{ solicitacao['nome'] }}">
 
-                <label for="tipo_despesa_id">Tipo da Despesa:</label>
-                <input type="text" readonly id="tipo_despesa_id" name="tipo_despesa" value="{{ solicitacao['tipo_despesa_codigo'] }} - {{ solicitacao['tipo_despesa_descricao'] }}">
-
                 <label for="descricao_id">Descrição:</label>
                 <textarea readonly id="descricao_id" name="descricao" rows="3">{{ solicitacao['descricao'] }}</textarea>
 

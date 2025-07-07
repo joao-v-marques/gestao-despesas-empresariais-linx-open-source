@@ -117,15 +117,6 @@
                     {% endfor %}
                 </select>
 
-                <label for="tipo_despesa_id">Tipo da Despesa:</label>
-                <select name="tipo_despesa" id="tipo_despesa_id" class="input-tipo-despesa" disabled>
-                    {% for t in tipo_despesa %}
-                        <option value="{{ t['codigo'] }}" {% if t['codigo'] == solicitacao['tipo_despesa'] %}selected{% endif %}>
-                            {{ t['codigo'] }} - {{ t['descricao'] }}
-                        </option>
-                    {% endfor %}
-                </select>
-
                 <label for="descricao_id">Descrição:</label>
                 <textarea readonly id="descricao_id" name="descricao" rows="3">{{ solicitacao['descricao'] }}</textarea>
 
