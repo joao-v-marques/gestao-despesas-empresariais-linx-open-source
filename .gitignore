@@ -7,4 +7,4 @@ venv/
 main.spec
 /build
 /database/instantclient_23_6/
-*.xlsx
+static/**/*.xlsx
