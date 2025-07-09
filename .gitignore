@@ -8,3 +8,4 @@ main.spec
 /build
 /database/instantclient_23_6/
 static/**/*.xlsx
+static/**/*.pdf
