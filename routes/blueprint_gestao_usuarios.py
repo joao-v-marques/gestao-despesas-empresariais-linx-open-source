@@ -29,7 +29,7 @@ def gestao_usuarios():
 @login_required
 @role_required('ADMIN')
 def cadastrar_usuario():
-    cod_apollo_form = request.form['cod_apollo'].strip()
+    cod_apollo_form = request.form['codigo_apollo'].strip()
     usuario_form = request.form['usuario'].upper()
     senha_form = request.form['senha'].strip()
     confirma_senha_form = request.form['confirma_senha'].strip()
