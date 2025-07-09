@@ -99,8 +99,8 @@
             <h2 class="titulo">Mais Informações</h2>
 
             <form action="{{ url_for('blueprint_painel_solicitacoes.salvar_edicao', id=solicitacao['id']) }}" method="POST" class="formulario">
-                <label for="id_solicitacao_id">Código:</label>
-                <input type="text" readonly id="id_solicitacao_id" name="id" value="{{ solicitacao['id'] }}">
+                <label for="codigo_apollo_solicitacao_id">ID:</label>
+                <input type="text" readonly id="codigo_apollo_solicitacao_id" name="codigo_apollo" value="{{ solicitacao['id'] }}">
 
                 <label for="empresa_revenda_id">Emp./Rev.:</label>
                 <input type="text" readonly id="empresa_revenda_id" name="empresa_revenda" value="{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}">

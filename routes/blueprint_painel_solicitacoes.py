@@ -26,7 +26,8 @@ def painel_solicitacoes():
                 d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO, 
                 d.NOME AS DEPARTAMENTO_DESCRICAO, 
                 s.VALOR, 
-                s.STATUS
+                s.STATUS,
+                s.NRO_PROCESSO
             FROM 
                 LIU_SOLICITACOES s
             JOIN 
@@ -43,7 +44,7 @@ def painel_solicitacoes():
                 valores = [current_user.CODIGO_APOLLO]
 
             colunas_permitidas = [
-                   'ID', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'VALOR', 'STATUS'
+                   'ID', 'NRO_PROCESSO', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'VALOR', 'STATUS'
             ]
 
             if sort_by not in colunas_permitidas:

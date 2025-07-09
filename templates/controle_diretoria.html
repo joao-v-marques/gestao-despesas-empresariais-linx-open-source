@@ -98,6 +98,7 @@
                 <thead>
                     <tr class="head-lista">
                         <th>ID</th>
+                        <th>Nro. Processo</th>
                         <th>Emp./Rev.</th>
                         <th>Usuario</th>
                         <th>Departamento</th>
@@ -110,6 +111,18 @@
                     {% for solicitacao in query %}
                         <tr class="body-lista">
                             <td>{{ solicitacao['id'] }}</td>
+                            <td>
+                                {% if solicitacao['nro_processo'] == None %}
+
+                                    -
+
+                                {% else %}
+
+                                {{ solicitacao['nro_processo']}}
+                                
+                                {% endif %}
+                            </td>
+
                             <td>{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}</td>
                             <td>{{ solicitacao['usuario_solicitante'] }}</td>
                             <td>{{ solicitacao['departamento_codigo'] }} - {{ solicitacao['departamento_descricao'] }}</td>

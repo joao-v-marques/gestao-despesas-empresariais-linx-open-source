@@ -82,14 +82,15 @@ def editar_usuario(id):
     novo_funcao = request.form['funcao']
     novo_empresa = request.form['empresa']
     novo_revenda = request.form['revenda']
+    cod_apollo = request.form['codigo_apollo'].strip()
     if novo_senha != confirma_senha:
         flash('As senhas não são iguais!')
         return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
     else:
         try:
             cursor, conn = abrir_cursor()
-            sql = "UPDATE LIU_USUARIO SET USUARIO = :1, SENHA = :2, NOME = :3, FUNCAO = :4, EMPRESA = :5, REVENDA = :6 WHERE ID = :7"
-            valores = [novo_usuario, novo_senha, novo_nome, novo_funcao, novo_empresa, novo_revenda, id]
+            sql = "UPDATE LIU_USUARIO SET USUARIO = :1, SENHA = :2, NOME = :3, FUNCAO = :4, EMPRESA = :5, REVENDA = :6, CODIGO_APOLLO = :7 WHERE ID = :8"
+            valores = [novo_usuario, novo_senha, novo_nome, novo_funcao, novo_empresa, novo_revenda, cod_apollo, id]
             cursor.execute(sql, valores)
             conn.commit()
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))

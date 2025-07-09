@@ -265,7 +265,7 @@ nav {
     padding: 12px;
     background: #fff;
     font-size: 0.98rem;
-    vertical-align: middle;
+    text-align: center;
     transition: background 0.2s;
 }
 

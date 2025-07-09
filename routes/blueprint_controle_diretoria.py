@@ -23,7 +23,8 @@ def controle_diretoria():
             d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
             d.NOME  AS DEPARTAMENTO_DESCRICAO,
             s.VALOR,
-            s.STATUS
+            s.STATUS,
+            s.NRO_PROCESSO
         FROM
             LIU_SOLICITACOES s
         JOIN 

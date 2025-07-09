@@ -121,7 +121,6 @@
             <label for="empresa_id" class="label-empresa">Empresa</label>
             <select name="empresa" id="empresa_id">
                 <option value="1">1</option>
-                <option value="4">4</option>
             </select>
 
             <label for="revenda_id" class="label-revenda">Revenda</label>
@@ -188,6 +187,9 @@
                             </div>
                             <div class="modal-body">
                                 <form action="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=u['id']) }}" method="POST" class="formulario-modal">
+                                    <label for="codigo_apollo_id_edit{{ u['codigo_apollo'] }}">Cód. Apollo</label>
+                                    <input type="text" id="codigo_apollo_id_edit{{ u['codigo_apollo'] }}" name="codigo-apollo" class="input-codigo-apollo" value="{{ u['codigo_apollo'] }}">
+
                                     <label for="usuario_id_edit_{{ u['id'] }}" class="label-usuario">Usuário</label>
                                     <input type="text" id="usuario_id_edit_{{ u['id'] }}" name="usuario" class="input-usuario" value="{{ u['usuario'] }}" required>
 

@@ -116,7 +116,8 @@
             <table class="tabela">
                 <thead>
                     <tr class="head-lista">
-                        <th>Código</th>
+                        <th>ID</th>
+                        <th>Nro. Processo</th>
                         <th>Emp./Rev</th>
                         <th>Usuario</th>
                         <th>Departamento</th>
@@ -129,6 +130,17 @@
                     {% for s in solicitacoes %}
                         <tr class="body-lista">
                             <td>{{ s['id'] }}</td>
+                            <td>
+                                {% if s['nro_processo'] == None %}
+
+                                    -
+
+                                {% else %}
+
+                                {{ s['nro_processo'] }}
+                                
+                                {% endif %}
+                            </td>
                             <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
                             <td>{{ s['usuario_solicitante'] }}</td>
                             <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>
@@ -154,8 +166,8 @@
                             </div>
                             <div class="modal-body-edit">
                                 <form method="POST" action="#" class="formulario-modal">
-                                    <label for="id_id">ID</label>
-                                    <input type="text" id="id_id" readonly value="{{ s['id'] }}">
+                                    <label for="id_id">Cód. Apollo</label>
+                                    <input type="text" id="id_id" readonly value="{{ s['codigo_apollo'] }}">
 
                                     <label for="empresa_id">Emp./Rev.</label>
                                     <input type="text" id="empresa_id" readonly value="{{ s['empresa'] }}.{{ s['revenda'] }}">

@@ -115,8 +115,20 @@
                     <tr class="head-lista">
                         {% set new_dir = 'asc' if sort_dir|lower == 'desc' else 'desc' %}
                         <th><a href="?filtro={{ filtro }}&sort_by=ID&sort_dir={{ new_dir }}">
-                            Código
+                            ID
                             {% if sort_by == 'ID' %}
+                                <span class="seta-ordenacao">
+                                    {% if sort_dir|lower == 'asc' %}
+                                        ↑
+                                    {% else %}
+                                        ↓
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </a></th>
+                        <th><a href="?filtro={{ filtro }}&sort_by=NRO_PROCESSO&sort_dir={{ new_dir }}">
+                            Nro. Processo
+                            {% if sort_by == 'NRO_PROCESSO' %}
                                 <span class="seta-ordenacao">
                                     {% if sort_dir|lower == 'asc' %}
                                         ↑
@@ -193,6 +205,17 @@
                         {% for s in solicitacoes %}
                             <tr class="body-lista">
                                 <td>{{ s['id'] }}</td>
+                                <td>
+                                    {% if s['nro_processo'] == None %}
+
+                                        -
+
+                                    {% else %}
+
+                                    {{ s['nro_processo'] }}
+                                    
+                                    {% endif %}
+                                </td>
                                 <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
                                 <td>{{ s['usuario_solicitante'] }}</td>
                                 <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>
