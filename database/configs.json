@@ -3,6 +3,6 @@
         "user" : "demo",
         "pass" : "ninguemsabe",
         "dns" : "fortissolucoes.myddns.me:1521/orcl",
-        "instant_client" : "C:\\Users\\joaqu\\OneDrive\\Documentos\\joao\\workspace\\gestao_processos_kato\\database\\instantclient_23_6"
+        "instant_client" : "C:\\Users\\joaqu\\OneDrive\\Documentos\\joao\\workspace\\gestao_despesas\\database\\instantclient_23_6"
     }
 }
