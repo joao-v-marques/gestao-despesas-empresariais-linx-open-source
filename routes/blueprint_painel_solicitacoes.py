@@ -1,4 +1,4 @@
-import logging
+import logging, os
 from datetime import date
 from gerar_relatorio import gerar_relatorio
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file, session
@@ -79,6 +79,7 @@ def mais_info_sol(id):
             cursor, conn = abrir_cursor()
             sql_solicitacao = """SELECT
                                     s.ID,
+                                    s.NRO_PROCESSO,
                                     s.EMPRESA,
                                     s.REVENDA,
                                     u.LOGIN AS USUARIO_SOLICITANTE,
@@ -229,7 +230,9 @@ def excluir_solicitacao(id):
                 sql = "DELETE FROM LIU_SOLICITACOES WHERE ID = :1"
                 cursor.execute(sql, [id])
                 conn.commit()
-                flash('Solitação excluida com sucesso!', 'error')
+                logging.info('Solicitação excluida com sucesso!')
+                flash('Solitação excluida com sucesso!', 'success')
+
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
             except Exception as e:
                 logging.info(e)                
@@ -260,7 +263,7 @@ def reenviar_solicitacao(id):
                     cursor.close()
                     conn.close()
 
-@blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/desautorizar')
+@blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/desautorizar', methods=['POST'])
 @login_required
 def desautorizar_solicitacao(id):
     try:
@@ -282,6 +285,13 @@ def desautorizar_solicitacao(id):
         cursor.execute(sql_update, valores_update)
         conn.commit()
         logging.info('Solicitação alterada para STATUS PENDENTE, NRO_PROCESSO NULL e USUARIO_AUTORIZANTE NULL')
+
+        pdf_path = os.path.join('static', 'pdf', f'solicitacao_{id}.pdf')
+        if os.path.exists(pdf_path):
+            os.remove(pdf_path)
+            logging.info(f'PDF removido: {pdf_path}')
+        else:
+            logging.info(f'PDF não encontrado para remoção: {pdf_path}')
 
         return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
     except Exception as e:

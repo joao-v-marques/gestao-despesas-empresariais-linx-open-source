@@ -371,3 +371,10 @@ nav {
     flex-direction: row;
     gap: 10px;
 }
+
+.btn-reprovados {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}

@@ -102,6 +102,9 @@
                 <label for="codigo_apollo_solicitacao_id">ID:</label>
                 <input type="text" readonly id="codigo_apollo_solicitacao_id" name="codigo_apollo" value="{{ solicitacao['id'] }}">
 
+                <label for="nro_processo_id">Nro. Processo:</label>
+                <input type="text" readonly id="nro_processo_id" name="nro_processo" value="{% if solicitacao['nro_processo'] == None %} - {% else %} {{ solicitacao['nro_processo'] }} {% endif %}">
+
                 <label for="empresa_revenda_id">Emp./Rev.:</label>
                 <input type="text" readonly id="empresa_revenda_id" name="empresa_revenda" value="{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}">
 
@@ -149,17 +152,43 @@
                 {% if solicitacao['status'] == 'PENDENTE' %}
                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao['id'] }}">Cancelar Envio</button>
                 {% elif solicitacao['status'] == 'REPROVADO' %}
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao['id'] }}">Excluir</button>
-                    <button type="button" class="btn btn-primary" id="btn-editar">Editar</button>
-                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalReenviar{{ solicitacao['id'] }}" style="margin-left: 270px;">Reenviar</button>
+                    <div class="btn-reprovados">
+                        <div class="btn-exc-edit">
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao['id'] }}">Excluir</button>
+                            <button type="button" class="btn btn-primary" id="btn-editar">Editar</button>
+                        </div>
+                        <div class="btn-reenviar">
+                            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalReenviar{{ solicitacao['id'] }}">Reenviar</button>
+                        </div>
+                    </div>
                 {% elif solicitacao['status'] == 'APROVADO' %}
                     {% if solicitacao['usuario_autorizante'] == current_user.CODIGO_APOLLO or current_user.FUNCAO == 'ADMIN' %}
-                        <a href="{{ url_for('blueprint_painel_solicitacoes.desautorizar_solicitacao', id=solicitacao['id']) }}" class="btn btn-danger">Desautorizar</a>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDesautorizar{{ solicitacao['id'] }}">Cancelar Envio</button>
                     {% endif %}
                     <a href="{{ url_for('blueprint_painel_solicitacoes.download_pdf', id=solicitacao['id']) }}" class="btn btn-info">Baixar PDF</a>
                 {% elif solicitacao['status'] == 'ENCERRADO' %}
                     <a href="{{ url_for('blueprint_painel_solicitacoes.download_pdf', id=solicitacao['id']) }}" class="btn btn-info">Baixar PDF</a>
                 {% endif %}
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalDesautorizar{{ solicitacao['id'] }}" tabindex="-1" aria-labelledby="modalDesautorizarLabel{{ solicitacao['id'] }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDesautorizarLabel{{ solicitacao['id'] }}">Confirmar ação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        Você tem certeza de que deseja <b style="color: red;">Desautorizar</b> esta solicitação? Ela voltará a ficar PENDENTE.
+                    </div>
+                    <div class="modal-footer d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form method="POST" action="{{ url_for('blueprint_painel_solicitacoes.desautorizar_solicitacao', id=solicitacao['id']) }}">
+                            <button type="submit" class="btn btn-success">Confirmar</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -191,12 +220,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                     </div>
                     <div class="modal-body">
-                        Você tem certeza que deseja <b>Excluir</b> essa solicitação? Esta ação não pode ser revertida
+                        Você tem certeza que deseja <b style="color: red;">Excluir</b> essa solicitação? Esta ação não pode ser revertida
                     </div>
                     <div class="modal-footer d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <form method="POST" action="{{ url_for('blueprint_painel_solicitacoes.excluir_solicitacao', id=solicitacao['id']) }}">
-                            <button type="submit" class="btn btn-danger">Confirmar</button>
+                            <button type="submit" class="btn btn-success">Confirmar</button>
                         </form>
                     </div>
                 </div>
