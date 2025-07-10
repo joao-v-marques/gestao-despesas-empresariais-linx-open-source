@@ -114,6 +114,11 @@
                 <label for="usuario_solicitante_id">Usuário Solicitante:</label>
                 <input type="text" readonly id="usuario_solicitante_id" name="usuario_solicitante" value="{{ solicitacao['usuario_solicitante'] }}">
 
+                {% if solicitacao['status'] == 'APROVADO' %}
+                    <label for="usuario_autorizante_id">Usuario Autorizante</label>
+                    <input type="text" readonly id="usuario_autorizante_id" name="usuario_autorizante" value="{{ usuario_autorizante['login'] }}">
+                {% endif %}
+
                 <label for="departamento_id">Departamento:</label>
                 <select name="departamento" id="departamento_id" class="input-departamento" disabled>
                     {% for d in departamento %}
@@ -148,6 +153,9 @@
                     <button type="button" class="btn btn-primary" id="btn-editar">Editar</button>
                     <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalReenviar{{ solicitacao['id'] }}" style="margin-left: 270px;">Reenviar</button>
                 {% elif solicitacao['status'] == 'APROVADO' %}
+                    {% if solicitacao['usuario_autorizante'] == current_user.CODIGO_APOLLO or current_user.FUNCAO == 'ADMIN' %}
+                        <a href="{{ url_for('blueprint_painel_solicitacoes.desautorizar_solicitacao', id=solicitacao['id']) }}" class="btn btn-danger">Desautorizar</a>
+                    {% endif %}
                     <a href="{{ url_for('blueprint_painel_solicitacoes.download_pdf', id=solicitacao['id']) }}" class="btn btn-info">Baixar PDF</a>
                 {% elif solicitacao['status'] == 'ENCERRADO' %}
                     <a href="{{ url_for('blueprint_painel_solicitacoes.download_pdf', id=solicitacao['id']) }}" class="btn btn-info">Baixar PDF</a>

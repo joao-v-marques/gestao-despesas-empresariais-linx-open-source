@@ -88,7 +88,8 @@ def mais_info_sol(id):
                                     s.VALOR,
                                     s.STATUS,
                                     s.MOTIVO_REPROVA,
-                                    s.FORNECEDOR
+                                    s.FORNECEDOR,
+                                    s.USUARIO_AUTORIZANTE
                                 FROM
                                     LIU_SOLICITACOES s
                                 JOIN 
@@ -105,32 +106,15 @@ def mais_info_sol(id):
             cursor.execute(sql_departamento)
             retorno_departamento = cursor.dict_fetchall()
 
-            return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=retorno_solicitacao, departamento=retorno_departamento)
+            sql_autorizante = "SELECT USUARIO, LOGIN FROM GER_USUARIO WHERE USUARIO = :1"
+            valores_autorizante = [retorno_solicitacao['usuario_autorizante']]
+            cursor.execute(sql_autorizante, valores_autorizante)
+            retorno_autorizante = cursor.dict_fetchone()
+
+            return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=retorno_solicitacao, departamento=retorno_departamento, usuario_autorizante=retorno_autorizante)
         except Exception as e:
                 flash(f'Erro interno ao realizar a consulta: {e}', 'error')
                 logging.info(f'{e}')
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
-        finally:
-                cursor.close()
-                conn.close()
-
-@blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/download-pdf', methods=['GET'])
-@login_required
-def download_pdf(id):
-        try:
-            cursor, conn = abrir_cursor()
-            sql = "SELECT PDF_PATH FROM LIU_SOLICITACOES WHERE ID = :1"
-            cursor.execute(sql, [id])
-            retorno = cursor.dict_fetchone()
-
-            if not retorno:
-                flash('Não foi possivel localizar o PDF!', 'error')
-                return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol'))
-            else:
-                flash('PDF localizado!', 'success')
-                return send_file(retorno['pdf_path'], as_attachment=True)
-        except Exception as e:
-                flash(f'Erro interno: {e}', 'error')
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
         finally:
                 cursor.close()
@@ -180,6 +164,28 @@ def download_relatorio():
         cursor.close()
         conn.close()
 
+@blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/download-pdf', methods=['GET'])
+@login_required
+def download_pdf(id):
+        try:
+            cursor, conn = abrir_cursor()
+            sql = "SELECT PDF_PATH FROM LIU_SOLICITACOES WHERE ID = :1"
+            cursor.execute(sql, [id])
+            retorno = cursor.dict_fetchone()
+
+            if not retorno:
+                flash('Não foi possivel localizar o PDF!', 'error')
+                return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol'))
+            else:
+                flash('PDF localizado!', 'success')
+                return send_file(retorno['pdf_path'], as_attachment=True)
+        except Exception as e:
+                flash(f'Erro interno: {e}', 'error')
+                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+        finally:
+                cursor.close()
+                conn.close()
+
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/salvar', methods=['POST'])
 @login_required
 def salvar_edicao(id):
@@ -226,7 +232,7 @@ def excluir_solicitacao(id):
                 flash('Solitação excluida com sucesso!', 'error')
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
             except Exception as e:
-                flash('Erro na consulta: {e}', 'error')
+                logging.info(e)                
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
             finally:
                 cursor.close()
@@ -253,3 +259,34 @@ def reenviar_solicitacao(id):
                 finally:
                     cursor.close()
                     conn.close()
+
+@blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/desautorizar')
+@login_required
+def desautorizar_solicitacao(id):
+    try:
+        cursor, conn = abrir_cursor()
+        sql_solicitacao = "SELECT ID, NRO_PROCESSO FROM LIU_SOLICITACOES WHERE ID = :1"
+        valores_solicitacao = [id]
+        cursor.execute(sql_solicitacao, valores_solicitacao)
+        retorno_solicitacao = cursor.dict_fetchone()
+        logging.info(f'Select da solicitação atual feito. NRO_PROCESSO: {retorno_solicitacao['nro_processo']}')
+
+        sql_deletar = "DELETE FROM FAT_PROCESSO_DESPESA WHERE NRO_PROCESSO = :1"
+        valores_deletar = [retorno_solicitacao['nro_processo']]
+        cursor.execute(sql_deletar, valores_deletar)
+        conn.commit()
+        logging.info('Solicitação excluida no FAT_PROCESSO_DESPESA')
+
+        sql_update = "UPDATE LIU_SOLICITACOES SET STATUS = :1, NRO_PROCESSO = :2, USUARIO_AUTORIZANTE = :3 WHERE ID = :4"
+        valores_update = ['PENDENTE', None, None, id]
+        cursor.execute(sql_update, valores_update)
+        conn.commit()
+        logging.info('Solicitação alterada para STATUS PENDENTE, NRO_PROCESSO NULL e USUARIO_AUTORIZANTE NULL')
+
+        return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
+    except Exception as e:
+        logging.info(e)
+        return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
+    finally:
+        cursor.close()
+        conn.close()
