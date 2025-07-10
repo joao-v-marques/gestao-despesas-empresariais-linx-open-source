@@ -105,6 +105,12 @@
                 <label for="empresa_revenda_id">Emp./Rev.:</label>
                 <input type="text" readonly id="empresa_revenda_id" name="empresa_revenda" value="{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}">
 
+                <label for="codigo_fornecedor_id" class="label-fornecedor">Cód. Fornecedor</label>
+                <div class="container-fornecedor">
+                    <input type="number" name="fornecedor" id="codigo_fornecedor_id_{{ solicitacao['id'] }}" class="input-fornecedor" readonly value="{{ solicitacao['fornecedor'] }}">
+                    <input type="text" class="mostrar-fornecedor" id="descricao_fornecedor_id_{{ solicitacao['id'] }}" readonly>
+                </div>
+
                 <label for="usuario_solicitante_id">Usuário Solicitante:</label>
                 <input type="text" readonly id="usuario_solicitante_id" name="usuario_solicitante" value="{{ solicitacao['usuario_solicitante'] }}">
 
@@ -140,7 +146,7 @@
                 {% elif solicitacao['status'] == 'REPROVADO' %}
                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao['id'] }}">Excluir</button>
                     <button type="button" class="btn btn-primary" id="btn-editar">Editar</button>
-                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalReenviar{{ solicitacao['id'] }}" style="margin-left: 285px;">Reenviar</button>
+                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalReenviar{{ solicitacao['id'] }}" style="margin-left: 270px;">Reenviar</button>
                 {% elif solicitacao['status'] == 'APROVADO' %}
                     <a href="{{ url_for('blueprint_painel_solicitacoes.download_pdf', id=solicitacao['id']) }}" class="btn btn-info">Baixar PDF</a>
                 {% elif solicitacao['status'] == 'ENCERRADO' %}

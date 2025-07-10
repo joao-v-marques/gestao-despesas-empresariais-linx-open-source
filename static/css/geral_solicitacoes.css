@@ -493,6 +493,21 @@ nav {
     letter-spacing: 0.5px;
 }
 
+.input-fornecedor {
+    width: 25%;
+    height: 44px;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;    
+}
+
+.container-fornecedor {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
 @media (max-width: 600px) {
     .modal-dialog {
         max-width: 98vw;

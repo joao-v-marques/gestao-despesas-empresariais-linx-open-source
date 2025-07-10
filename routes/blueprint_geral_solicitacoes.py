@@ -25,7 +25,8 @@ def geral_solicitacoes():
             s.DESCRICAO,
             s.MOTIVO_REPROVA,
             s.STATUS,
-            s.NRO_PROCESSO
+            s.NRO_PROCESSO,
+            s.FORNECEDOR
         FROM
             LIU_SOLICITACOES s
         JOIN

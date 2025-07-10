@@ -224,7 +224,7 @@ nav {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 700px;
     margin: 56px auto 40px auto;
     background: #fff;
     padding: 36px 32px 28px 32px;
@@ -234,8 +234,7 @@ nav {
 
 .formulario {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px 24px;
+    gap: 14px 1px;
     margin-bottom: 18px;
 }
 
@@ -244,7 +243,6 @@ nav {
     color: #333;
     margin-bottom: 2px;
     font-size: 1rem;
-    grid-column: span 1;
 }
 
 .formulario input[type="text"] {
@@ -268,14 +266,6 @@ nav {
     background: var(--input-readonly-bg);
     color: var(--input-readonly-color);
     cursor: not-allowed;
-}
-
-.formulario label[for="descricao_id"] {
-    grid-column: 1 / 3;
-}
-
-.formulario label[for="motivo_reprova_id"] {
-    grid-column: 1 / 3;
 }
 
 .formulario label[for="motivo_reprova_id"] {
@@ -365,4 +355,19 @@ nav {
 .formulario select option:checked {
     background: var(--accent-color);
     color: var(--primary-color);
+}
+
+.input-fornecedor {
+    text-align: center;
+    width: 25%;
+    height: 44px;
+    font-weight: 600;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;    
+}
+
+.container-fornecedor {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }

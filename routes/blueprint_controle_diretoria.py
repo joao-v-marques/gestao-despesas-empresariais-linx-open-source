@@ -63,7 +63,9 @@ def mais_info_cd(id):
             d.NOME AS NOME,
             s.DESCRICAO,
             s.VALOR,
-            s.STATUS 
+            s.STATUS,
+            s.FORNECEDOR,
+            s.NRO_PROCESSO
         FROM 
             LIU_SOLICITACOES s
         JOIN 

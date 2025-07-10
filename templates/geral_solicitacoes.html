@@ -166,11 +166,20 @@
                             </div>
                             <div class="modal-body-edit">
                                 <form method="POST" action="#" class="formulario-modal">
-                                    <label for="id_id">Cód. Apollo</label>
-                                    <input type="text" id="id_id" readonly value="{{ s['codigo_apollo'] }}">
+                                    <label for="id_id">ID</label>
+                                    <input type="text" id="id_id" readonly value="{{ s['id'] }}">
+
+                                    <label for="nro_processo_id">Nro. Processo</label>
+                                    <input type="text" id="nro_processo_id" readonly value="{% if s['nro_processo'] == None %} - {% else %} {{ s['nro_processo'] }} {% endif %}">
 
                                     <label for="empresa_id">Emp./Rev.</label>
                                     <input type="text" id="empresa_id" readonly value="{{ s['empresa'] }}.{{ s['revenda'] }}">
+
+                                    <label for="codigo_fornecedor_id" class="label-fornecedor">Cód. Fornecedor</label>
+                                    <div class="container-fornecedor">
+                                        <input type="number" name="fornecedor" id="codigo_fornecedor_id_{{ s['id'] }}" class="input-fornecedor" readonly value="{{ s['fornecedor'] }}">
+                                        <input type="text" class="mostrar-fornecedor" id="descricao_fornecedor_id_{{ s['id'] }}" readonly>
+                                    </div>
 
                                     <label for="usuario_id">Usuário</label>
                                     <input type="text" id="usuario_id" readonly value="{{ s['usuario_solicitante'] }}">

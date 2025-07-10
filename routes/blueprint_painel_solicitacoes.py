@@ -86,7 +86,9 @@ def mais_info_sol(id):
                                     d.NOME AS NOME,
                                     s.DESCRICAO AS DESCRICAO,
                                     s.VALOR,
-                                    s.STATUS
+                                    s.STATUS,
+                                    s.MOTIVO_REPROVA,
+                                    s.FORNECEDOR
                                 FROM
                                     LIU_SOLICITACOES s
                                 JOIN 
