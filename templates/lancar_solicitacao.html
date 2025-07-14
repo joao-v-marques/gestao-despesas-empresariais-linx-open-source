@@ -28,7 +28,7 @@
                     </ul>
                 </li>
 
-                {% if current_user.FUNCAO == 'ADMIN' %}
+                {% if current_user.FUNCAO == 'Administrador' %}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-white" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             ADMIN
@@ -40,13 +40,13 @@
                     </li>
                 {% endif %}
 
-                {% if current_user.FUNCAO == 'ADMIN' or current_user.FUNCAO == 'DIRETORIA' %}
+                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Aprovador' %}
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle text-white" id="diretoriaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a href="#" class="nav-link dropdown-toggle text-white" id="aprovadorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Aprovações
                         </a>
 
-                        <ul class="dropdown-menu" aria-labelledby="diretoriaDropdown">
+                        <ul class="dropdown-menu" aria-labelledby="aprovadorDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Controle de Aprovações</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_geral_solicitacoes.geral_solicitacoes') }}">Visão Geral de Solicitações</a></li>
                         </ul>
@@ -78,7 +78,7 @@
                     <div class="modal-body">
                         <form action="{{ url_for('blueprint_principal.troca_senha', id=current_user.id  ) }}" method="POST">
                             <label for="nova_senha_id" class="label_nova_senha">Digite uma nova senha</label>
-                            <input type="text" id="nova_senha_id" name="nova_senha" class="input_nova_senha" required> 
+                            <input type="text" id="nova_senha_id" name="nova_senha" class="input_nova_senha" required>
 
                             <label for="confirma_nova_senha_id" class="label_confirma_nova_senha">Confirme sua nova senha</label>
                             <input type="text" id="confirma_nova_senha_id" class="input_confirma_nova_senha" name="confirma_nova_senha" required>

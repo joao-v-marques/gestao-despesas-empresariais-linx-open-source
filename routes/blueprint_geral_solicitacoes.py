@@ -7,7 +7,7 @@ blueprint_geral_solicitacoes = Blueprint('blueprint_geral_solicitacoes', __name_
 
 @blueprint_geral_solicitacoes.route('/')
 @login_required
-@role_required('DIRETORIA', 'ADMIN')
+@role_required('Administrador', 'Aprovador')
 def geral_solicitacoes():
     filtro = request.args.get('filtro', 'PENDENTE')
     usuario_solicitante = request.args.get('usuario_solicitante', '')

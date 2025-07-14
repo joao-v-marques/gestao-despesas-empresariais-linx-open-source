@@ -10,7 +10,7 @@ blueprint_controle_diretoria = Blueprint('blueprint_controle_diretoria', __name_
 
 @blueprint_controle_diretoria.route('/')
 @login_required
-@role_required('ADMIN', 'DIRETORIA')
+@role_required('Administrador', 'Aprovador')
 def controle_diretoria():
     try:
         cursor, conn = abrir_cursor()
@@ -49,7 +49,7 @@ def controle_diretoria():
 
 @blueprint_controle_diretoria.route('/mais-info/<int:id>')
 @login_required
-@role_required('ADMIN', 'DIRETORIA')
+@role_required('Administrador', 'Aprovador')
 def mais_info_cd(id):
     try:
         cursor, conn = abrir_cursor()
@@ -87,7 +87,7 @@ def mais_info_cd(id):
 
 @blueprint_controle_diretoria.route('/mudar-status/<int:id>', methods=['POST'])
 @login_required
-@role_required('ADMIN', 'DIRETORIA')
+@role_required('Administrador', 'Aprovador')
 def mudar_status(id):
     novo_status = request.form['status']
     if novo_status == 'APROVADO':

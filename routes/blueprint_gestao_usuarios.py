@@ -7,7 +7,7 @@ blueprint_gestao_usuarios = Blueprint('blueprint_gestao_usuarios', __name__)
 
 @blueprint_gestao_usuarios.route('/')
 @login_required
-@role_required('ADMIN')
+@role_required('Administrador')
 def gestao_usuarios():
     cursor = None
     conn = None
@@ -27,7 +27,7 @@ def gestao_usuarios():
 
 @blueprint_gestao_usuarios.route('/cadastrar-usuario', methods=['POST'])
 @login_required
-@role_required('ADMIN')
+@role_required('Administrador')
 def cadastrar_usuario():
     cod_apollo_form = request.form['codigo_apollo'].strip()
     usuario_form = request.form['usuario'].upper()
@@ -73,7 +73,7 @@ def cadastrar_usuario():
 
 @blueprint_gestao_usuarios.route('/editar-usuario/<int:id>', methods=['POST'])
 @login_required
-@role_required('ADMIN')
+@role_required('Administrador')
 def editar_usuario(id):
     novo_usuario = request.form['usuario'].strip()
     novo_senha = request.form['senha'].strip()
@@ -103,7 +103,7 @@ def editar_usuario(id):
 
 @blueprint_gestao_usuarios.route('/deletar-usuario/<int:id>', methods=['POST'])
 @login_required
-@role_required('ADMIN')
+@role_required('Administrador')
 def deletar_usuario(id):
         if current_user.USUARIO == id:
             flash('Você não pode deletar você mesmo!', 'error')

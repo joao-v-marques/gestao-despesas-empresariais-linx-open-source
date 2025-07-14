@@ -1,8 +1,5 @@
-import os
-from datetime import datetime
 from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill, Alignment
-from openpyxl.chart import BarChart, Reference
+from openpyxl.styles import Font, Alignment
 
 def gerar_relatorio(dados, colunas, destino):
     wb = Workbook()
