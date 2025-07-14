@@ -1,4 +1,5 @@
 import logging, os
+from io import BytesIO
 from datetime import date
 from gerar_relatorio import gerar_relatorio
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file, session
@@ -151,16 +152,16 @@ def download_relatorio():
         dia_atual = date.today()
         dia_formatado = dia_atual.strftime("%d_%m_%Y")
 
-        caminho = f"static/relatorios/relatorio_solicitacoes_{dia_formatado}.xlsx"
+        buffer = BytesIO()
+        gerar_relatorio(dados, colunas, buffer)
+        buffer.seek(0)
 
-        gerar_relatorio(dados, colunas, caminho)
-
-        return send_file(caminho, as_attachment=True)
+        return send_file(buffer, as_attachment=True, download_name=f'relatorio_solicitacoes_{dia_formatado}.xlsx')
     
     except Exception as e:
             flash(f'Erro na consulta: {e}', 'error')
             logging.error(f"Erro na consulta: {e}")
-            return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
+            return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol'))
     finally:
         cursor.close()
         conn.close()

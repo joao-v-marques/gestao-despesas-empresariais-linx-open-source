@@ -4,7 +4,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.chart import BarChart, Reference
 
-def gerar_relatorio(dados, colunas, caminho):
+def gerar_relatorio(dados, colunas, destino):
     wb = Workbook()
     ws = wb.active
     ws.title = "relatorio_solicitacoes"
@@ -22,4 +22,4 @@ def gerar_relatorio(dados, colunas, caminho):
         for col_idx, valor in enumerate(linha, start=1):
             ws.cell(row=linha_idx, column=col_idx, value=valor)
 
-    wb.save(caminho)
+    wb.save(destino)
