@@ -109,7 +109,7 @@
                     </div>
                 </form>
                 <div class="relatorio">
-                    <a href="{{ url_for('blueprint_painel_solicitacoes.download_relatorio') }}" class="logo-excel"><img src="{{ url_for('static', filename='img/logo_excel.png') }}" alt="Logo do Excel para Relatórios"></a>
+                    <a href="{{ url_for('blueprint_painel_solicitacoes.download_relatorio') }}" class="logo-excel">Imprimir Relatório<img src="{{ url_for('static', filename='img/logo_excel.png') }}" alt="Logo do Excel para Relatórios"></a>
                 </div>
             </div>
 
@@ -166,11 +166,15 @@
                             </div>
                             <div class="modal-body-edit">
                                 <form method="POST" action="#" class="formulario-modal">
-                                    <label for="id_id">ID</label>
-                                    <input type="text" id="id_id" readonly value="{{ s['id'] }}">
+                                    <div class="first-modal">
+                                        <label for="id_id">ID</label>
+                                        <input type="text" id="id_id" readonly value="{{ s['id'] }}">
 
-                                    <label for="nro_processo_id">Nro. Processo</label>
-                                    <input type="text" id="nro_processo_id" readonly value="{% if s['nro_processo'] == None %} - {% else %} {{ s['nro_processo'] }} {% endif %}">
+                                        <label for="nro_processo_id">Nro. Processo</label>
+                                        <input type="text" id="nro_processo_id" readonly value="{% if s['nro_processo'] == None %} - {% else %} {{ s['nro_processo'] }} {% endif %}">
+                                    </div>
+
+                                    
 
                                     <label for="empresa_id">Emp./Rev.</label>
                                     <input type="text" id="empresa_id" readonly value="{{ s['empresa'] }}.{{ s['revenda'] }}">
@@ -198,7 +202,7 @@
 
                                     {% if s['status'] == 'REPROVADO' %}
                                         <label for="motivo_reprova_id">Motivo Reprova</label>
-                                        <textarea name="motivo_reprova" id="motivo_reprova_id">{{ s['motivo_reprova'] }}</textarea>
+                                        <textarea name="motivo_reprova" id="motivo_reprova_id" readonly>{{ s['motivo_reprova'] }}</textarea>
                                     {% endif %}
                                 </form>
                             </div>
