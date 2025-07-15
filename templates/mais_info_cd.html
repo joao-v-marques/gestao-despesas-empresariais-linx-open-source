@@ -47,7 +47,7 @@
                         </a>
 
                         <ul class="dropdown-menu" aria-labelledby="aprovadorDropdown">
-                            <li><a class="dropdown-item" href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}">Controle de Aprovações</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_aprovacoes.aprovacoes') }}">Controle de Aprovações</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('blueprint_geral_solicitacoes.geral_solicitacoes') }}">Visão Geral de Solicitações</a></li>
                         </ul>
                     </li>
@@ -94,7 +94,7 @@
 
     <main>
         <div class="container">
-            <a href="{{ url_for('blueprint_controle_diretoria.controle_diretoria') }}" class="voltar"><- Voltar</a>
+            <a href="{{ url_for('blueprint_aprovacoes.aprovacoes') }}" class="voltar"><- Voltar</a>
 
             <h2 class="titulo">Mais Informações</h2>
 
@@ -141,7 +141,7 @@
                         </div>
                         <div class="modal-footer d-flex justify-content-end gap-2">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <form method="POST" action="{{ url_for('blueprint_controle_diretoria.mudar_status', id=solicitacao['id']) }}">
+                            <form method="POST" action="{{ url_for('blueprint_aprovacoes.mudar_status', id=solicitacao['id']) }}">
                                 <input type="hidden" name="id" value="{{ solicitacao['id'] }}">
                                 <input type="hidden" name="status" value="APROVADO">
                                 <input type="submit" value="Aprovar" class="btn btn-success">
@@ -163,7 +163,7 @@
                         <div class="modal-body">
                             Você tem certeza que deseja <b>REPROVAR</b> essa solicitação?
 
-                            <form method="POST" action="{{ url_for('blueprint_controle_diretoria.mudar_status', id=solicitacao['id']) }}" class="modal-form">
+                            <form method="POST" action="{{ url_for('blueprint_aprovacoes.mudar_status', id=solicitacao['id']) }}" class="modal-form">
                                 <label for="motivo_reprova_id">Descreva um motivo para a reprova</label>
                                 <input type="text" id="motivo_reprova_id" name="motivo_reprova" required>
 

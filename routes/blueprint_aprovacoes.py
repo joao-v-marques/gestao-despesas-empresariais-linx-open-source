@@ -6,12 +6,12 @@ from database.connect_db import abrir_cursor
 from datetime import datetime
 import logging
 
-blueprint_controle_diretoria = Blueprint('blueprint_controle_diretoria', __name__)
+blueprint_aprovacoes = Blueprint('blueprint_aprovacoes', __name__)
 
-@blueprint_controle_diretoria.route('/')
+@blueprint_aprovacoes.route('/')
 @login_required
 @role_required('Administrador', 'Aprovador')
-def controle_diretoria():
+def aprovacoes():
     try:
         cursor, conn = abrir_cursor()
         sql = """
@@ -38,7 +38,7 @@ def controle_diretoria():
         cursor.execute(sql)
         retorno = cursor.dict_fetchall()
 
-        return render_template('controle_diretoria.html', query=retorno, usuario_logado=current_user.USUARIO)
+        return render_template('aprovacoes.html', query=retorno, usuario_logado=current_user.USUARIO)
     except Exception as e:    
         flash(f'Erro interno ao realizar a consulta: {e}', 'error')
         logging.error(e)
@@ -47,7 +47,7 @@ def controle_diretoria():
         cursor.close()
         conn.close()
 
-@blueprint_controle_diretoria.route('/mais-info/<int:id>')
+@blueprint_aprovacoes.route('/mais-info/<int:id>')
 @login_required
 @role_required('Administrador', 'Aprovador')
 def mais_info_cd(id):
@@ -80,12 +80,12 @@ def mais_info_cd(id):
         return render_template('mais_info_cd.html', usuario_logado=current_user.USUARIO, solicitacao=retorno)
     except Exception as e:
         flash(f'Erro interno ao realizar a consulta: {e}', 'error')
-        return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
+        return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
     finally:
         cursor.close()
         conn.close()
 
-@blueprint_controle_diretoria.route('/mudar-status/<int:id>', methods=['POST'])
+@blueprint_aprovacoes.route('/mudar-status/<int:id>', methods=['POST'])
 @login_required
 @role_required('Administrador', 'Aprovador')
 def mudar_status(id):
@@ -142,11 +142,11 @@ def mudar_status(id):
             conn.commit()
             
             flash('Solicitação Aprovada e PDF gerado com sucesso!', 'success')
-            return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
+            return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
         except Exception as e:
             flash(f'Erro interno ao realizar a consulta: {e}', 'error')
             logging.error(f'Erro ao realizar a consulta: {e}')
-            return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
+            return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
         finally:
             cursor.close()
             conn.close()
@@ -159,13 +159,13 @@ def mudar_status(id):
             cursor.execute(sql, valores)
             conn.commit()
             flash('Solicitação Reprovada!', 'success')
-            return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
+            return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
         except Exception as e:
             flash(f'Erro interno ao realizar a consulta: {e}', 'error')
-            return redirect(url_for('blueprint_controle_diretoria.mais_info_cd', id=id))
+            return redirect(url_for('blueprint_aprovacoes.mais_info_cd', id=id))
         finally:
             cursor.close()
             conn.close()
     else:
         flash('Status inválido!', 'error')
-        return redirect(url_for('blueprint_controle_diretoria.controle_diretoria'))
+        return redirect(url_for('blueprint_aprovacoes.aprovacoes'))

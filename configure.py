@@ -7,7 +7,7 @@ from routes.blueprint_gestao_usuarios import blueprint_gestao_usuarios
 from routes.blueprint_principal import blueprint_principal
 from routes.blueprint_login import blueprint_login
 from routes.blueprint_painel_solicitacoes import blueprint_painel_solicitacoes
-from routes.blueprint_controle_diretoria import blueprint_controle_diretoria
+from routes.blueprint_aprovacoes import blueprint_aprovacoes
 from routes.blueprint_geral_solicitacoes import blueprint_geral_solicitacoes
 
 def config_all(app):
@@ -15,7 +15,7 @@ def config_all(app):
     config_login(app)
 
 def config_bp(app):
-    app.register_blueprint(blueprint_controle_diretoria, url_prefix="/controle-diretoria")
+    app.register_blueprint(blueprint_aprovacoes, url_prefix="/aprovacoes")
     app.register_blueprint(blueprint_painel_solicitacoes, url_prefix="/painel-solicitacoes")
     app.register_blueprint(blueprint_lancar_solicitacao, url_prefix="/lancar-solicitacao")
     app.register_blueprint(blueprint_gestao_usuarios, url_prefix="/gestao-usuarios")
