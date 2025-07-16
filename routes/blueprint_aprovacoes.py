@@ -94,7 +94,7 @@ def mudar_status(id):
         try:
             cursor, conn = abrir_cursor()
 
-            sql_solicitacao = "SELECT * FROM LIU_SOLICITACOES WHERE ID = :1"
+            sql_solicitacao = "SELECT ID, EMPRESA, REVENDA, FORNECEDOR, DEPARTAMENTO, DESCRICAO, VALOR, USUARIO_SOLICITANTE FROM LIU_SOLICITACOES WHERE ID = :1"
             cursor.execute(sql_solicitacao, [id])
             solicitacao = cursor.dict_fetchone()
 

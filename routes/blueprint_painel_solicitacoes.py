@@ -128,10 +128,15 @@ def download_relatorio():
     try:
         cursor, conn = abrir_cursor()
         sql = """
-        SELECT
+        SELECT DISTINCT
             s.ID,
             s.EMPRESA,
             s.REVENDA,
+            s.NRO_PROCESSO,
+            s.USUARIO_SOLICITANTE,
+            s.USUARIO_AUTORIZANTE,
+            s.DESCRICAO,
+            s.FORNECEDOR,
             u.LOGIN AS USUARIO_SOLICITANTE,
             d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
             d.NOME AS DEPARTAMENTO_DESCRICAO,

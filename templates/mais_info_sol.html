@@ -163,7 +163,7 @@
                     </div>
                 {% elif solicitacao['status'] == 'APROVADO' %}
                     {% if solicitacao['usuario_autorizante'] == current_user.CODIGO_APOLLO or current_user.FUNCAO == 'Administrador' %}
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDesautorizar{{ solicitacao['id'] }}">Cancelar Envio</button>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDesautorizar{{ solicitacao['id'] }}">Desautorizar Solicitação</button>
                     {% endif %}
                     <a href="{{ url_for('blueprint_painel_solicitacoes.download_pdf', id=solicitacao['id']) }}" class="btn btn-info">Baixar PDF</a>
                 {% elif solicitacao['status'] == 'ENCERRADO' %}

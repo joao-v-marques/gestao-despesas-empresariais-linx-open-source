@@ -8,6 +8,7 @@ def gerar_pdf(solicitacao, usuario_aprovador, usuario_solicitante):
     pdf.cell(200, 10, txt="Comprovante de Aprovação", ln=True, align='C')
     pdf.cell(200, 10, txt=f"ID da Solicitação: {solicitacao['id']}", ln=True)
     pdf.cell(200, 10, txt=f"Empresa/Revenda: {solicitacao['empresa']}.{solicitacao['revenda']}", ln=True)
+    pdf.cell(200, 10, txt=f"Fornecedor: {solicitacao['fornecedor']}", ln=True)
     pdf.cell(200, 10, txt=f"Usuário Solicitante: {usuario_solicitante}", ln=True)
     pdf.cell(200, 10, txt=f"Departamento: {solicitacao['departamento']}", ln=True)
     pdf.cell(200, 10, txt=f"Descrição: {solicitacao['descricao']}", ln=True)
@@ -17,6 +18,6 @@ def gerar_pdf(solicitacao, usuario_aprovador, usuario_solicitante):
     diretorio_atual = os.getcwd()
     base_dir = f"{diretorio_atual}/static/pdf/"
     os.makedirs(base_dir, exist_ok=True)
-    pdf_path = os.path.join(base_dir, f'solicitacao_{solicitacao['id']}.pdf')
+    pdf_path = os.path.join(base_dir, f"solicitacao_{solicitacao['id']}.pdf")
     pdf.output(pdf_path)
     return pdf_path
