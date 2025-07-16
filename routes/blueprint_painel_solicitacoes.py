@@ -253,9 +253,10 @@ def reenviar_solicitacao(id):
                 try:
                     cursor, conn = abrir_cursor()
 
-                    sql = "UPDATE LIU_SOLICITACOES SET STATUS = :1 WHERE ID = :2"
+                    sql = "UPDATE LIU_SOLICITACOES SET STATUS = :1, MOTIVO_REPROVA = :2 WHERE ID = :3"
                     valores = [
                         'PENDENTE',
+                        None,
                         id
                         ]
                     cursor.execute(sql, valores)
