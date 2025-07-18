@@ -1,4 +1,7 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from io import BytesIO
+from datetime import date
+from gerar_relatorio import gerar_relatorio
+from flask import Blueprint, render_template, request, flash, redirect, url_for, send_file
 from flask_login import login_required, current_user
 from decorators import role_required
 from database.connect_db import abrir_cursor
@@ -58,3 +61,61 @@ def geral_solicitacoes():
     finally:
             cursor.close()
             conn.close()
+
+@blueprint_geral_solicitacoes.route('/download-relatorio')
+@login_required
+@role_required('Administrador', 'Aprovador')
+def download_relatorio():
+    try:
+        cursor, conn = abrir_cursor()
+        sql = """
+        SELECT DISTINCT
+            s.ID,
+            s.EMPRESA,
+            s.REVENDA,
+            s.NRO_PROCESSO,
+            s.USUARIO_AUTORIZANTE,
+            s.DESCRICAO,
+            s.FORNECEDOR,
+            u.LOGIN AS USUARIO_SOLICITANTE,
+            d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
+            d.NOME AS DEPARTAMENTO_DESCRICAO,
+            s.VALOR,
+            s.STATUS
+        FROM
+            LIU_SOLICITACOES s
+        JOIN
+            GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+        JOIN
+            GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+    """
+        
+        filtro = request.args.get('filtro', 'PENDENTE')
+        if filtro != 'TODOS':
+            sql += "WHERE s.STATUS = :1"
+            valores = [filtro]
+        else:
+            sql += "ORDER BY s.STATUS"
+            valores = []
+            
+        cursor.execute(sql, valores)
+
+        dados = cursor.fetchall()
+        colunas = [desc[0] for desc in cursor.description]
+
+        dia_atual = date.today()
+        dia_formatado = dia_atual.strftime("%d_%m_%Y")
+
+        buffer = BytesIO()
+        gerar_relatorio(dados, colunas, buffer)
+        buffer.seek(0)
+
+        return send_file(buffer, as_attachment=True, download_name=f'relatorio_solicitacoes_{dia_formatado}.xlsx')
+    
+    except Exception as e:
+        flash(f'Erro na consulta: {e}', 'error')
+        return redirect(url_for('blueprint_geral_solicitacoes.geral_solicitacoes'))
+    finally:
+        cursor.close()
+        conn.close()
+            

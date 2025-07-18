@@ -133,7 +133,6 @@ def download_relatorio():
             s.EMPRESA,
             s.REVENDA,
             s.NRO_PROCESSO,
-            s.USUARIO_SOLICITANTE,
             s.USUARIO_AUTORIZANTE,
             s.DESCRICAO,
             s.FORNECEDOR,
@@ -148,8 +147,17 @@ def download_relatorio():
             GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
         JOIN
             GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
-    """   
-        cursor.execute(sql)
+    """
+
+        filtro = request.args.get('filtro', 'PENDENTE')
+        if filtro != 'TODOS':
+            sql += "WHERE s.STATUS = :1 AND s.USUARIO_SOLICITANTE = :2"
+            valores = [filtro, current_user.CODIGO_APOLLO]
+        else:
+            sql += "WHERE s.USUARIO_SOLICITANTE = :1"
+            valores = [current_user.CODIGO_APOLLO]
+        
+        cursor.execute(sql, valores)
 
         dados = cursor.fetchall()
         colunas = [desc[0] for desc in cursor.description]
@@ -166,7 +174,7 @@ def download_relatorio():
     except Exception as e:
             flash(f'Erro na consulta: {e}', 'error')
             logging.error(f"Erro na consulta: {e}")
-            return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol'))
+            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
     finally:
         cursor.close()
         conn.close()
