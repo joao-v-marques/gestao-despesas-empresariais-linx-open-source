@@ -151,6 +151,11 @@
             <div class="botoes">
                 {% if solicitacao['status'] == 'PENDENTE' %}
                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao['id'] }}">Cancelar Envio</button>
+                    {% if solicitacao['fornecedor'] == None %}
+                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalFornecedor{{ solicitacao['id'] }}">Inserir Fornecedor</button>
+                    {% else %}
+                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalFornecedor{{ solicitacao['id'] }}">Alterar Fornecedor</button>
+                    {% endif %}
                 {% elif solicitacao['status'] == 'REPROVADO' %}
                     <div class="btn-reprovados">
                         <div class="btn-exc-edit">
@@ -169,6 +174,39 @@
                 {% elif solicitacao['status'] == 'ENCERRADO' %}
                     <a href="{{ url_for('blueprint_painel_solicitacoes.download_pdf', id=solicitacao['id']) }}" class="btn btn-info">Baixar PDF</a>
                 {% endif %}
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <ul class="flashes">
+                            {% for category, message in messages %}
+                                <li class="flash-{{ category }}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalFornecedor{{ solicitacao['id'] }}" tabindex="-1" aria-labelledby="modalFornecedorLabel{{ solicitacao['id'] }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalFornecedorLabel{{ solicitacao['id'] }}">Confirmar ação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url_for('blueprint_painel_solicitacoes.inserir_fornecedor', id=solicitacao['id']) }}" method="POST" class="form-inserir-fornecedor">
+                            <label for="inserir_fornecedor_id">Inserir Fornecedor</label>
+                            <div class="container-fornecedor-modal">
+                                <input type="number" class="cod-fornecedor-modal" id="inserir_fornecedor_id" name="inserir-fornecedor-modal">
+                                <input type="text" class="input-fornecedor-modal" id="descricao_fornecedor_modal_id_{{ solicitacao['id'] }}" name="desc-inserir-fornecedor-modal" readonly>
+                            </div>
+
+                            <input type="submit" class="btn btn-success" value="Confirmar">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 

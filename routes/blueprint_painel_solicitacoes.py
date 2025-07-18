@@ -122,6 +122,41 @@ def mais_info_sol(id):
                 cursor.close()
                 conn.close()
 
+@blueprint_painel_solicitacoes.route('/inserir-fornecedor/<int:id>', methods=['POST'])
+@login_required
+def inserir_fornecedor(id):
+    session.pop('_flashes', None)
+    cod_fornecedor = request.form['inserir-fornecedor-modal'].strip()
+    desc_fornecedor = request.form['desc-inserir-fornecedor-modal'].strip()
+
+    if desc_fornecedor == 'Erro na busca':
+        logging.error('Você inseriu um fornecedor inválido!')
+        flash('Você inseriu um fornecedor inválido!', 'error')
+        return redirect(url_for("blueprint_painel_solicitacoes.mais_info_sol", id=id))
+    elif desc_fornecedor == 'Fornecedor não encontrado':
+        logging.error('Você inseriu um fornecedor inválido!')
+        flash('Você inseriu um fornecedor inválido!', 'error')
+        return redirect(url_for("blueprint_painel_solicitacoes.mais_info_sol", id=id))
+    else:
+        try:
+            cursor, conn = abrir_cursor()
+            sql = "UPDATE LIU_SOLICITACOES SET FORNECEDOR = :1 WHERE ID = :2"
+            valores = [cod_fornecedor, id]
+            cursor.execute(sql, valores)
+            conn.commit()
+
+            logging.info(f'Fornecedor: {cod_fornecedor} Inserido com sucesso!')
+            flash('Fornecedor inserido com sucesso!', 'success')
+
+            return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
+        except Exception as e:
+            flash(f'Erro interno ao realizar a consulta: {e}', 'error')
+            logging.error(f'{e}')
+            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+        finally:
+            cursor.close()
+            conn.close()
+
 @blueprint_painel_solicitacoes.route('/download-relatorio', methods=['GET'])
 @login_required
 def download_relatorio():
@@ -228,7 +263,7 @@ def salvar_edicao(id):
                     cursor.execute(sql, valores)
                     conn.commit()
                     flash('Alteração realizada com sucesso!', 'success')
-                    return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', ixd=id))
+                    return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
                 except Exception as e:
                     flash(f'Erro na consulta: {e}', 'error')
                     return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))

@@ -1,9 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 from database.connect_db import abrir_cursor
-
 import logging
-
 
 blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name__)
 
@@ -55,7 +53,8 @@ def fazer_lancamento():
     departamento_form = request.form['departamento'].strip()
     descricao_form = request.form['descricao'].strip()
     valor_form = request.form['valor']
-    fornecedor_form = request.form['fornecedor']
+    fornecedor_form = request.form['fornecedor'].strip()
+    desc_fornecedor_form = request.form['desc-fornecedor'].strip()
 
     try:
         valor_float = float(valor_form.replace('R$', ''))
@@ -66,6 +65,14 @@ def fazer_lancamento():
     if not descricao_form or not valor_form:
         flash('Nenhum campo pode estar vazio!', 'error')
         return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
+    elif desc_fornecedor_form == 'Erro na busca':
+        logging.error('Você inseriu um fornecedor inválido!')
+        flash('Você inseriu um fornecedor inválido!', 'error')
+        return redirect(url_for("blueprint_lancar_solicitacao.lancar_solicitacao"))
+    elif desc_fornecedor_form == 'Fornecedor não encontrado':
+        logging.error('Você inseriu um fornecedor inválido!')
+        flash('Você inseriu um fornecedor inválido!', 'error')
+        return redirect(url_for("blueprint_lancar_solicitacao.lancar_solicitacao"))
     else:
         try:
             cursor, conn = abrir_cursor()

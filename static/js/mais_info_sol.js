@@ -83,3 +83,27 @@ document.addEventListener('DOMContentLoaded', function () {
         descricaoInput.value = '';
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const solicitacaoId = document.getElementById('codigo_apollo_solicitacao_id').value;
+    const codigoInputModal = document.getElementById('inserir_fornecedor_id');
+    const descricaoInputModal = document.getElementById(`descricao_fornecedor_modal_id_${solicitacaoId}`);
+
+    if (codigoInputModal && descricaoInputModal) {
+        codigoInputModal.addEventListener('input', function () {
+            const codigo = codigoInputModal.value;
+            if (codigo) {
+                fetch(`/lancar-solicitacao/fornecedor/${codigo}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        descricaoInputModal.value = data.nome || 'Fornecedor não encontrado';
+                    })
+                    .catch(error => {
+                        descricaoInputModal.value = 'Erro na busca';
+                    });
+            } else {
+                descricaoInputModal.value = '';
+            }
+        });
+    }
+});

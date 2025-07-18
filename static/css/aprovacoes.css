@@ -206,3 +206,21 @@ table.tabela {
     font-style: italic;
     padding: 24px 0;
 }
+
+.flash-error {
+    text-align: center;
+    color: red;
+    list-style: none;
+}
+
+.flash-success {
+    text-align: center;
+    color: lightgreen;
+    list-style: none;
+}
+
+.flash-info {
+    text-align: center;
+    color: blue;
+    list-style: none;
+}
