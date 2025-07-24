@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputs = form.querySelectorAll('input[type="text"], textarea');
     const selects = [
         document.getElementById('departamento_id'),
+        document.getElementById('origem_id')
     ];
 
     let valoresOriginais = {};
@@ -65,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Atualizar fornecedor
 document.addEventListener('DOMContentLoaded', function () {
     const solicitacaoId = document.getElementById('codigo_apollo_solicitacao_id').value;
     const codigoInput = document.getElementById(`codigo_fornecedor_id_${solicitacaoId}`);
@@ -84,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+// Atualiza fornecedor na insercao
 document.addEventListener('DOMContentLoaded', function () {
     const solicitacaoId = document.getElementById('codigo_apollo_solicitacao_id').value;
     const codigoInputModal = document.getElementById('inserir_fornecedor_id');

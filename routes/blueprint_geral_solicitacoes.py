@@ -32,9 +32,9 @@ def geral_solicitacoes():
             s.FORNECEDOR
         FROM
             LIU_SOLICITACOES s
-        JOIN
+        LEFT JOIN
             GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
-        JOIN
+        LEFT JOIN
             GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
         """
         

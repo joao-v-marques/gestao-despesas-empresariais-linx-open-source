@@ -19,23 +19,23 @@ def painel_solicitacoes():
         try:
             cursor, conn = abrir_cursor()
             base_sql = """
-            SELECT DISTINCT
-                s.ID,
-                s.EMPRESA, 
-                s.REVENDA, 
-                u.LOGIN AS USUARIO_SOLICITANTE, 
-                d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO, 
-                d.NOME AS DEPARTAMENTO_DESCRICAO, 
-                s.VALOR, 
-                s.STATUS,
-                s.NRO_PROCESSO
-            FROM 
-                LIU_SOLICITACOES s
-            JOIN 
-                GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
-            JOIN
-                GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
-        """
+    SELECT DISTINCT
+        s.ID,
+        s.EMPRESA,
+        s.REVENDA,
+        s.DESCRICAO,
+        u.LOGIN AS USUARIO_SOLICITANTE, 
+        d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO, 
+        d.NOME AS DEPARTAMENTO_DESCRICAO, 
+        s.VALOR, 
+        s.STATUS,
+        s.NRO_PROCESSO,
+        s.FORNECEDOR
+    FROM 
+        LIU_SOLICITACOES s
+        LEFT JOIN GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+        LEFT JOIN GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
+"""
                 
             if filtro != 'TODOS':
                 sql = base_sql + " WHERE s.STATUS = :1 AND s.USUARIO_SOLICITANTE = :2"
@@ -44,8 +44,8 @@ def painel_solicitacoes():
                 sql = base_sql + " WHERE s.USUARIO_SOLICITANTE = :1"
                 valores = [current_user.CODIGO_APOLLO]
 
-            colunas_permitidas = [
-                   'ID', 'NRO_PROCESSO', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'VALOR', 'STATUS'
+            colunas_permitidas = [  
+                'ID', 'NRO_PROCESSO', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'VALOR', 'STATUS', 'FORNECEDOR'
             ]
 
             if sort_by not in colunas_permitidas:
@@ -84,36 +84,48 @@ def mais_info_sol(id):
                                     s.EMPRESA,
                                     s.REVENDA,
                                     u.LOGIN AS USUARIO_SOLICITANTE,
-                                    d.DEPARTAMENTO AS CODIGO,
-                                    d.NOME AS NOME,
+                                    d.DEPARTAMENTO AS DEPARTAMENTO_SOL,
+                                    d.NOME AS DESC_DEPARTAMENTO_SOL,
                                     s.DESCRICAO AS DESCRICAO,
                                     s.VALOR,
                                     s.STATUS,
                                     s.MOTIVO_REPROVA,
                                     s.FORNECEDOR,
-                                    s.USUARIO_AUTORIZANTE
+                                    s.USUARIO_AUTORIZANTE,
+                                    o.ORIGEM AS ORIGEM_SOL,
+                                    o.DES_ORIGEM AS DES_ORIGEM_SOL
                                 FROM
                                     LIU_SOLICITACOES s
-                                JOIN 
+                                LEFT JOIN 
                                     GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
-                                JOIN
+                                LEFT JOIN
                                     GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+                                LEFT JOIN
+                                    FIN_ORIGEM o ON s.ORIGEM = o.ORIGEM
                                 WHERE 
                                     ID = :1
                                     """
             cursor.execute(sql_solicitacao, [id])
             retorno_solicitacao = cursor.dict_fetchone()
                 
-            sql_departamento = "SELECT * FROM GER_DEPARTAMENTO ORDER BY DEPARTAMENTO"
+            sql_departamento = "SELECT DISTINCT DEPARTAMENTO, NOME FROM GER_DEPARTAMENTO ORDER BY DEPARTAMENTO"
             cursor.execute(sql_departamento)
             retorno_departamento = cursor.dict_fetchall()
+
+            sql_origem = "SELECT DISTINCT ORIGEM, DES_ORIGEM FROM FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = 'N' AND DES_ORIGEM != 'LIVRE'"
+            valores_origem = [
+                retorno_solicitacao['empresa'],
+                retorno_solicitacao['revenda'],
+            ]
+            cursor.execute(sql_origem, valores_origem)
+            retorno_origem = cursor.dict_fetchall()
 
             sql_autorizante = "SELECT USUARIO, LOGIN FROM GER_USUARIO WHERE USUARIO = :1"
             valores_autorizante = [retorno_solicitacao['usuario_autorizante']]
             cursor.execute(sql_autorizante, valores_autorizante)
             retorno_autorizante = cursor.dict_fetchone()
 
-            return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=retorno_solicitacao, departamento=retorno_departamento, usuario_autorizante=retorno_autorizante)
+            return render_template('mais_info_sol.html', usuario_logado=current_user.USUARIO, solicitacao=retorno_solicitacao, departamento=retorno_departamento, origem=retorno_origem, usuario_autorizante=retorno_autorizante)
         except Exception as e:
                 flash(f'Erro interno ao realizar a consulta: {e}', 'error')
                 logging.info(f'{e}')
@@ -145,7 +157,6 @@ def inserir_fornecedor(id):
             cursor.execute(sql, valores)
             conn.commit()
 
-            logging.info(f'Fornecedor: {cod_fornecedor} Inserido com sucesso!')
             flash('Fornecedor inserido com sucesso!', 'success')
 
             return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
@@ -240,12 +251,16 @@ def download_pdf(id):
 @login_required
 def salvar_edicao(id):
             novo_departamento = request.form['departamento']
+            novo_origem = request.form['origem']
             novo_descricao = request.form.get('descricao').strip()
             novo_valor = float(request.form.get('valor').replace('R$', '').replace('.', '').replace(',', '.').strip())
-            
+                        
             if len(novo_departamento) != 3:
-                    flash('O departamento deve ter exatamente 3 caracteres!')
-                    return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
+                flash('O departamento deve ter exatamente 3 caracteres!')
+                return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
+            elif len(novo_origem) != 4:
+                flash('A origem deve ter exatamente 3 caracteres!')
+                return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
             else:
                 try:
                     cursor, conn = abrir_cursor()
@@ -255,11 +270,12 @@ def salvar_edicao(id):
                             SET 
                                 DEPARTAMENTO = :1,
                                 DESCRICAO = :2,
-                                VALOR = :3 
+                                VALOR = :3,
+                                ORIGEM = :4 
                             WHERE 
-                                ID = :4
+                                ID = :5
                             """
-                    valores = [novo_departamento, novo_descricao, novo_valor, id]
+                    valores = [novo_departamento, novo_descricao, novo_valor, novo_origem, id]
                     cursor.execute(sql, valores)
                     conn.commit()
                     flash('Alteração realizada com sucesso!', 'success')
@@ -279,7 +295,6 @@ def excluir_solicitacao(id):
                 sql = "DELETE FROM LIU_SOLICITACOES WHERE ID = :1"
                 cursor.execute(sql, [id])
                 conn.commit()
-                logging.info('Solicitação excluida com sucesso!')
                 flash('Solitação excluida com sucesso!', 'success')
 
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
@@ -322,19 +337,16 @@ def desautorizar_solicitacao(id):
         valores_solicitacao = [id]
         cursor.execute(sql_solicitacao, valores_solicitacao)
         retorno_solicitacao = cursor.dict_fetchone()
-        logging.info(f'Select da solicitação atual feito. NRO_PROCESSO: {retorno_solicitacao['nro_processo']}')
 
         sql_deletar = "DELETE FROM FAT_PROCESSO_DESPESA WHERE NRO_PROCESSO = :1"
         valores_deletar = [retorno_solicitacao['nro_processo']]
         cursor.execute(sql_deletar, valores_deletar)
         conn.commit()
-        logging.info('Solicitação excluida no FAT_PROCESSO_DESPESA')
 
         sql_update = "UPDATE LIU_SOLICITACOES SET STATUS = :1, NRO_PROCESSO = :2, USUARIO_AUTORIZANTE = :3 WHERE ID = :4"
         valores_update = ['PENDENTE', None, None, id]
         cursor.execute(sql_update, valores_update)
         conn.commit()
-        logging.info('Solicitação alterada para STATUS PENDENTE, NRO_PROCESSO NULL e USUARIO_AUTORIZANTE NULL')
 
         pdf_path = os.path.join('static', 'pdf', f'solicitacao_{id}.pdf')
         if os.path.exists(pdf_path):

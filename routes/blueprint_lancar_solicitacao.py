@@ -18,7 +18,11 @@ def lancar_solicitacao():
         cursor.execute(sql_departamento, valores)
         retorno_departamento = cursor.dict_fetchall()
 
-        return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO, departamento=retorno_departamento)
+        sql_origem = "SELECT ORIGEM, DES_ORIGEM FROM FIN_ORIGEM WHERE UTILIZACAO = 'N' AND DES_ORIGEM != 'LIVRE'"
+        cursor.execute(sql_origem)
+        retorno_origem = cursor.dict_fetchall()
+
+        return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO, departamento=retorno_departamento, origem=retorno_origem)
     except Exception as e:
         flash(f'Erro interno ao realizar a consulta: {e}', 'error')
         logging.error(f'Erro: {e}')
@@ -55,6 +59,7 @@ def fazer_lancamento():
     valor_form = request.form['valor']
     fornecedor_form = request.form['fornecedor'].strip()
     desc_fornecedor_form = request.form['desc-fornecedor'].strip()
+    origem_form = request.form['origem'].strip()
 
     try:
         valor_float = float(valor_form.replace('R$', ''))
@@ -76,7 +81,7 @@ def fazer_lancamento():
     else:
         try:
             cursor, conn = abrir_cursor()
-            sql = "INSERT INTO LIU_SOLICITACOES (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, DESCRICAO, VALOR, FORNECEDOR, STATUS, MOTIVO_REPROVA, PDF_PATH) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)"
+            sql = "INSERT INTO LIU_SOLICITACOES (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, DESCRICAO, VALOR, FORNECEDOR, STATUS, MOTIVO_REPROVA, PDF_PATH, ORIGEM) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)"
             valores = [
                 empresa_form,
                 revenda_form,
@@ -87,7 +92,8 @@ def fazer_lancamento():
                 fornecedor_form,
                 'PENDENTE',
                 '',
-                ''
+                '',
+                origem_form
                 ]
             cursor.execute(sql, valores)
             conn.commit()

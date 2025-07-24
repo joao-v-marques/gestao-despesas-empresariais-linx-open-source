@@ -125,8 +125,17 @@
                 <label for="departamento_id">Departamento:</label>
                 <select name="departamento" id="departamento_id" class="input-departamento" disabled>
                     {% for d in departamento %}
-                        <option value="{{ d['departamento'] }}" {% if d['departamento'] == solicitacao['nome'] %}selected{% endif %}>
+                        <option value="{{ d['departamento'] }}" {% if d['departamento'] == solicitacao['departamento_sol'] %}selected{% endif %}>
                             {{ d['departamento'] }} - {{ d['nome'] }}
+                        </option>]
+                    {% endfor %}
+                </select>
+
+                <label for="origem_id">Origem:</label>
+                <select name="origem" id="origem_id" disabled>
+                    {% for o in origem %}
+                        <option value="{{ o['origem'] }}" {% if o['des_origem'] == solicitacao['des_origem_sol'] %}selected{% endif %}>
+                            {{ o['origem'] }} - {{ o['des_origem'] }}
                         </option>
                     {% endfor %}
                 </select>

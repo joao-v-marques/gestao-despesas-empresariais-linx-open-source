@@ -184,6 +184,7 @@ nav {
 .tabela {
     width: 100%;
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    border-collapse: collapse;
 }
 
 table.tabela {
@@ -198,17 +199,35 @@ table.tabela {
     padding: 4px 8px;
     letter-spacing: 1px;
     text-align: left;
-    font-size: 0.90rem;
 }
 
 .tabela td {
     padding: 5px 1px;
     font-size: 0.80rem;
     transition: background 0.2s;
+    border-bottom: 1.3px solid rgba(0,0,0,0.40);
 }
 
 .tabela tr:hover td {
     background: #e3f2fd;
+}
+
+.tabela-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tabela td.descricao {
+    white-space: normal;
+    max-width: 300px; /* ajustável */
+    word-break: break-word;
+}
+
+.tabela td.origem {
+    white-space: nowrap;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .nenhuma-solicitacao {

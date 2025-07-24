@@ -113,48 +113,54 @@
                 </div>
             </div>
 
-            <table class="tabela">
-                <thead>
-                    <tr class="head-lista">
-                        <th>ID</th>
-                        <th>Nro. Processo</th>
-                        <th>Emp./Rev</th>
-                        <th>Usuario</th>
-                        <th>Departamento</th>
-                        <th>Valor</th>
-                        <th>Status</th>
-                        <th>Opções</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for s in solicitacoes %}
-                        <tr class="body-lista">
-                            <td>{{ s['id'] }}</td>
-                            <td>
-                                {% if s['nro_processo'] == None %}
-
-                                    -
-
-                                {% else %}
-
-                                {{ s['nro_processo'] }}
-                                
-                                {% endif %}
-                            </td>
-                            <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
-                            <td>{{ s['usuario_solicitante'] }}</td>
-                            <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>
-                            <td>{{ "{:,.2f}".format(s['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
-                            <td>{{ s['status'] }}</td>
-                            <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#infoModal{{ s['id'] }}">Expandir</button></td>
+            <div class="tabela-scroll">
+                <table class="tabela">
+                    <thead>
+                        <tr class="head-lista">
+                            <th>ID</th>
+                            <th>Nro. Processo</th>
+                            <th>Emp./Rev</th>
+                            <th>Fornecedor</th>
+                            <th>Usuario</th>
+                            <th>Departamento</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                            <th>Descrição</th>
+                            <th>Opções</th>
                         </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="7" class="nenhuma-solicitacao">Nenhuma solicitação foi encontrada</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for s in solicitacoes %}
+                            <tr class="body-lista">
+                                <td>{{ s['id'] }}</td>
+                                <td>
+                                    {% if s['nro_processo'] == None %}
+
+                                        -
+
+                                    {% else %}
+
+                                    {{ s['nro_processo'] }}
+                                    
+                                    {% endif %}
+                                </td>
+                                <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
+                                <td>{{ s['fornecedor'] }}</td>
+                                <td>{{ s['usuario_solicitante'] }}</td>
+                                <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>
+                                <td>{{ "{:,.2f}".format(s['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
+                                <td>{{ s['status'] }}</td>
+                                <td class="descricao">{{ s['descricao'] }}</td>
+                                <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#infoModal{{ s['id'] }}">Expandir</button></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="10" class="nenhuma-solicitacao">Nenhuma solicitação foi encontrada</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
             {% for s in solicitacoes %}
                 <div class="modal fade" id="infoModal{{ s['id'] }}" tabindex="-1" aria-labelledby="infoModalLabel{{ s['id'] }}" aria-hidden="true">
