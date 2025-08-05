@@ -18,15 +18,35 @@ def lancar_solicitacao():
         cursor.execute(sql_departamento, valores)
         retorno_departamento = cursor.dict_fetchall()
 
-        sql_origem = "SELECT ORIGEM, DES_ORIGEM FROM FIN_ORIGEM WHERE UTILIZACAO = 'N' AND DES_ORIGEM != 'LIVRE'"
-        cursor.execute(sql_origem)
-        retorno_origem = cursor.dict_fetchall()
-
-        return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO, departamento=retorno_departamento, origem=retorno_origem)
+        return render_template('lancar_solicitacao.html', usuario_logado=current_user.USUARIO, departamento=retorno_departamento)
     except Exception as e:
         flash(f'Erro interno ao realizar a consulta: {e}', 'error')
         logging.error(f'Erro: {e}')
         return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))    
+    finally:
+        cursor.close()
+        conn.close()
+
+@blueprint_lancar_solicitacao.route('/buscar-origens')
+@login_required
+def buscar_origens():
+    empresa = int(request.args.get('empresa'))
+    revenda = int(request.args.get('revenda'))
+    logging.info(f'Empresa: {empresa} Tipo: {type(empresa)} <<< >>> Revenda: {revenda} Tipo: {type(revenda)}')
+    try:
+        cursor, conn = abrir_cursor()
+        sql_origem = "SELECT ORIGEM, DES_ORIGEM FROM FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = :3 AND DES_ORIGEM != :4"
+        valores = [
+            empresa,
+            revenda,
+            'N',
+            'LIVRE'
+        ]
+        cursor.execute(sql_origem, valores)
+        retorno = cursor.dict_fetchall()
+        return jsonify(retorno)
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
     finally:
         cursor.close()
         conn.close()

@@ -122,9 +122,7 @@
 
             <label for="origem_id">Origem</label>
             <select name="origem" id="origem_id">
-                {% for o in origem %}
-                    <option value="{{ o['origem'] }}">{{ o['origem'] }} - {{ o['des_origem'] }}</option>
-                {% endfor %}
+                <!-- Está sendo preenchida com JS -->
             </select>
 
             <label for="descricao_id" class="label-descricao">Descrição</label>

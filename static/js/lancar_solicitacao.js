@@ -1,6 +1,8 @@
+// Puxa a empresa e revenda do HTML
 const empresaInput = document.querySelector('#empresa_id');
 const revendaInput = document.querySelector('#revenda_id');
 
+// Função que atualiza as opções da revenda
 function atualizarOpcoesRevenda() {
     revendaInput.innerHTML = '';
 
@@ -87,4 +89,30 @@ document.getElementById('codigo_fornecedor_id').addEventListener('input', functi
     } else {
         document.getElementById('descricao_fornecedor_id').value = '';
     }
+});
+
+document.getElementById('empresa_id').addEventListener('change', buscarOrigens);
+document.getElementById('revenda_id').addEventListener('change', buscarOrigens);
+
+function buscarOrigens() {
+    var empresa = document.getElementById('empresa_id').value;
+    var revenda = document.getElementById('revenda_id').value;
+    empresa = Number(empresa)
+    revenda = Number(revenda)
+    fetch(`/lancar-solicitacao/buscar-origens?empresa=${empresa}&revenda=${revenda}`)
+        .then(response => response.json())
+        .then(data => {
+            const origemSelect = document.getElementById('origem_id');
+            origemSelect.innerHTML = '';
+            data.forEach(origem => {
+                const option = document.createElement('option');
+                option.value = origem.origem;
+                option.text = origem.des_origem;
+                origemSelect.appendChild(option);
+            });
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    buscarOrigens();
 });
