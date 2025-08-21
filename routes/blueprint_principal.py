@@ -5,12 +5,14 @@ from decorators import role_required
 
 blueprint_principal = Blueprint('blueprint_principal', __name__)
 
+# Rota que renderiza a pagina principal (Desativada)
 @blueprint_principal.route('/')
 @login_required
 @role_required('Administrador')
 def principal():
     return render_template('principal.html', usuario_logado=current_user.USUARIO)
 
+# Rota para deslogar do sistema (Substituir por JWT)
 @blueprint_principal.route('/logout')
 @login_required
 def logout():
@@ -19,6 +21,7 @@ def logout():
     flash('Você deslogou da sua conta com sucesso!', 'success')
     return redirect(url_for('blueprint_login.pagina_login'))
 
+# Rota para trocar a senha do usuário
 @blueprint_principal.route('/troca-senha/<int:id>', methods=['POST'])
 @login_required
 def troca_senha(id):

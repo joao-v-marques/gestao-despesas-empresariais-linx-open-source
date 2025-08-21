@@ -8,9 +8,10 @@ import logging
 
 blueprint_aprovacoes = Blueprint('blueprint_aprovacoes', __name__)
 
+# Rota que renderiza a pagina
 @blueprint_aprovacoes.route('/')
 @login_required
-@role_required('Administrador', 'Aprovador')
+@role_required('Administrador', 'Gerente', 'Diretoria')
 def aprovacoes():
     try:
         cursor, conn = abrir_cursor()
@@ -19,6 +20,7 @@ def aprovacoes():
             s.ID,
             s.EMPRESA,
             s.REVENDA,
+            s.NRO_OS,
             u.LOGIN AS USUARIO_SOLICITANTE,
             d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
             d.NOME  AS DEPARTAMENTO_DESCRICAO,
@@ -32,10 +34,22 @@ def aprovacoes():
         JOIN
             GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
         WHERE
-            s.STATUS = 'PENDENTE'
+            s.STATUS = :1
         """
-
-        cursor.execute(sql)
+        if current_user.FUNCAO == 'Gerente':
+            alcada = 'Gerente'
+            sql += " AND s.ALCADA = :2"
+            valores_sql = ['PENDENTE', alcada]
+        elif current_user.FUNCAO == 'Diretoria':
+            valores_sql = ['PENDENTE']
+        elif current_user.FUNCAO == 'Administrador':
+            valores_sql = ['PENDENTE']
+        else:
+            flash("Você não não pode visualizar essa tela!", 'error')
+            logging.info("Você não não pode visualizar essa tela!")
+            return redirect(url_for("blueprint_painel_solicitacoes.painel_solicitacoes"))
+            
+        cursor.execute(sql, valores_sql)
         retorno = cursor.dict_fetchall()
 
         return render_template('aprovacoes.html', query=retorno, usuario_logado=current_user.USUARIO)
@@ -47,9 +61,10 @@ def aprovacoes():
         cursor.close()
         conn.close()
 
+# Rota para abrir o mais_info_cd (O certo seria mais_info_aprov)
 @blueprint_aprovacoes.route('/mais-info/<int:id>')
 @login_required
-@role_required('Administrador', 'Aprovador')
+@role_required('Administrador', 'Gerente', 'Diretoria')
 def mais_info_cd(id):
     try:
         cursor, conn = abrir_cursor()
@@ -58,6 +73,7 @@ def mais_info_cd(id):
             s.ID,
             s.EMPRESA,
             s.REVENDA,
+            s.NRO_OS,
             u.LOGIN AS USUARIO_SOLICITANTE,
             d.DEPARTAMENTO AS DEPARTAMENTO,
             d.NOME AS NOME,
@@ -85,33 +101,56 @@ def mais_info_cd(id):
         cursor.close()
         conn.close()
 
+# Rota que altera o status para APROVADO ou PENDENTE
 @blueprint_aprovacoes.route('/mudar-status/<int:id>', methods=['POST'])
 @login_required
-@role_required('Administrador', 'Aprovador')
+@role_required('Administrador', 'Gerente', 'Diretoria')
 def mudar_status(id):
     novo_status = request.form['status']
     if novo_status == 'APROVADO':
         try:
             cursor, conn = abrir_cursor()
 
-            sql_solicitacao = "SELECT ID, EMPRESA, REVENDA, FORNECEDOR, DEPARTAMENTO, DESCRICAO, VALOR, USUARIO_SOLICITANTE FROM LIU_SOLICITACOES WHERE ID = :1"
+            sql_solicitacao = """
+            SELECT DISTINCT 
+                s.ID,
+                s.EMPRESA,
+                s.REVENDA,
+                s.FORNECEDOR,
+                s.DESCRICAO,
+                s.VALOR,
+                s.ORCAMENTO,
+                d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
+                d.NOME AS DEPARTAMENTO_DESCRICAO,
+                u.NOME AS NOM_USUARIO_SOLICITANTE,
+                u.LOGIN AS USUARIO_SOLICITANTE,
+                u.USUARIO AS COD_USUARIO_SOLICITANTE,
+                o.ORIGEM AS ORIGEM_CODIGO,
+                o.DES_ORIGEM AS ORIGEM_DESCRICAO
+            FROM
+                LIU_SOLICITACOES s
+                LEFT JOIN GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+                LEFT JOIN GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
+                LEFT JOIN FIN_ORIGEM o ON s.ORIGEM = o.ORIGEM 
+            WHERE
+                ID = :1
+            """
             cursor.execute(sql_solicitacao, [id])
             solicitacao = cursor.dict_fetchone()
+
+            codFornecedor = str(solicitacao['fornecedor'])
+
+            sql_fornecedor = "SELECT CLIENTE, NOME, CGCCPF FROM FAT_CLIENTE WHERE CLIENTE = :1"
+            cursor.execute(sql_fornecedor, [codFornecedor])
+            fornecedor = cursor.dict_fetchone()
+            logging.info("Fez a SELECT fornecedor")
 
             if solicitacao['fornecedor'] == None or solicitacao['fornecedor'] == '':
                 logging.info('Você deve cadastrar um fornecedor antes de aprovar uma solicitação!')
                 flash('Você deve cadastrar um fornecedor antes de aprovar uma solicitação!', 'error')
                 return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
             else:
-                sql_usuario_solicitante = "SELECT USUARIO FROM LIU_USUARIO WHERE CODIGO_APOLLO = :1"
-                valores = [
-                    solicitacao['usuario_solicitante']
-                ]
-                cursor.execute(sql_usuario_solicitante, valores)
-                
-                usuario_solicitante = cursor.dict_fetchone()
-
-                pdf_path = gerar_pdf(solicitacao, current_user.USUARIO, usuario_solicitante['usuario'])
+                pdf_path = gerar_pdf(solicitacao, fornecedor, str(fornecedor['cgccpf']), str(solicitacao['id']))
 
                 sql_max_processo = "SELECT MAX(NRO_PROCESSO) FROM FAT_PROCESSO_DESPESA"
                 cursor.execute(sql_max_processo)
@@ -122,7 +161,7 @@ def mudar_status(id):
                 else:
                     proximo_numero_processo = max_processo + 1
                 
-                data_atual = datetime.now()
+                data_atual = datetime.now().replace(microsecond=0)
 
                 sql_aprovado = "UPDATE LIU_SOLICITACOES SET STATUS = 'APROVADO', PDF_PATH = :1, USUARIO_AUTORIZANTE = :2, NRO_PROCESSO = :3 WHERE ID = :4"
                 valores = [pdf_path, current_user.CODIGO_APOLLO, proximo_numero_processo, id]
@@ -138,19 +177,20 @@ def mudar_status(id):
                     f"{solicitacao['descricao']}. Aprovado por: {current_user.NOME}",
                     solicitacao['valor'],
                     'A',
-                    solicitacao['usuario_solicitante'],
-                    solicitacao['departamento'],
+                    solicitacao['cod_usuario_solicitante'],
+                    solicitacao['departamento_codigo'],
                     current_user.CODIGO_APOLLO,
                     solicitacao['fornecedor']
                     ]
                 cursor.execute(sql_inserir, valores_inserir)
                 conn.commit()
-                
+                logging.info("Inseriu no FAT_PROCESSO_DESPESA")
+
                 flash('Solicitação Aprovada e PDF gerado com sucesso!', 'success')
                 return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
         except Exception as e:
-            flash(f'Erro interno ao realizar a consulta: {e}', 'error')
-            logging.error(f'Erro ao realizar a consulta: {e}')
+            flash(f'Erro interno ao realizar a aprovação: {e}', 'error')
+            logging.error(f'Erro ao realizar a aprovação: {e}')
             return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
         finally:
             cursor.close()

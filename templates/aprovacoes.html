@@ -39,7 +39,7 @@
                     </li>
                 {% endif %}
 
-                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Aprovador' %}
+                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Gerente' or current_user.FUNCAO == 'Diretoria' %}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-white" id="aprovadorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Aprovações
@@ -100,6 +100,7 @@
                         <th>ID</th>
                         <th>Nro. Processo</th>
                         <th>Emp./Rev.</th>
+                        <th>O.S</th>
                         <th>Usuario</th>
                         <th>Departamento</th>
                         <th>Valor</th>
@@ -113,16 +114,19 @@
                             <td>{{ solicitacao['id'] }}</td>
                             <td>
                                 {% if solicitacao['nro_processo'] == None %}
-
                                     -
-
                                 {% else %}
-
-                                {{ solicitacao['nro_processo']}}
-                                
+                                    {{ solicitacao['nro_processo']}}
                                 {% endif %}
                             </td>
                             <td>{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}</td>
+                            <td>
+                                {% if solicitacao['nro_os'] == None %}
+                                    -
+                                {% else %}
+                                    {{ solicitacao['nro_os'] }}
+                                {% endif %}
+                            </td>
                             <td>{{ solicitacao['usuario_solicitante'] }}</td>
                             <td>{{ solicitacao['departamento_codigo'] }} - {{ solicitacao['departamento_descricao'] }}</td>
                             <td>{{ "{:,.2f}".format(solicitacao['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>

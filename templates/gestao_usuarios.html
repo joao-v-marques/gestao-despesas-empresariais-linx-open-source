@@ -40,7 +40,7 @@
                     </li>
                 {% endif %}
 
-                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Aprovador' %}
+                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Gerente' or current_user.FUNCAO == 'Diretoria' %}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-white" id="aprovadorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Aprovações
@@ -97,7 +97,7 @@
             <h2 class="titulo-cadastro">Cadastro de Usuários</h2>
 
             <label for="cod_apollo_id" class="label-cod-apollo">Cód. Apollo</label>
-            <input type="text" id="cod_apollo_id" name="cod_apollo" class="input-cod-apollo">
+            <input type="text" id="cod_apollo_id" name="codigo_apollo" class="input-cod-apollo" value="0">
 
             <label for="usuario_id" class="label-usuario">Usuario</label>
             <input type="text" id="usuario_id" name="usuario" class="input-usuario">
@@ -114,7 +114,8 @@
             <label for="funcao_id" class="label-funcao">Função</label>
             <select name="funcao" id="funcao_id" class="input-funcao">
                 <option value="Solicitante">Solicitante</option>
-                <option value="Aprovador">Aprovador</option>
+                <option value="Gerente">Gerente</option>
+                <option value="Diretoria">Diretoria</option>
                 <option value="Administrador">Administrador</option>
             </select>
 
@@ -188,7 +189,7 @@
                             <div class="modal-body">
                                 <form action="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=u['id']) }}" method="POST" class="formulario-modal">
                                     <label for="codigo_apollo_id_edit{{ u['codigo_apollo'] }}">Cód. Apollo</label>
-                                    <input type="text" id="codigo_apollo_id_edit{{ u['codigo_apollo'] }}" name="codigo_apollo" class="input-codigo-apollo" value="{{ u['codigo_apollo'] }}">
+                                    <input type="number" id="codigo_apollo_id_edit{{ u['codigo_apollo'] }}" name="codigo_apollo" class="input-codigo-apollo" value="{{ u['codigo_apollo'] }}">
 
                                     <label for="usuario_id_edit_{{ u['id'] }}" class="label-usuario">Usuário</label>
                                     <input type="text" id="usuario_id_edit_{{ u['id'] }}" name="usuario" class="input-usuario" value="{{ u['usuario'] }}" required>
@@ -205,7 +206,8 @@
                                     <label for="funcao_id_edit_{{ u['id'] }}" class="label-funcao">Função</label>
                                     <select name="funcao" id="funcao_id_edit_{{ u['id'] }}">
                                         <option value="Solicitante" {% if u['funcao'] == "Solicitante" %}selected{%endif%}>Solicitante</option>
-                                        <option value="Aprovador" {% if u['funcao'] == "Aprovador" %}selected{%endif%}>Aprovador</option>
+                                        <option value="Gerente" {% if u['funcao'] == "Gerente" %}selected{%endif%}>Gerente</option>
+                                        <option value="Diretoria" {% if u['funcao'] == "Diretoria" %}selected{%endif%}>Diretoria</option>
                                         <option value="Administrador" {% if u['funcao'] == "Administrador" %}selected{%endif%}>Administrador</option>
                                     </select>
 

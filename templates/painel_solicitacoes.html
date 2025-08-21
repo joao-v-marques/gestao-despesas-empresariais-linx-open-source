@@ -40,7 +40,7 @@
                     </li>
                 {% endif %}
 
-                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Aprovador' %}
+                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Gerente' or current_user.FUNCAO == 'Diretoria' %}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-white" id="aprovadorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Aprovações
@@ -151,6 +151,18 @@
                                     </span>
                                 {% endif %}
                             </a></th>
+                            <th><a href="?filtro={{ filtro }}&sort_by=NRO_OS&sort_dir={{ new_dir }}">
+                                O.S
+                                {% if sort_by == 'NRO_OS' %}
+                                    <span class="seta-ordenacao">
+                                        {% if sort_dir|lower == 'asc' %}
+                                            ↑
+                                        {% else %}
+                                            ↓
+                                        {% endif %}
+                                    </span>
+                                {% endif %}
+                            </a></th>
                             <th><a href="?filtro={{ filtro }}&sort_by=FORNECEDOR&sort_dir={{ new_dir }}">
                                 Fornecedor
                                 {% if sort_by == 'FORNECEDOR' %}
@@ -221,16 +233,19 @@
                                     <td>{{ s['id'] }}</td>
                                     <td>
                                         {% if s['nro_processo'] == None %}
-
                                             -
-
                                         {% else %}
-
-                                        {{ s['nro_processo'] }}
-                                        
+                                            {{ s['nro_processo'] }}
                                         {% endif %}
                                     </td>
                                     <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
+                                    <td>
+                                        {% if s['nro_os'] == None %}
+                                            -
+                                        {% else %}
+                                            {{ s['nro_os'] }}
+                                        {% endif %}
+                                    </td>
                                     <td>{% if s['fornecedor'] == None %} - {% else %} {{ s['fornecedor'] }} {% endif %}</td>
                                     <td>{{ s['usuario_solicitante'] }}</td>
                                     <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>

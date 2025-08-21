@@ -1,3 +1,4 @@
+import logging
 from flask import Blueprint, render_template, redirect, request, flash, url_for
 from flask_login import login_required, current_user
 from decorators import role_required
@@ -5,6 +6,7 @@ from database.connect_db import abrir_cursor
 
 blueprint_gestao_usuarios = Blueprint('blueprint_gestao_usuarios', __name__)
 
+# Rota que renderiza a pagina de gestão de usuários
 @blueprint_gestao_usuarios.route('/')
 @login_required
 @role_required('Administrador')
@@ -25,6 +27,7 @@ def gestao_usuarios():
 
     return render_template('gestao_usuarios.html', usuario_logado=current_user.USUARIO, usuarios=retorno)
 
+# Rota para cadastrar um novo usuário
 @blueprint_gestao_usuarios.route('/cadastrar-usuario', methods=['POST'])
 @login_required
 @role_required('Administrador')
@@ -47,23 +50,37 @@ def cadastrar_usuario():
     elif len(senha_form) <= 2:
         flash('A senha deve conter no minimo 3 caracteres!', 'error')
         return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+    elif cod_apollo_form == '':
+        flash('O campo "Cód. Apollo" não pode estar vazio!', "error")
+        return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
     else:
         try:
             cursor, conn = abrir_cursor()
-            sql = "INSERT INTO LIU_USUARIO (USUARIO, SENHA, NOME, FUNCAO, EMPRESA, REVENDA, CODIGO_APOLLO) VALUES (:1, :2, :3, :4, :5, :6, :7)"
-            valores = [
-                usuario_form,
-                senha_form,
-                nome_form,
-                funcao_form,
-                empresa_form,
-                revenda_form,
-                cod_apollo_form
-                ]
-            cursor.execute(sql, valores)
-            conn.commit()
-            flash('Cadastro realizado com sucesso!', 'success')
-            return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+
+            sql_cod_apollo = "SELECT USUARIO, LOGIN, NOME FROM GER_USUARIO WHERE USUARIO = :1"
+            valores_cod_apollo = [cod_apollo_form]
+            cursor.execute(sql_cod_apollo, valores_cod_apollo)
+            retorno_cod_apollo = cursor.dict_fetchall()
+
+            if retorno_cod_apollo:
+                sql = "INSERT INTO LIU_USUARIO (USUARIO, SENHA, NOME, FUNCAO, EMPRESA, REVENDA, CODIGO_APOLLO) VALUES (:1, :2, :3, :4, :5, :6, :7)"
+                valores = [
+                    usuario_form,
+                    senha_form,
+                    nome_form,
+                    funcao_form,
+                    empresa_form,
+                    revenda_form,
+                    cod_apollo_form
+                    ]
+                cursor.execute(sql, valores)
+                conn.commit()
+                flash('Cadastro realizado com sucesso!', 'success')
+                return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+            else:
+                flash("O campo 'Cód. Apollo' Inserido não existe!", "error")
+                logging.info("O campo 'Cód. Apollo' Inserido não existe!")
+                return redirect(url_for("blueprint_gestao_usuarios.gestao_usuarios"))
         except Exception as e:
             flash(f'Erro interno ao realizar a consulta: {e}', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))    
@@ -71,6 +88,7 @@ def cadastrar_usuario():
                 cursor.close()
                 conn.close()
 
+# Rota para editar um usuário
 @blueprint_gestao_usuarios.route('/editar-usuario/<int:id>', methods=['POST'])
 @login_required
 @role_required('Administrador')
@@ -101,6 +119,7 @@ def editar_usuario(id):
             cursor.close()
             conn.close()
 
+# Rota que deleta um usuários
 @blueprint_gestao_usuarios.route('/deletar-usuario/<int:id>', methods=['POST'])
 @login_required
 @role_required('Administrador')

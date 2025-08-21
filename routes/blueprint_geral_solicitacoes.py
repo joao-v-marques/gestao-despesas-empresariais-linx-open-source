@@ -8,9 +8,10 @@ from database.connect_db import abrir_cursor
 
 blueprint_geral_solicitacoes = Blueprint('blueprint_geral_solicitacoes', __name__)
 
+# Rota que renderiza a pagina de Solicitações em geral
 @blueprint_geral_solicitacoes.route('/')
 @login_required
-@role_required('Administrador', 'Aprovador')
+@role_required('Administrador', 'Gerente', 'Diretoria')
 def geral_solicitacoes():
     filtro = request.args.get('filtro', 'PENDENTE')
     usuario_solicitante = request.args.get('usuario_solicitante', '')
@@ -62,9 +63,10 @@ def geral_solicitacoes():
             cursor.close()
             conn.close()
 
+# Rota para fazer download do relatório de solicitações
 @blueprint_geral_solicitacoes.route('/download-relatorio')
 @login_required
-@role_required('Administrador', 'Aprovador')
+@role_required('Administrador', 'Gerente', 'Diretoria')
 def download_relatorio():
     try:
         cursor, conn = abrir_cursor()

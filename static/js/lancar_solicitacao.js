@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// Função que atualiza os fornecedores -------------------------------------------------------------------
 document.getElementById('codigo_fornecedor_id').addEventListener('input', function () {
     const codigo = this.value;
 
@@ -91,6 +92,7 @@ document.getElementById('codigo_fornecedor_id').addEventListener('input', functi
     }
 });
 
+// Função que atualiza as origens ------------------------------------------------------------------------
 document.getElementById('empresa_id').addEventListener('change', buscarOrigens);
 document.getElementById('revenda_id').addEventListener('change', buscarOrigens);
 
@@ -107,7 +109,7 @@ function buscarOrigens() {
             data.forEach(origem => {
                 const option = document.createElement('option');
                 option.value = origem.origem;
-                option.text = origem.des_origem;
+                option.text = `${origem.origem} - ${origem.des_origem}`;
                 origemSelect.appendChild(option);
             });
         });
@@ -115,4 +117,101 @@ function buscarOrigens() {
 
 document.addEventListener('DOMContentLoaded', function () {
     buscarOrigens();
+});
+
+const btnEnviar = document.getElementById("btnOpenModal");
+
+btnEnviar.addEventListener('click', function () {
+    const empresa = document.getElementById("empresa_id").value;
+    const revenda = document.getElementById("revenda_id").value;
+    const departamento = document.getElementById("departamento_id").value;
+    const origem = document.getElementById("origem_id").value;
+
+    // Listener do botão "Enviar OS" (só precisa ser adicionado uma vez)
+    document.getElementById("btnEnviarOS").onclick = function () {
+        const nroOSValue = document.getElementById("nroOS_input").value.trim();
+        if (!nroOSValue) {
+            alert("Por favor, insira o número da O.S.");
+            return;
+        }
+
+        document.getElementById("nroOS").value = nroOSValue;
+        document.getElementById("mainForm").submit();
+    };
+
+    if (origem === '5121') {
+        // NÃO chama o fetch
+        const modal5121 = new bootstrap.Modal(document.getElementById("modal5121"));
+        modal5121.show();
+
+    } else {
+        // Aqui SIM executa o fetch do orçamento
+        fetch('/lancar-solicitacao/fazer-lancamento/confirm', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                empresa_form: empresa,
+                revenda_form: revenda,
+                departamento_form: departamento,
+                origem_form: origem
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const campo_valor = document.getElementById("valModal");
+            const campo_pergunta = document.querySelector(".modalAsk");
+            const modalConfirmButton = document.getElementById("modalConfirmButton");
+            const modalConfirm = document.getElementById("modalConfirma");
+
+            modalConfirm.addEventListener('hidden.bs.modal', () => {
+                campo_valor.classList.remove('green', 'red', 'notFound');
+                campo_pergunta.textContent = 'Confirme se deseja solicitar mesmo assim';
+                modalConfirmButton.removeAttribute('hidden');
+            });
+
+            if (Array.isArray(data) && data.length > 0) {
+                const valor = parseFloat(data[0].valor);
+                campo_valor.textContent = `R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+
+                if (valor <= 0) {
+                    campo_valor.classList.add("red");
+                    campo_valor.classList.remove("green");
+                } else {
+                    campo_valor.classList.add("green");
+                    campo_valor.classList.remove("red");
+                }
+
+                // Exibe o modal de confirmação
+                const modal = new bootstrap.Modal(document.getElementById("modalConfirma"));
+                modal.show();
+
+            } else {
+                campo_valor.textContent = "Nenhum valor foi encontrado!";
+                campo_pergunta.textContent = "Não é possível lançar uma solicitação sem orçamento.";
+                modalConfirmButton.setAttribute("hidden", "true");
+                campo_valor.classList.add("notFound");
+                campo_valor.classList.remove("green", "red");
+
+                // Ainda exibe o modal para mostrar o erro
+                const modal = new bootstrap.Modal(document.getElementById("modalConfirma"));
+                modal.show();
+            }
+        })
+        .catch(error => {
+            alert("Erro ao buscar orçamento.");
+            console.error(error);
+        });
+    }
+});
+
+document.getElementById("btnLimpar").addEventListener("click", function () {
+    document.querySelector(".formulario").reset();
+    buscarOrigens();
+});
+
+document.getElementById("modalConfirmButton").addEventListener("click", function () {
+    document.querySelector('.formulario').submit();
 });

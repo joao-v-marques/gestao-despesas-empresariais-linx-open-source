@@ -151,11 +151,11 @@ nav {
     margin-bottom: 30px;
 }
 
-.formulario {
-    max-width: 600px;
-    margin: 0 auto;
+.container {
+    max-width: 700px;
+    margin: 20px auto;
     padding: 20px;
-    background: #fff;
+    background: white;
     border-radius: 10px;
     margin-bottom: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -202,8 +202,11 @@ nav {
     transition: background-color 0.3s ease;
 }
 
-.formulario input[type="submit"]:hover {
-    background-color: #0056b3;
+.container button {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-right: 15px;
+    padding-left: 15px;
 }
 
 .container-fornecedor {
@@ -259,3 +262,72 @@ nav {
     color: blue;
     list-style: none;
 }
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+.notFound {
+    opacity: 75%;
+    color: rgb(99, 99, 99);
+}
+
+.modalTitle {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 850;
+}
+
+.modalValue {
+    text-align: center;
+    font-size: 35px;
+    font-weight: 650;
+}
+
+.modalAsk {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modalButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.modal5121Title {
+    font-weight: 750;
+    font-size: 20px;
+    text-align: center;
+}
+
+.modal5121div label {
+    font-weight: 600;
+}
+
+.modal5121div input {
+    padding: 8px 10px;
+    font-size: 1rem;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    background: var(--input-bg);
+    transition: border 0.2s, background 0.2s;
+    margin-bottom: 2px;
+}
+
+.modal5121div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+

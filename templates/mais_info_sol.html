@@ -40,7 +40,7 @@
                     </li>
                 {% endif %}
 
-                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Aprovador' %}
+                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Gerente' or current_user.FUNCAO == 'Diretoria' %}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-white" id="aprovadorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Aprovações
@@ -108,6 +108,13 @@
                 <label for="empresa_revenda_id">Emp./Rev.:</label>
                 <input type="text" readonly id="empresa_revenda_id" name="empresa_revenda" value="{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}">
 
+                {% if solicitacao['nro_os'] == None %}
+
+                {% else %}
+                    <label for=" nro_os_id">Nro. O.S:</label>
+                    <input type="text" readonly id="nro_os_id" name="nro_os" value="{{ solicitacao['nro_os'] }}">
+                {% endif %}
+
                 <label for="codigo_fornecedor_id" class="label-fornecedor">Cód. Fornecedor</label>
                 <div class="container-fornecedor">
                     <input type="number" name="fornecedor" id="codigo_fornecedor_id_{{ solicitacao['id'] }}" class="input-fornecedor" readonly value="{{ solicitacao['fornecedor'] }}">
@@ -134,7 +141,7 @@
                 <label for="origem_id">Origem:</label>
                 <select name="origem" id="origem_id" disabled>
                     {% for o in origem %}
-                        <option value="{{ o['origem'] }}" {% if o['des_origem'] == solicitacao['des_origem_sol'] %}selected{% endif %}>
+                        <option value="{{ o['origem'] }}" {% if o['origem'] == solicitacao['origem_sol'] %}selected{% endif %}>
                             {{ o['origem'] }} - {{ o['des_origem'] }}
                         </option>
                     {% endfor %}

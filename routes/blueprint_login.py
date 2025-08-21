@@ -6,20 +6,22 @@ import logging
 
 blueprint_login = Blueprint('blueprint_login', __name__)
 
+# Rota que renderiza a pagina de login
 @blueprint_login.route('/')
 def pagina_login():
     return render_template('login.html')
 
+# Rota para realizar o login
 @blueprint_login.route('/fazer-login', methods=['POST'])
 def fazer_login():
     session.pop('_flashes', None)
     usuario_form = request.form['usuario'].strip()
     senha_form = request.form['senha']
-    
-    sql = "SELECT ID, USUARIO, SENHA, NOME, FUNCAO, CODIGO_APOLLO, EMPRESA, REVENDA FROM LIU_USUARIO WHERE USUARIO = :1"
-    valores = [usuario_form]
-    cursor, conn = abrir_cursor()
     try:
+        cursor, conn = abrir_cursor()
+        sql = "SELECT ID, USUARIO, SENHA, NOME, FUNCAO, CODIGO_APOLLO, EMPRESA, REVENDA FROM LIU_USUARIO WHERE USUARIO = :1"
+        valores = [usuario_form]
+
         cursor.execute(sql, valores)
         retorno = cursor.dict_fetchone()
 

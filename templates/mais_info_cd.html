@@ -40,7 +40,7 @@
                     </li>
                 {% endif %}
 
-                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Aprovador' %}
+                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Gerente' or current_user.FUNCAO == 'Diretoria' %}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-white" id="aprovadorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Aprovações
@@ -113,6 +113,13 @@
 
                 <label for="empresa_revenda_id">Emp./Rev.:</label>
                 <input type="text" readonly id="empresa_revenda_id" name="empresa_revenda" value="{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}">
+
+                {% if solicitacao['nro_os'] == None %}
+
+                {% else %}
+                    <label for=" nro_os_id">Nro. O.S:</label>
+                    <input type="text" readonly id="nro_os_id" name="nro_os" value="{{ solicitacao['nro_os'] }}">
+                {% endif %}
 
                 <label for="usuario_solicitante_id">Usuário Solicitante:</label>
                 <input type="text" readonly id="usuario_solicitante_id" name="usuario_solicitante" value="{{ solicitacao['usuario_solicitante'] }}">

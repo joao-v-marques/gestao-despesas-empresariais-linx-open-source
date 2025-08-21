@@ -8,6 +8,7 @@ from database.connect_db import abrir_cursor
 
 blueprint_painel_solicitacoes = Blueprint('blueprint_painel_solicitacoes', __name__)
 
+# Rota que renderiza a pagina do painel de solicitações
 @blueprint_painel_solicitacoes.route('/')
 @login_required
 def painel_solicitacoes():
@@ -24,6 +25,7 @@ def painel_solicitacoes():
         s.EMPRESA,
         s.REVENDA,
         s.DESCRICAO,
+        s.NRO_OS,
         u.LOGIN AS USUARIO_SOLICITANTE, 
         d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO, 
         d.NOME AS DEPARTAMENTO_DESCRICAO, 
@@ -45,7 +47,7 @@ def painel_solicitacoes():
                 valores = [current_user.CODIGO_APOLLO]
 
             colunas_permitidas = [  
-                'ID', 'NRO_PROCESSO', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'VALOR', 'STATUS', 'FORNECEDOR'
+                'ID', 'NRO_PROCESSO', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'VALOR', 'STATUS', 'FORNECEDOR', 'NRO_OS'
             ]
 
             if sort_by not in colunas_permitidas:
@@ -73,6 +75,7 @@ def painel_solicitacoes():
                 cursor.close()
                 conn.close()
 
+# Rota que direciona para a pagina de mais_info_sol (Mais informações das solicitações) 
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>')
 @login_required
 def mais_info_sol(id):
@@ -83,6 +86,7 @@ def mais_info_sol(id):
                                     s.NRO_PROCESSO,
                                     s.EMPRESA,
                                     s.REVENDA,
+                                    s.NRO_OS,
                                     u.LOGIN AS USUARIO_SOLICITANTE,
                                     d.DEPARTAMENTO AS DEPARTAMENTO_SOL,
                                     d.NOME AS DESC_DEPARTAMENTO_SOL,
@@ -134,6 +138,7 @@ def mais_info_sol(id):
                 cursor.close()
                 conn.close()
 
+# Rota que atualiza os fornecedores (Não é a rota para inserir um novo fornecedor no sistema)
 @blueprint_painel_solicitacoes.route('/inserir-fornecedor/<int:id>', methods=['POST'])
 @login_required
 def inserir_fornecedor(id):
@@ -168,6 +173,7 @@ def inserir_fornecedor(id):
             cursor.close()
             conn.close()
 
+# Rota para baixar um relatório do painel de solicitações
 @blueprint_painel_solicitacoes.route('/download-relatorio', methods=['GET'])
 @login_required
 def download_relatorio():
@@ -225,6 +231,7 @@ def download_relatorio():
         cursor.close()
         conn.close()
 
+# Rota para baixar o PDF de comprovante para solicitações aprovadas
 @blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/download-pdf', methods=['GET'])
 @login_required
 def download_pdf(id):
@@ -247,6 +254,7 @@ def download_pdf(id):
                 cursor.close()
                 conn.close()
 
+# Rota para editar uma solicitação
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/salvar', methods=['POST'])
 @login_required
 def salvar_edicao(id):
@@ -287,6 +295,7 @@ def salvar_edicao(id):
                     cursor.close()
                     conn.close()
         
+# Rota para excluir uma solicitação
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/excluir', methods=['POST'])
 @login_required
 def excluir_solicitacao(id):
@@ -305,6 +314,7 @@ def excluir_solicitacao(id):
                 cursor.close()
                 conn.close()
 
+# Rota para reenviar uma solicitação reprovada
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/reenviar', methods=['POST'])
 @login_required
 def reenviar_solicitacao(id):
@@ -328,6 +338,7 @@ def reenviar_solicitacao(id):
                     cursor.close()
                     conn.close()
 
+# Rota para desautorizar uma solicitação aprovada
 @blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/desautorizar', methods=['POST'])
 @login_required
 def desautorizar_solicitacao(id):
