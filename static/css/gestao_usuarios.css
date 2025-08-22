@@ -1,21 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 :root {
-    --primary-color: #1d3557;
-    --secondary-color: #f1faee;
-    --accent-color: #a8dadc;
+    --primary-background: #121212; /* Background Color */
+    --secondary-background: #1F1F1F; /* Cards, Superfices, etc. */
+
+    --primary-text: #EAEAEA; /* Text Color */
+    --secondary-text: #B0B0B0; /* Text Color */
+
+    --primary-action: #0D6EFD; /* Buttons, links, etc. */
+    --primary-action-hover: #3399FF; /* Hoover */
+    --success: #2ECC71; /* Buttons, links, etc. */
+    --warning: #FFC107; /* Buttons, links, etc. */
+    --error: #E63946; /* Buttons, links, etc. */
+    
+    
+    --first-complement: #C0C0C0; /* Buttons, links, etc. */
+    --second-complement: #1E3A8A; /* Buttons, links, etc. */
+    
+    --tabela-hover: #2f2f2f; 
+
+    --input-background: #2a2a2a;
+    --input-border: #3A3A3A;
+    --input-focus: #0D6EFD; /* Usar um glow box-shadow */
+
 }
 
 body, html {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    background: #f8f9fa;
+    background: var(--primary-background);
 }
 
 header {
     width: 100%;
-    background: var(--primary-color);
+    background: var(--secondary-background);
 }
 
 nav {
@@ -24,7 +43,6 @@ nav {
     justify-content: space-between;
     padding: 0 32px;
     min-height: 64px;
-    background: var(--primary-color);
 }
 
 .navbar-logo img {
@@ -41,7 +59,7 @@ nav {
 }
 
 .nav-link {
-    color: var(--secondary-color) !important;
+    color: var(--primary-text) !important;
     font-weight: 700;
     border-radius: 6px;
     transition: background 0.2s, color 0.2s;
@@ -51,14 +69,15 @@ nav {
 
 .nav-link:hover,
 .nav-link:focus {
-    background: var(--accent-color);
-    color: var(--primary-color) !important;
+    outline: none;
+    box-shadow: none;
+    color: var(--primary-action-hover) !important;
 }
 
 .dropdown-menu {
+    background-color: var(--secondary-background);
     min-width: 180px;
     border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(29, 53, 87, 0.10);
     border: none;
 }
 
@@ -68,37 +87,35 @@ nav {
 }
 
 .dropdown-item {
-    color: black;
-    padding: 8px 20px ;
+    color: var(--primary-text);
+    padding: 8px 20px;
     border-radius: 5px;
     transition: background 0.2s, color 0.2s;
 }
 
 .dropdown-item:hover,
 .dropdown-item:focus {
-    background: var(--accent-color);
-    color: var(--primary-color);
+    outline: none;
+    background-color: var(--secondary-background);
+    color: var(--primary-action-hover);
 }
 
 .user a {
-    padding: 7px;
-    background: #f8f9fa;
-    color: var(--primary-color);
-    font-weight: 650;
-    border-radius: 16px;
-    transition: background 0.3s, color 0.3s;
+    color: var(--primary-text);
     text-decoration: none;
 }
 
 .user a:hover,
 .user a:focus {
-    background: var(--accent-color);
+    outline: none;
+    box-shadow: none;
+    color: var(--primary-action-hover) !important;
 }
 
 .btn-troca-senha button {
     padding: 5px;
     border-radius: 50%;
-    background-color: #f1faee;
+    background-color: var(--secondary-text);
     border: none;
     transition: background-color 0.3s, transform 0.3s;
 }
@@ -109,7 +126,7 @@ nav {
 }
 
 .btn-troca-senha:hover button {
-    background-color: var(--accent-color);
+    background-color: var(--secondary-text);
     transform: scale(1.1);
 }
 
@@ -118,20 +135,26 @@ nav {
     width: 100%;
     padding: 10px;
     margin-bottom: 16px;
-    border: 1px solid #bdbdbd;
     border-radius: 4px;
-    background-color: #f7fafc;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-background);
+    color: var(--primary-text);
 }
 
 .input_nova_senha:focus,
 .input_confirma_nova_senha:focus {
-    border-color: var(--accent-color);
+    border-color: var(--input-focus);
     outline: none;
 }
 
 .modal-header {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--secondary-background);
+    color: var(--primary-text);
+}
+
+.modal-body {
+    background-color: var(--secondary-background);
+    color: var(--primary-text);
 }
 
 .btn-close {
@@ -142,13 +165,17 @@ nav {
     width: 50%;
     margin: 50px auto 50px;
     padding: 30px;
-    background-color: white;
+    background-color: var(--secondary-background);
     border-radius: 8px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.20);
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: column;
 }
 
 .titulo-cadastro {
-    color: var(--primary-color);
+    color: var(--primary-text);
     text-align: center;
     margin-bottom: 20px;
     font-weight: 700;
@@ -159,7 +186,7 @@ nav {
     margin-top: 15px;
     margin-bottom: 5px;
     font-weight: 650;
-    color: black;
+    color: var(--primary-text);
 }
 
 #usuario_id {
@@ -171,45 +198,55 @@ nav {
 .formulario select {
     width: 100%;
     padding: 10px;
-    border: 1px solid #bdbdbd;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-background);
+    color: var(--primary-text);
     border-radius: 4px;
     margin-bottom: 10px;
 }
 
-.botao-enviar {
-    width: 215px;
-    display: block;
-    margin: 22px auto 0 auto;
-    padding: 10px;
-    background: var(--primary-color);
-    color: var(--secondary-color);
-    border: none;
-    border-radius: 10px;
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    transition: background 0.2s, transform 0.15s;
+.formulario input[type="text"]:focus,
+.formulario input[type="password"]:focus,
+.formulario select:focus {
+    outline: 1px solid var(--input-focus);
+    box-shadow: 0 0 5px 1px var(--input-focus);
 }
 
-.botao-enviar:hover {
-    transform: translateY(-2px) scale(1.03);
+.formulario input[type="submit"] {
+    width: 25%;
+    align-self: center;
+    border-radius: 8px;
+    border: none;
+    transition: background-color 0.3s ease;
+    background-color: var(--primary-action);
+    color: var(--primary-text);
+    padding: 12px;
+    margin-top: 20px;
+}
+
+.formulario input[type="submit"]:hover {
+    background-color: var(--primary-action-hover);
+}
+
+.formulario input[type="submit"]:focus {
+    outline: 1px solid var(--input-focus);
 }
 
 .flash-error {
     text-align: center;
-    color: #721c24;
+    color: var(--error);
     list-style: none;
 }
 
 .flash-success {
     text-align: center;
-    color: #155724;
+    color: var(--success);
     list-style: none;
 }
 
 .flash-info {
     text-align: center;
-    color: blue;
+    color: var(--second-complement);
     list-style: none;
 }
 
@@ -217,7 +254,7 @@ nav {
     max-width: 1400px;
     margin: 40px auto;
     padding: 30px;
-    background-color: white;
+    background-color: var(--secondary-background);
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.11);
 }
@@ -227,7 +264,7 @@ nav {
     margin-bottom: 25px;
     font-size: 26px;
     font-weight: 700;
-    color: var(--primary-color);
+    color: var(--primary-text);
 }
 
 .tabela {
@@ -238,12 +275,12 @@ nav {
 }
 
 .tabela th {
-    background-color: var(--primary-color);
-    color: var(--secondary-color);
+    text-align: center;
+    background-color: var(--input-background);
+    color: var(--primary-text);
     font-weight: 650;
     padding: 4px 8px;
-    text-align: left;
-    border-bottom: 2px solid rgba(38, 38, 38, 0.287);
+    font-size: 0.90rem;
     letter-spacing: 1px;
 }
 
@@ -253,15 +290,16 @@ table.tabela {
 }
 
 .tabela td {
+    text-align: center;
     padding: 5px 1px;
     font-size: 0.80rem;
-    border-bottom: 1px solid #e5e5e5;
-    vertical-align: middle;
+    color: var(--primary-text);
+    border-bottom: 1px solid var(--first-complement);
     transition: background 0.2s;
 }
 
 .tabela tr:hover td {
-    background: #e3f2fd;
+    background: var(--tabela-hover);
 }
 
 .tabela .th-opcoes {
@@ -269,9 +307,7 @@ table.tabela {
 }
 
 .tabela .td-opcoes {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+    align-items: center;
 }
 
 .formulario-modal {
@@ -284,8 +320,8 @@ table.tabela {
 }
 
 .formulario-modal label {
-    color: var(--primary-color);
-    font-weight: 700;
+    color: var(--primary-color) ;
+    font-weight: 600;
 }
 
 .formulario-modal input[type="text"],
@@ -293,17 +329,19 @@ table.tabela {
 .formulario-modal input[type="password"],
 .formulario-modal select {
     padding: 9px 12px;
-    border: 1px solid #bdbdbd;
+    border: 1px solid var(--input-border);
+    color: var(--primary-text);
+    background: var(--input-background);
     border-radius: 6px;
-    background: #f7fafc;
     margin-bottom: 8px;
     transition: border 0.2s;
 }
 
 .formulario-modal input[type="text"]:focus,
+.formulario-modal input[type="number"]:focus,
 .formulario-modal input[type="password"]:focus,
 .formulario-modal select:focus {
-    border-color: var(--accent-color);
+    border: 1px solid var(--input-focus);
     outline: none;
 }
 
@@ -314,4 +352,8 @@ table.tabela {
 .modal-title {
     font-weight: 700;
     letter-spacing: 0.5px;
+}
+
+.modal-footer {
+    background-color: var(--secondary-background);
 }

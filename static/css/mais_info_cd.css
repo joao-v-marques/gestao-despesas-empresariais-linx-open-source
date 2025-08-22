@@ -1,25 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 :root {
-    --primary-color: #1d3557;
-    --secondary-color: #f1faee;
-    --accent-color: #a8dadc;
-    --input-bg: #f7fafc;
-    --input-border: #bdbdbd;
-    --input-readonly-bg: #e9ecef;
-    --input-readonly-color: #6c757d;
+    --primary-background: #121212; /* Background Color */
+    --secondary-background: #1F1F1F; /* Cards, Superfices, etc. */
+
+    --primary-text: #EAEAEA; /* Text Color */
+    --secondary-text: #B0B0B0; /* Text Color */
+
+    --primary-action: #0D6EFD; /* Buttons, links, etc. */
+    --primary-action-hover: #3399FF; /* Hoover */
+    --success: #2ECC71; /* Buttons, links, etc. */
+    --warning: #FFC107; /* Buttons, links, etc. */
+    --error: #E63946; /* Buttons, links, etc. */
+    
+    
+    --first-complement: #C0C0C0; /* Buttons, links, etc. */
+    --second-complement: #1E3A8A; /* Buttons, links, etc. */
+    
+    --tabela-hover: #2f2f2f; 
+
+    --input-background: #2a2a2a;
+    --input-border: #3A3A3A;
+    --input-focus: #0D6EFD; /* Usar um glow box-shadow */
+
 }
 
 body, html {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    background: #f8f9fa;
+    background: var(--primary-background);
 }
 
 header {
     width: 100%;
-    background: var(--primary-color);
+    background: var(--secondary-background);
 }
 
 nav {
@@ -28,7 +43,6 @@ nav {
     justify-content: space-between;
     padding: 0 32px;
     min-height: 64px;
-    background: var(--primary-color);
 }
 
 .navbar-logo img {
@@ -45,7 +59,7 @@ nav {
 }
 
 .nav-link {
-    color: var(--secondary-color) !important;
+    color: var(--primary-text) !important;
     font-weight: 700;
     border-radius: 6px;
     transition: background 0.2s, color 0.2s;
@@ -55,14 +69,15 @@ nav {
 
 .nav-link:hover,
 .nav-link:focus {
-    background: var(--accent-color);
-    color: var(--primary-color) !important;
+    outline: none;
+    box-shadow: none;
+    color: var(--primary-action-hover) !important;
 }
 
 .dropdown-menu {
+    background-color: var(--secondary-background);
     min-width: 180px;
     border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(29, 53, 87, 0.10);
     border: none;
 }
 
@@ -72,37 +87,35 @@ nav {
 }
 
 .dropdown-item {
-    color: black;
-    padding: 8px 20px ;
+    color: var(--primary-text);
+    padding: 8px 20px;
     border-radius: 5px;
     transition: background 0.2s, color 0.2s;
 }
 
 .dropdown-item:hover,
 .dropdown-item:focus {
-    background: var(--accent-color);
-    color: var(--primary-color);
+    outline: none;
+    background-color: var(--secondary-background);
+    color: var(--primary-action-hover);
 }
 
 .user a {
-    padding: 7px;
-    background: #f8f9fa;
-    color: var(--primary-color);
-    font-weight: 650;
-    border-radius: 16px;
-    transition: background 0.3s, color 0.3s;
+    color: var(--primary-text);
     text-decoration: none;
 }
 
 .user a:hover,
 .user a:focus {
-    background: var(--accent-color);
+    outline: none;
+    box-shadow: none;
+    color: var(--primary-action-hover) !important;
 }
 
 .btn-troca-senha button {
     padding: 5px;
     border-radius: 50%;
-    background-color: #f1faee;
+    background-color: var(--secondary-text);
     border: none;
     transition: background-color 0.3s, transform 0.3s;
 }
@@ -113,7 +126,7 @@ nav {
 }
 
 .btn-troca-senha:hover button {
-    background-color: var(--accent-color);
+    background-color: var(--secondary-text);
     transform: scale(1.1);
 }
 
@@ -122,20 +135,26 @@ nav {
     width: 100%;
     padding: 10px;
     margin-bottom: 16px;
-    border: 1px solid #bdbdbd;
     border-radius: 4px;
-    background-color: #f7fafc;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-background);
+    color: var(--primary-text);
 }
 
 .input_nova_senha:focus,
 .input_confirma_nova_senha:focus {
-    border-color: var(--accent-color);
+    border-color: var(--input-focus);
     outline: none;
 }
 
 .modal-header {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--secondary-background);
+    color: var(--primary-text);
+}
+
+.modal-body {
+    background-color: var(--secondary-background);
+    color: var(--primary-text);
 }
 
 .btn-close {
@@ -144,25 +163,26 @@ nav {
 
 .voltar {
     text-decoration: none;
-    color: var(--primary-color);
+    border: 1px solid var(--primary-text);
+    color: var(--primary-text);
+    background-color: var(--primary-color);
     font-weight: 500;
     font-size: 0.9rem;
     padding: 6px 12px;
-    border: 1px solid var(--primary-color);
     border-radius: 4px;
     transition: 0.2s;
 }
 
 .voltar:hover,
 .voltar:focus {
-    color: white;
-    background-color: var(--primary-color);
+    border: 1px solid var(--input-focus);
+    color: var(--primary-action);
 }
 
 .titulo {
     text-align: center;
     margin: 36px 0 28px 0;
-    color: var(--primary-color);
+    color: var(--primary-text);
     font-size: 2rem;
     font-weight: 700;
     letter-spacing: 1px;
@@ -171,7 +191,7 @@ nav {
 .container {
     max-width: 700px;
     margin: 56px auto 40px auto;
-    background: #fff;
+    background: var(--secondary-background);
     padding: 36px 32px 28px 32px;
     border-radius: 16px;
     box-shadow: 0 0 24px rgba(0,0,0,0.09);
@@ -186,7 +206,7 @@ nav {
 .formulario label {
     align-self: center;
     font-weight: 600;
-    color: #333;
+    color: var(--primary-text);
     margin-bottom: 2px;
     font-size: 1rem;
 }
@@ -195,22 +215,22 @@ nav {
     width: 100%;
     padding: 8px 10px;
     font-size: 1rem;
+    color: var(--primary-text);
     border: 1px solid var(--input-border);
+    background: var(--input-background);
     border-radius: 6px;
-    background: var(--input-bg);
     transition: border 0.2s, background 0.2s;
     margin-bottom: 2px;
 }
 
 .formulario input[type="text"]:focus {
-    border: 1.5px solid var(--primary-color);
-    outline: none;
-    background: #e3f2fd;
+    outline: 1px solid var(--input-focus);
+    box-shadow: 0 0 5px 1px var(--input-focus);
 }
 
 .formulario input[readonly] {
-    background: var(--input-readonly-bg);
-    color: var(--input-readonly-color);
+    background: var(--input-background);
+    color: var(--primary-text);
     cursor: not-allowed;
 }
 
@@ -219,10 +239,10 @@ nav {
     width: 100%;
     padding: 8px 10px;
     font-size: 1rem;
-    border: 1px solid var(--input-border);
     border-radius: 6px;
-    background: var(--input-bg);
-    color: #333;
+    border: 1px solid var(--input-border);
+    background: var(--input-background);
+    color: var(--primary-text);
     resize: vertical;
     min-height: 60px;
     box-sizing: border-box;
@@ -263,7 +283,9 @@ nav {
 
 .modal-form input[type="text"] {
     padding: 6px 10px;
-    border: 1px solid #ced4da;
+    border: 1px solid var(--input-border);
+    color: var(--primary-text);
+    background-color: var(--input-background);
     border-radius: 4px;
     font-size: 1rem;
     transition: border-color 0.2s;
@@ -271,12 +293,16 @@ nav {
 }
 
 .modal-form input[type="text"]:focus {
-    border-color: #dc3545;
-    outline: none;
+    outline: 1px solid var(--error);
+    box-shadow: 0 0 5px 1px var(--error);
 }
 
 .modal-form .botoes {
     display: flex;
-    gap: 20px;
-    justify-content: right;
+    gap: 10px;
+    justify-content: center;
+}
+
+.modal-footer {
+    background-color: var(--secondary-background);
 }

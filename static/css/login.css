@@ -1,12 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 :root {
-    --primary-color: #1d3557;
-    --secondary-color: #f1faee;
-    --accent-color: #a8dadc;
-    --input-border: #bdbdbd;
-    --input-readonly-bg: #e9ecef;
-    --input-readonly-color: #6c757d;
+    --primary-background: #121212; /* Background Color */
+    --secondary-background: #1F1F1F; /* Cards, Superfices, etc. */
+
+    --primary-text: #EAEAEA; /* Text Color */
+    --secondary-text: #B0B0B0; /* Text Color */
+
+    --primary-action: #0D6EFD; /* Buttons, links, etc. */
+    --primary-action-hover: #3399FF; /* Hoover */
+    --success: #2ECC71; /* Buttons, links, etc. */
+    --warning: #FFC107; /* Buttons, links, etc. */
+    --error: #E63946; /* Buttons, links, etc. */
+    
+    
+    --first-complement: #C0C0C0; /* Buttons, links, etc. */
+    --second-complement: #1E3A8A; /* Buttons, links, etc. */
+
+    --tabela-hover: #2f2f2f; 
+
+    --input-background: #2a2a2a;
+    --input-border: #3A3A3A;
+    --input-focus: #0D6EFD; /* Usar um glow box-shadow */
+
 }
 
 * {
@@ -17,22 +33,22 @@ body, html {
     margin: 0;
     padding: 0;
     height: 100%;
-    background: #f8f9fa;
+    background: var(--primary-background);
 }
 
 .container {
     max-width: 400px;
     margin: 60px auto;
     padding: 40px;
-    background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     text-align: center;
+    background-color: var(--secondary-background);
 }
 
 h1 {
     margin-bottom: 30px;
-    color: #1d3557;
+    color: var(--primary-text);
 }
 
 .logo-kato {
@@ -51,22 +67,30 @@ h1 {
     text-align: left;
     margin-bottom: 5px;
     font-weight: 600;
-    color: #333;
+    color: var(--secondary-text);
 }
 
 .input-usuario,
 .input-senha {
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-background);
+    color: var(--primary-text);
     border-radius: 4px;
     font-size: 1rem;
 }
 
+.input-usuario:focus,
+.input-senha:focus {
+    outline: 1px solid var(--input-focus);
+    box-shadow: 0 0 5px 1px var(--input-focus);
+}
+
 .botao-enviar {
     padding: 12px;
-    background-color: #1d3557;
-    color: #ffffff;
+    background-color: var(--primary-action);
+    color: var(--primary-text);
     font-size: 1rem;
     border: none;
     border-radius: 4px;
@@ -75,23 +99,27 @@ h1 {
 }
 
 .botao-enviar:hover {
-    background-color: #457b9d;
+    background-color: var(--primary-action-hover);
+}
+
+.botao-enviar:focus {
+    outline: 1px solid var(--input-focus);
 }
 
 .flash-error {
     text-align: center;
-    color: #721c24;
+    color: var(--error);
     list-style: none;
 }
 
 .flash-success {
     text-align: center;
-    color: #155724;
+    color: var(--success);
     list-style: none;
 }
 
 .flash-info {
     text-align: center;
-    color: blue;
+    color: var(--second-complement);
     list-style: none;
 }
