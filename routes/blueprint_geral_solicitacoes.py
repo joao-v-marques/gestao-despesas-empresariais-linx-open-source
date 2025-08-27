@@ -32,11 +32,11 @@ def geral_solicitacoes():
             s.NRO_PROCESSO,
             s.FORNECEDOR
         FROM
-            LIU_SOLICITACOES s
+            LIU.LIU_SOLICITACOES s
         LEFT JOIN
-            GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+            FORTIS.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
         LEFT JOIN
-            GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
+            FORTIS.GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
         """
         
         if filtro != 'TODOS':
@@ -85,11 +85,11 @@ def download_relatorio():
             s.VALOR,
             s.STATUS
         FROM
-            LIU_SOLICITACOES s
+            LIU.LIU_SOLICITACOES s
         JOIN
-            GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+            FORTIS.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
         JOIN
-            GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+            FORTIS.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
     """
         
         filtro = request.args.get('filtro', 'PENDENTE')

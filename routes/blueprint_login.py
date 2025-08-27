@@ -19,7 +19,7 @@ def fazer_login():
     senha_form = request.form['senha']
     try:
         cursor, conn = abrir_cursor()
-        sql = "SELECT ID, USUARIO, SENHA, NOME, FUNCAO, CODIGO_APOLLO, EMPRESA, REVENDA FROM LIU_USUARIO WHERE USUARIO = :1"
+        sql = "SELECT ID, USUARIO, SENHA, NOME, FUNCAO, CODIGO_APOLLO, EMPRESA, REVENDA FROM LIU.LIU_USUARIO WHERE USUARIO = :1"
         valores = [usuario_form]
 
         cursor.execute(sql, valores)

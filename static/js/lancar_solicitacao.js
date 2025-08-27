@@ -207,6 +207,10 @@ btnEnviar.addEventListener('click', function () {
     }
 });
 
+document.getElementById("nroOS_input").addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, "");
+})
+
 document.getElementById("btnLimpar").addEventListener("click", function () {
     document.querySelector(".formulario").reset();
     buscarOrigens();

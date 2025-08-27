@@ -12,7 +12,7 @@ blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name_
 def lancar_solicitacao():
     try:
         cursor, conn = abrir_cursor()
-        sql_departamento = "SELECT DEPARTAMENTO, NOME FROM GER_DEPARTAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 ORDER BY DEPARTAMENTO"
+        sql_departamento = "SELECT DEPARTAMENTO, NOME FROM FORTIS.GER_DEPARTAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 ORDER BY DEPARTAMENTO"
         valores = [
             current_user.EMPRESA,
             current_user.REVENDA
@@ -37,7 +37,7 @@ def buscar_origens():
     revenda = int(request.args.get('revenda'))
     try:
         cursor, conn = abrir_cursor()
-        sql_origem = "SELECT ORIGEM, DES_ORIGEM FROM FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = :3 AND DES_ORIGEM != :4"
+        sql_origem = "SELECT ORIGEM, DES_ORIGEM FROM FORTIS.FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = :3 AND DES_ORIGEM != :4"
         valores = [
             empresa,
             revenda,
@@ -59,7 +59,7 @@ def buscar_origens():
 def busca_fornecedor(codigo):
     try:
         cursor, conn = abrir_cursor()
-        sql_busca_fornecedor = "SELECT NOME FROM FAT_CLIENTE WHERE CLIENTE = :1" 
+        sql_busca_fornecedor = "SELECT NOME FROM FORTIS.FAT_CLIENTE WHERE CLIENTE = :1" 
         cursor.execute(sql_busca_fornecedor, [codigo])
         retorno = cursor.dict_fetchone()
         conn.close()
@@ -156,7 +156,7 @@ def fazer_lancamento():
 
         try:
             cursor, conn = abrir_cursor()
-            sql = "INSERT INTO LIU_SOLICITACOES (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, DESCRICAO, VALOR, FORNECEDOR, STATUS, DATA_SOLICITACAO, MOTIVO_REPROVA, PDF_PATH, ORIGEM, ORCAMENTO, ALCADA, NRO_OS) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11, :12, :13, :14, :15)"
+            sql = "INSERT INTO LIU.LIU_SOLICITACOES (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, DESCRICAO, VALOR, FORNECEDOR, STATUS, DATA_SOLICITACAO, MOTIVO_REPROVA, PDF_PATH, ORIGEM, ORCAMENTO, ALCADA, NRO_OS) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11, :12, :13, :14, :15)"
             valores = [
                 int(empresa_form),
                 int(revenda_form),

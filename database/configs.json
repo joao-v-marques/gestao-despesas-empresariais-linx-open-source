@@ -1,6 +1,6 @@
 {
     "banco": {
-        "user" : "demo",
+        "user" : "cnp",
         "pass" : "ninguemsabe",
         "dns" : "fortissolucoes.myddns.me:1521/orcl",
         "instant_client" : "C:\\Users\\joaqu\\OneDrive\\Documentos\\joao\\workspace\\gestao_despesas\\database\\instantclient_23_6"

@@ -34,9 +34,9 @@ def painel_solicitacoes():
         s.NRO_PROCESSO,
         s.FORNECEDOR
     FROM 
-        LIU_SOLICITACOES s
-        LEFT JOIN GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
-        LEFT JOIN GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
+        LIU.LIU_SOLICITACOES s
+        LEFT JOIN FORTIS.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+        LEFT JOIN FORTIS.GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
 """
                 
             if filtro != 'TODOS':
@@ -99,24 +99,24 @@ def mais_info_sol(id):
                                     o.ORIGEM AS ORIGEM_SOL,
                                     o.DES_ORIGEM AS DES_ORIGEM_SOL
                                 FROM
-                                    LIU_SOLICITACOES s
+                                    LIU.LIU_SOLICITACOES s
                                 LEFT JOIN 
-                                    GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+                                    FORTIS.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
                                 LEFT JOIN
-                                    GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+                                    FORTIS.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
                                 LEFT JOIN
-                                    FIN_ORIGEM o ON s.ORIGEM = o.ORIGEM
+                                    FORTIS.FIN_ORIGEM o ON s.ORIGEM = o.ORIGEM
                                 WHERE 
                                     ID = :1
                                     """
             cursor.execute(sql_solicitacao, [id])
             retorno_solicitacao = cursor.dict_fetchone()
                 
-            sql_departamento = "SELECT DISTINCT DEPARTAMENTO, NOME FROM GER_DEPARTAMENTO ORDER BY DEPARTAMENTO"
+            sql_departamento = "SELECT DISTINCT DEPARTAMENTO, NOME FROM FORTIS.GER_DEPARTAMENTO ORDER BY DEPARTAMENTO"
             cursor.execute(sql_departamento)
             retorno_departamento = cursor.dict_fetchall()
 
-            sql_origem = "SELECT DISTINCT ORIGEM, DES_ORIGEM FROM FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = 'N' AND DES_ORIGEM != 'LIVRE'"
+            sql_origem = "SELECT DISTINCT ORIGEM, DES_ORIGEM FROM FORTIS.FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = 'N' AND DES_ORIGEM != 'LIVRE'"
             valores_origem = [
                 retorno_solicitacao['empresa'],
                 retorno_solicitacao['revenda'],
@@ -124,7 +124,7 @@ def mais_info_sol(id):
             cursor.execute(sql_origem, valores_origem)
             retorno_origem = cursor.dict_fetchall()
 
-            sql_autorizante = "SELECT USUARIO, LOGIN FROM GER_USUARIO WHERE USUARIO = :1"
+            sql_autorizante = "SELECT USUARIO, LOGIN FROM FORTIS.GER_USUARIO WHERE USUARIO = :1"
             valores_autorizante = [retorno_solicitacao['usuario_autorizante']]
             cursor.execute(sql_autorizante, valores_autorizante)
             retorno_autorizante = cursor.dict_fetchone()
@@ -157,7 +157,7 @@ def inserir_fornecedor(id):
     else:
         try:
             cursor, conn = abrir_cursor()
-            sql = "UPDATE LIU_SOLICITACOES SET FORNECEDOR = :1 WHERE ID = :2"
+            sql = "UPDATE LIU.LIU_SOLICITACOES SET FORNECEDOR = :1 WHERE ID = :2"
             valores = [cod_fornecedor, id]
             cursor.execute(sql, valores)
             conn.commit()
@@ -194,11 +194,11 @@ def download_relatorio():
             s.VALOR,
             s.STATUS
         FROM
-            LIU_SOLICITACOES s
+            LIU.LIU_SOLICITACOES s
         JOIN
-            GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+            FORTIS.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
         JOIN
-            GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+            FORTIS.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
     """
 
         filtro = request.args.get('filtro', 'PENDENTE')
@@ -237,7 +237,7 @@ def download_relatorio():
 def download_pdf(id):
         try:
             cursor, conn = abrir_cursor()
-            sql = "SELECT PDF_PATH FROM LIU_SOLICITACOES WHERE ID = :1"
+            sql = "SELECT PDF_PATH FROM LIU.LIU_SOLICITACOES WHERE ID = :1"
             cursor.execute(sql, [id])
             retorno = cursor.dict_fetchone()
 
@@ -274,7 +274,7 @@ def salvar_edicao(id):
                     cursor, conn = abrir_cursor()
                     sql = """
                             UPDATE 
-                                LIU_SOLICITACOES
+                                LIU.LIU_SOLICITACOES
                             SET 
                                 DEPARTAMENTO = :1,
                                 DESCRICAO = :2,
@@ -301,7 +301,7 @@ def salvar_edicao(id):
 def excluir_solicitacao(id):
             try:
                 cursor, conn = abrir_cursor()
-                sql = "DELETE FROM LIU_SOLICITACOES WHERE ID = :1"
+                sql = "DELETE FROM LIU.LIU_SOLICITACOES WHERE ID = :1"
                 cursor.execute(sql, [id])
                 conn.commit()
                 flash('Solitação excluida com sucesso!', 'success')
@@ -321,7 +321,7 @@ def reenviar_solicitacao(id):
                 try:
                     cursor, conn = abrir_cursor()
 
-                    sql = "UPDATE LIU_SOLICITACOES SET STATUS = :1, MOTIVO_REPROVA = :2 WHERE ID = :3"
+                    sql = "UPDATE LIU.LIU_SOLICITACOES SET STATUS = :1, MOTIVO_REPROVA = :2 WHERE ID = :3"
                     valores = [
                         'PENDENTE',
                         None,
@@ -344,17 +344,17 @@ def reenviar_solicitacao(id):
 def desautorizar_solicitacao(id):
     try:
         cursor, conn = abrir_cursor()
-        sql_solicitacao = "SELECT ID, NRO_PROCESSO FROM LIU_SOLICITACOES WHERE ID = :1"
+        sql_solicitacao = "SELECT ID, NRO_PROCESSO FROM LIU.LIU_SOLICITACOES WHERE ID = :1"
         valores_solicitacao = [id]
         cursor.execute(sql_solicitacao, valores_solicitacao)
         retorno_solicitacao = cursor.dict_fetchone()
 
-        sql_deletar = "DELETE FROM FAT_PROCESSO_DESPESA WHERE NRO_PROCESSO = :1"
+        sql_deletar = "DELETE FROM FORTIS.FAT_PROCESSO_DESPESA WHERE NRO_PROCESSO = :1"
         valores_deletar = [retorno_solicitacao['nro_processo']]
         cursor.execute(sql_deletar, valores_deletar)
         conn.commit()
 
-        sql_update = "UPDATE LIU_SOLICITACOES SET STATUS = :1, NRO_PROCESSO = :2, USUARIO_AUTORIZANTE = :3 WHERE ID = :4"
+        sql_update = "UPDATE LIU.LIU_SOLICITACOES SET STATUS = :1, NRO_PROCESSO = :2, USUARIO_AUTORIZANTE = :3 WHERE ID = :4"
         valores_update = ['PENDENTE', None, None, id]
         cursor.execute(sql_update, valores_update)
         conn.commit()
