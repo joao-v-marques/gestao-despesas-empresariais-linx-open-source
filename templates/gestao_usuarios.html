@@ -93,7 +93,7 @@
     </header>
 
     <main>
-        <form action="{{ url_for('blueprint_gestao_usuarios.cadastrar_usuario') }}" method="POST" class="formulario">
+        <form action="{{ url_for('blueprint_gestao_usuarios.cadastrar_usuario') }}" method="POST" class="formulario" id="formCad">
             <h2 class="titulo-cadastro">Cadastro de Usuários</h2>
 
             <label for="cod_apollo_id" class="label-cod-apollo">Cód. Apollo</label>
@@ -129,7 +129,7 @@
                 <!-- A Revenda é preenchida dinamicamente pelo JS -->
             </select>
 
-            <input type="submit" class="botao-enviar" value="Cadastrar Usuario">
+            <input type="submit" class="botao-enviar" value="Cadastrar Usuario" id="btnCad">
 
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -187,7 +187,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                             </div>
                             <div class="modal-body">
-                                <form action="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=u['id']) }}" method="POST" class="formulario-modal">
+                                <form action="{{ url_for('blueprint_gestao_usuarios.editar_usuario', id=u['id']) }}" method="POST" class="formulario-modal" id="formEditar">
                                     <label for="codigo_apollo_id_edit{{ u['codigo_apollo'] }}">Cód. Apollo</label>
                                     <input type="number" id="codigo_apollo_id_edit{{ u['codigo_apollo'] }}" name="codigo_apollo" class="input-codigo-apollo" value="{{ u['codigo_apollo'] }}">
 
@@ -222,7 +222,7 @@
                                         <!-- Preenchido via JS -->
                                     </select>
                                     
-                                    <input type="submit" class="btn btn-success" value="Confirmar">
+                                    <input type="submit" class="btn btn-success" value="Confirmar" id="btnEditar">
                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
                                 </form>
                             </div>
@@ -242,8 +242,8 @@
                             </div>
                             <div class="modal-footer d-flex justify-content-end gap-2">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <form method="POST" action="{{ url_for('blueprint_gestao_usuarios.deletar_usuario', id=u['id']) }}">
-                                    <button type="submit" class="btn btn-danger">Confirmar</button>
+                                <form method="POST" action="{{ url_for('blueprint_gestao_usuarios.deletar_usuario', id=u['id']) }}" id="formDeletar">
+                                    <button type="submit" class="btn btn-danger" id="btnDeletar">Confirmar</button>
                                 </form>
                             </div>
                         </div>

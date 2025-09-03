@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// Atualiza fornecedor na insercao
+// Atualiza fornecedor na inserção
 document.addEventListener('DOMContentLoaded', function () {
     const solicitacaoId = document.getElementById('codigo_apollo_solicitacao_id').value;
     const codigoInputModal = document.getElementById('inserir_fornecedor_id');

@@ -5,6 +5,7 @@ from gerar_relatorio import gerar_relatorio
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file, session
 from flask_login import login_required, current_user
 from database.connect_db import abrir_cursor
+from datetime import datetime
 
 blueprint_painel_solicitacoes = Blueprint('blueprint_painel_solicitacoes', __name__)
 
@@ -35,8 +36,8 @@ def painel_solicitacoes():
         s.FORNECEDOR
     FROM 
         LIU.LIU_SOLICITACOES s
-        LEFT JOIN FORTIS.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
-        LEFT JOIN FORTIS.GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
+        LEFT JOIN PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+        LEFT JOIN PONTAL.GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
 """
                 
             if filtro != 'TODOS':
@@ -101,22 +102,22 @@ def mais_info_sol(id):
                                 FROM
                                     LIU.LIU_SOLICITACOES s
                                 LEFT JOIN 
-                                    FORTIS.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+                                    PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
                                 LEFT JOIN
-                                    FORTIS.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+                                    PONTAL.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
                                 LEFT JOIN
-                                    FORTIS.FIN_ORIGEM o ON s.ORIGEM = o.ORIGEM
+                                    PONTAL.FIN_ORIGEM o ON s.ORIGEM = o.ORIGEM
                                 WHERE 
                                     ID = :1
                                     """
             cursor.execute(sql_solicitacao, [id])
             retorno_solicitacao = cursor.dict_fetchone()
                 
-            sql_departamento = "SELECT DISTINCT DEPARTAMENTO, NOME FROM FORTIS.GER_DEPARTAMENTO ORDER BY DEPARTAMENTO"
+            sql_departamento = "SELECT DISTINCT DEPARTAMENTO, NOME FROM PONTAL.GER_DEPARTAMENTO ORDER BY DEPARTAMENTO"
             cursor.execute(sql_departamento)
             retorno_departamento = cursor.dict_fetchall()
 
-            sql_origem = "SELECT DISTINCT ORIGEM, DES_ORIGEM FROM FORTIS.FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = 'N' AND DES_ORIGEM != 'LIVRE'"
+            sql_origem = "SELECT DISTINCT ORIGEM, DES_ORIGEM FROM PONTAL.FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = 'N' AND DES_ORIGEM != 'LIVRE'"
             valores_origem = [
                 retorno_solicitacao['empresa'],
                 retorno_solicitacao['revenda'],
@@ -124,7 +125,7 @@ def mais_info_sol(id):
             cursor.execute(sql_origem, valores_origem)
             retorno_origem = cursor.dict_fetchall()
 
-            sql_autorizante = "SELECT USUARIO, LOGIN FROM FORTIS.GER_USUARIO WHERE USUARIO = :1"
+            sql_autorizante = "SELECT USUARIO, LOGIN FROM PONTAL.GER_USUARIO WHERE USUARIO = :1"
             valores_autorizante = [retorno_solicitacao['usuario_autorizante']]
             cursor.execute(sql_autorizante, valores_autorizante)
             retorno_autorizante = cursor.dict_fetchone()
@@ -166,6 +167,7 @@ def inserir_fornecedor(id):
 
             return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
         except Exception as e:
+            conn.rollback()
             flash(f'Erro interno ao realizar a consulta: {e}', 'error')
             logging.error(f'{e}')
             return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
@@ -196,9 +198,9 @@ def download_relatorio():
         FROM
             LIU.LIU_SOLICITACOES s
         JOIN
-            FORTIS.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+            PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
         JOIN
-            FORTIS.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+            PONTAL.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
     """
 
         filtro = request.args.get('filtro', 'PENDENTE')
@@ -248,11 +250,11 @@ def download_pdf(id):
                 flash('PDF localizado!', 'success')
                 return send_file(retorno['pdf_path'], as_attachment=True)
         except Exception as e:
-                flash(f'Erro interno: {e}', 'error')
-                return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+            flash(f'Erro interno: {e}', 'error')
+            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
         finally:
-                cursor.close()
-                conn.close()
+            cursor.close()
+            conn.close()
 
 # Rota para editar uma solicitação
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/salvar', methods=['POST'])
@@ -289,7 +291,8 @@ def salvar_edicao(id):
                     flash('Alteração realizada com sucesso!', 'success')
                     return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
                 except Exception as e:
-                    flash(f'Erro na consulta: {e}', 'error')
+                    conn.rollback()
+                    flash(f'Erro ao salvar edição: {e}', 'error')
                     return redirect(url_for('blueprint_painel_solicitacoes.mais_info_sol', id=id))
                 finally:
                     cursor.close()
@@ -308,7 +311,9 @@ def excluir_solicitacao(id):
 
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
             except Exception as e:
-                logging.info(e)                
+                conn.rollback()
+                logging.info(e)
+                flash(f"Erro ao excluir solicitação: {e}", "error")        
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
             finally:
                 cursor.close()
@@ -331,6 +336,7 @@ def reenviar_solicitacao(id):
                     conn.commit()
                     return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
                 except Exception as e:
+                    conn.rollback()
                     flash(f'Erro na consulta: {e}', 'error')
                     logging.info(e)
                     return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
@@ -344,19 +350,46 @@ def reenviar_solicitacao(id):
 def desautorizar_solicitacao(id):
     try:
         cursor, conn = abrir_cursor()
-        sql_solicitacao = "SELECT ID, NRO_PROCESSO FROM LIU.LIU_SOLICITACOES WHERE ID = :1"
+        sql_solicitacao = "SELECT ID, NRO_PROCESSO, EMPRESA, REVENDA, ORIGEM, VALOR, DATA_SOLICITACAO, DEPARTAMENTO FROM LIU.LIU_SOLICITACOES WHERE ID = :1"
         valores_solicitacao = [id]
         cursor.execute(sql_solicitacao, valores_solicitacao)
         retorno_solicitacao = cursor.dict_fetchone()
 
-        sql_deletar = "DELETE FROM FORTIS.FAT_PROCESSO_DESPESA WHERE NRO_PROCESSO = :1"
+        sql_deletar = "DELETE FROM PONTAL.FAT_PROCESSO_DESPESA WHERE NRO_PROCESSO = :1"
         valores_deletar = [retorno_solicitacao['nro_processo']]
         cursor.execute(sql_deletar, valores_deletar)
-        conn.commit()
 
         sql_update = "UPDATE LIU.LIU_SOLICITACOES SET STATUS = :1, NRO_PROCESSO = :2, USUARIO_AUTORIZANTE = :3 WHERE ID = :4"
         valores_update = ['PENDENTE', None, None, id]
         cursor.execute(sql_update, valores_update)
+
+        # Validacao = Se a origem do codigo for 5121 não devemos mexer nos orçamentos (Pois nao existe)
+        if retorno_solicitacao['origem'] != 5121:
+            # Ano e mes utilizado na SELECT dos orcamentos
+            data_solicitacao = retorno_solicitacao['data_solicitacao']
+            data_obj = datetime.strptime(data_solicitacao, "%d/%m/%Y")
+            ano_mes = data_obj.strftime("%Y%m")
+
+            # SELECT nos orcamentos que retorna apenas o valor para calcular
+            sql_orcamento = "SELECT VALOR FROM LIU.GD_ORCAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 AND ANO_MES = :3 AND ORIGEM = :4 AND CENTRO_CUSTO = :5"
+            valores_orcamento = [retorno_solicitacao['empresa'], retorno_solicitacao['revenda'], ano_mes, retorno_solicitacao['origem'], retorno_solicitacao['departamento']]
+            cursor.execute(sql_orcamento, valores_orcamento)
+            retorno_orcamento = cursor.dict_fetchone()
+
+            if retorno_orcamento:
+                # Declarado o novo valor da origem: novo_valor = valor_origem + valor_solicitacao (Agora e adicao pois esta devolvendo)
+                novo_valor = retorno_orcamento['valor'] + retorno_solicitacao['valor']
+
+                # Fazer um UPDATE nos orcamentos com esse novo valor
+                update_orcamento = "UPDATE LIU.GD_ORCAMENTO SET VALOR = :1 WHERE EMPRESA = :2 AND REVENDA = :3 AND ANO_MES = :4 AND ORIGEM = :5 AND CENTRO_CUSTO = :6"
+                valores_update_orcamento = [novo_valor, retorno_solicitacao['empresa'], retorno_solicitacao['revenda'], ano_mes, retorno_solicitacao['origem'], retorno_solicitacao['departamento']]
+                cursor.execute(update_orcamento, valores_update_orcamento)
+            else:
+                logging.error("Não foi localizado registro de orçamento para atualizar.")
+        else:
+            logging.error(f"Origem {retorno_solicitacao['origem']} ignorada na atualização do orçamento")
+
+        # Apenas 1 commit para todas as alterações, assim fazendo com que o conn.rollback funcione corretamente
         conn.commit()
 
         pdf_path = os.path.join('static', 'pdf', f'solicitacao_{id}.pdf')
@@ -368,7 +401,8 @@ def desautorizar_solicitacao(id):
 
         return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
     except Exception as e:
-        logging.info(e)
+        conn.rollback()
+        logging.info(f"Erro: {e}")
         return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes', usuario_logado=current_user.USUARIO))
     finally:
         cursor.close()

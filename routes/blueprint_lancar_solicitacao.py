@@ -2,17 +2,19 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash,
 from flask_login import login_required, current_user
 from database.connect_db import abrir_cursor
 from datetime import datetime
+from decorators import role_required
 import logging
 
 blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name__)
 
 # Rota que renderiza o HTML da pagina
 @blueprint_lancar_solicitacao.route('/')
+@role_required('Administrador', 'Gerente', 'Diretoria', 'Solicitante')
 @login_required
 def lancar_solicitacao():
     try:
         cursor, conn = abrir_cursor()
-        sql_departamento = "SELECT DEPARTAMENTO, NOME FROM FORTIS.GER_DEPARTAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 ORDER BY DEPARTAMENTO"
+        sql_departamento = "SELECT DEPARTAMENTO, NOME FROM PONTAL.GER_DEPARTAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 ORDER BY DEPARTAMENTO"
         valores = [
             current_user.EMPRESA,
             current_user.REVENDA
@@ -24,20 +26,21 @@ def lancar_solicitacao():
     except Exception as e:
         flash(f'Erro interno ao realizar a consulta: {e}', 'error')
         logging.error(f'Erro: {e}')
-        return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))    
+        return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
     finally:
         cursor.close()
         conn.close()
 
 # Rota que fica constantemente atualizando as Origens utilizando Javascript
 @blueprint_lancar_solicitacao.route('/buscar-origens')
+@role_required('Administrador', 'Gerente', 'Diretoria', 'Solicitante')
 @login_required
 def buscar_origens():
     empresa = int(request.args.get('empresa'))
     revenda = int(request.args.get('revenda'))
     try:
         cursor, conn = abrir_cursor()
-        sql_origem = "SELECT ORIGEM, DES_ORIGEM FROM FORTIS.FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = :3 AND DES_ORIGEM != :4"
+        sql_origem = "SELECT ORIGEM, DES_ORIGEM FROM PONTAL.FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = :3 AND DES_ORIGEM != :4"
         valores = [
             empresa,
             revenda,
@@ -55,11 +58,12 @@ def buscar_origens():
 
 # Rota que fica constantemente atualizando o Fornecedor utilizando Javascript
 @blueprint_lancar_solicitacao.route('/fornecedor/<int:codigo>')
+@role_required('Administrador', 'Gerente', 'Diretoria', 'Solicitante')
 @login_required
 def busca_fornecedor(codigo):
     try:
         cursor, conn = abrir_cursor()
-        sql_busca_fornecedor = "SELECT NOME FROM FORTIS.FAT_CLIENTE WHERE CLIENTE = :1" 
+        sql_busca_fornecedor = "SELECT NOME FROM PONTAL.FAT_CLIENTE WHERE CLIENTE = :1" 
         cursor.execute(sql_busca_fornecedor, [codigo])
         retorno = cursor.dict_fetchone()
         conn.close()
@@ -73,6 +77,7 @@ def busca_fornecedor(codigo):
         return jsonify({"erro": str(e)}), 500
 
 @blueprint_lancar_solicitacao.route('/fazer-lancamento/confirm', methods=['GET', 'POST'])
+@role_required('Administrador', 'Gerente', 'Diretoria', 'Solicitante')
 @login_required
 def consulta_orcamento():
     dados_form = request.get_json() # Lê o corpo da requisição como JSON
@@ -110,6 +115,7 @@ def consulta_orcamento():
 
 # Função que adiciona funcionalidade ao botão de cadastrar
 @blueprint_lancar_solicitacao.route('/fazer-lancamento', methods=['POST'])
+@role_required('Administrador', 'Gerente', 'Diretoria', 'Solicitante')
 @login_required
 def fazer_lancamento():
     empresa_form = request.form['empresa']
@@ -127,62 +133,83 @@ def fazer_lancamento():
     else:
         valor_orcamento = session.get('retorno_orcamento')    
     nro_os_form = request.form['nroOS']
+    
+    if valor_orcamento == 1:
+        try:
+            cursor, conn = abrir_cursor()
+            sql_os = "SELECT * FROM PONTAL.OFI_ORDEM_SERVICO WHERE EMPRESA = :1 AND REVENDA = :2 AND NRO_OS = :3"
+            cursor.execute(sql_os, [empresa_form, revenda_form, nro_os_form])
+            retorno_os = cursor.fetchone()
+        except Exception as e:
+            flash(f"Erro ao realizar consulta: {e}", "error")
+            logging.info("Erro ao realizar consulta!")
+            return redirect(url_for("blueprint_lancar_solicitacao.lancar_solicitacao"))
+        finally:
+            cursor.close()
+            conn.close()
 
+        if not retorno_os:
+            flash("Erro: A O.S inserida não existe no sistema!", "error")
+            logging.info("Atenção: A O.S inserida não existe no sistema!", "error")
+            return redirect(url_for("blueprint_lancar_solicitacao.lancar_solicitacao"))
+
+    # Conversão de valor
     try:
         valor_float = valor_form.replace('\xa0', '').replace('.', '').replace(',', '.').replace('R$', '')
+        valor_float = float(valor_float)
     except ValueError as error:
         flash('O valor inserido é inválido!', 'error')
         logging.error(f"O valor inserido é inválido! ERRO: {error}")
         return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
-    
 
+    # Validações comuns
     if not descricao_form or not valor_form:
         flash('Nenhum campo pode estar vazio!', 'error')
         return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
-    elif desc_fornecedor_form == 'Erro na busca':
+    if desc_fornecedor_form in ('Erro na busca', 'Fornecedor não encontrado'):
         logging.error('Você inseriu um fornecedor inválido!')
         flash('Você inseriu um fornecedor inválido!', 'error')
         return redirect(url_for("blueprint_lancar_solicitacao.lancar_solicitacao"))
-    elif desc_fornecedor_form == 'Fornecedor não encontrado':
-        logging.error('Você inseriu um fornecedor inválido!')
-        flash('Você inseriu um fornecedor inválido!', 'error')
-        return redirect(url_for("blueprint_lancar_solicitacao.lancar_solicitacao"))
-    else:
-        logging.info(f"Valor Orçamento: {valor_orcamento} <<<>>> Tipo: {type(valor_orcamento)}")
-        if valor_orcamento <= 0:
-            alcada = "Diretoria"
-        else:
-            alcada = "Gerente"
 
-        try:
-            cursor, conn = abrir_cursor()
-            sql = "INSERT INTO LIU.LIU_SOLICITACOES (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, DESCRICAO, VALOR, FORNECEDOR, STATUS, DATA_SOLICITACAO, MOTIVO_REPROVA, PDF_PATH, ORIGEM, ORCAMENTO, ALCADA, NRO_OS) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11, :12, :13, :14, :15)"
-            valores = [
-                int(empresa_form),
-                int(revenda_form),
-                int(current_user.CODIGO_APOLLO),
-                int(departamento_form),
-                descricao_form,
-                float(valor_float),
-                int(fornecedor_form),
-                'PENDENTE',
-                data_atual,
-                '',
-                '',
-                int(origem_form),
-                valor_orcamento,
-                alcada,
-                nro_os_form
-                ]
-            cursor.execute(sql, valores)
-            conn.commit()
-            session.pop('retorno_orcamento', None)
-            flash('Cadastro realizado com sucesso!', 'success')
-            return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao', usuario_logado=current_user.USUARIO, ))
-        except Exception as e:
-                flash(f'Erro interno ao realizar a o cadastro: {e}', 'error')
-                logging.error(f'Erro interno ao realizar a cadastro: {e}')
-                return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
-        finally:
-                cursor.close()
-                conn.close()
+    alcada = "Diretoria" if valor_orcamento <= 0 else "Gerente"
+
+    logging.info(f"Origem: {origem_form}")
+
+    # Insert final
+    try:
+        cursor, conn = abrir_cursor()
+        sql = """INSERT INTO LIU.LIU_SOLICITACOES 
+                 (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, DESCRICAO, 
+                  VALOR, FORNECEDOR, STATUS, DATA_SOLICITACAO, MOTIVO_REPROVA, 
+                  PDF_PATH, ORIGEM, ORCAMENTO, ALCADA, NRO_OS)
+                 VALUES (:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15)"""
+        valores = [
+            int(empresa_form),
+            int(revenda_form),
+            int(current_user.CODIGO_APOLLO),
+            int(departamento_form),
+            descricao_form,
+            valor_float,
+            int(fornecedor_form),
+            'PENDENTE',
+            data_atual,
+            '',
+            '',
+            int(origem_form),
+            valor_orcamento,
+            alcada,
+            nro_os_form
+        ]
+        cursor.execute(sql, valores)
+        conn.commit()
+        session.pop('retorno_orcamento', None)
+        flash('Cadastro realizado com sucesso!', 'success')
+        return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao', usuario_logado=current_user.USUARIO))
+    except Exception as e:
+        conn.rollback()
+        flash(f'Erro interno ao realizar o cadastro: {e}', 'error')
+        logging.error(f'Erro interno ao realizar a cadastro: {e}')
+        return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
+    finally:
+        cursor.close()
+        conn.close()

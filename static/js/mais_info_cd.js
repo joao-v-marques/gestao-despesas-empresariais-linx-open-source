@@ -16,3 +16,23 @@ document.addEventListener('DOMContentLoaded', function () {
         descricaoInput.value = '';
     }
 });
+
+const formAprovar = document.getElementById("formAprovar");
+const btnAprovar = document.getElementById("btnAprovar");
+
+formAprovar.addEventListener("submit", function () {
+    if (btnAprovar.disabled) return;
+
+    btnAprovar.disabled = true;
+    btnAprovar.value = "Aprovando..."
+})
+
+const formReprovar = document.getElementById("formReprovar");
+const btnReprovar = document.getElementById("btnReprovar");
+
+formReprovar.addEventListener("submit", function () {
+    if (btnReprovar.disabled) return;
+
+    btnReprovar.disabled = true;
+    btnReprovar.value = "Reprovando..."
+})

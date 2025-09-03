@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Força letras maiúsculas no campo de usuário dos modais de edição, sem bloquear números ou outros caracteres
-
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('input[id^="usuario_id_edit_"]').forEach(function(input) {
         input.addEventListener('input', function(e) {
@@ -60,3 +59,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+// Função para garantir que não seja cadastrado diversos usuários de uma só vez
+const formCad = document.getElementById("formCad");
+const btnCad = document.getElementById("btnCad");
+
+formCad.addEventListener("submit", function () {
+    if (btnCad.disabled) return;
+
+    btnCad.disabled = true;
+    btnCad.value = "Cadastrando..."
+})
+
+const formEditar = document.getElementById("formEditar");
+const btnEditar = document.getElementById("btnEditar");
+
+formEditar.addEventListener("submit", function () {
+    if (btnEditar.disabled) return;
+
+    btnEditar.disabled = true;
+    btnEditar.value = "Fazendo Alterações..."
+})
+
+const formDeletar = document.getElementById("formDeletar");
+const btnDeletar = document.getElementById("btnDeletar");
+
+formDeletar.addEventListener("submit", function () {
+    if (btnDeletar.disabled) return;
+
+    btnDeletar.disabled = true;
+    btnDeletar.textContent = "Deletando..."; 
+})

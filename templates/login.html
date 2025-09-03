@@ -15,14 +15,17 @@
         <h1>Gestão de Despesas</h1>
         <img src="{{ url_for('static', filename='img/Logo - Grupo Kato Branco.png') }}" alt="Logo KATO" class="logo-kato">
 
-        <form action="{{ url_for('blueprint_login.fazer_login') }}" method="POST" class="formulario">
+        <form action="{{ url_for('blueprint_login.fazer_login') }}" method="POST" class="formulario" id="loginForm">
             <label for="usuario_id" class="label-usuario">Usuario</label>
             <input type="text" id="usuario_id" name="usuario" class="input-usuario" oninput="this.value = this.value.toUpperCase();">
 
             <label for="senha_id" class="label-senha">Senha</label>
             <input type="password" id="senha_id" name="senha" class="input-senha">
 
-            <input type="submit" class="botao-enviar" value="Fazer Login">
+            <button type="submit" class="botao-enviar" id="loginBtn">
+                <span class="loginText">Fazer Login</span>
+                <div class="loader"></div>
+            </button>
 
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -54,5 +57,6 @@
         // Escuta mudanças no tema
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setFaviconBasedOnTheme);
     </script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 </body>
 </html>

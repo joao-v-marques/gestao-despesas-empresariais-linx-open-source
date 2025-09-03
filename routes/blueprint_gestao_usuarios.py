@@ -57,7 +57,7 @@ def cadastrar_usuario():
         try:
             cursor, conn = abrir_cursor()
 
-            sql_cod_apollo = "SELECT USUARIO, LOGIN, NOME FROM FORTIS.GER_USUARIO WHERE USUARIO = :1"
+            sql_cod_apollo = "SELECT USUARIO, LOGIN, NOME FROM PONTAL.GER_USUARIO WHERE USUARIO = :1"
             valores_cod_apollo = [cod_apollo_form]
             cursor.execute(sql_cod_apollo, valores_cod_apollo)
             retorno_cod_apollo = cursor.dict_fetchall()
@@ -82,11 +82,12 @@ def cadastrar_usuario():
                 logging.info("O campo 'Cód. Apollo' Inserido não existe!")
                 return redirect(url_for("blueprint_gestao_usuarios.gestao_usuarios"))
         except Exception as e:
+            conn.rollback()
             flash(f'Erro interno ao realizar a consulta: {e}', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))    
         finally:
-                cursor.close()
-                conn.close()
+            cursor.close()
+            conn.close()
 
 # Rota para editar um usuário
 @blueprint_gestao_usuarios.route('/editar-usuario/<int:id>', methods=['POST'])
@@ -124,7 +125,7 @@ def editar_usuario(id):
 @login_required
 @role_required('Administrador')
 def deletar_usuario(id):
-        if current_user.USUARIO == id:
+        if current_user.id == id:
             flash('Você não pode deletar você mesmo!', 'error')
             return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
         else:
@@ -136,8 +137,9 @@ def deletar_usuario(id):
                 flash('Usuário deletado com sucesso!', 'success')
                 return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
             except Exception as e:
+                conn.rollback()
                 flash(f'Erro interno ao realizar a consulta: {e}', 'error')
                 return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))    
             finally:
-                    cursor.close()
-                    conn.close()
+                cursor.close()
+                conn.close()

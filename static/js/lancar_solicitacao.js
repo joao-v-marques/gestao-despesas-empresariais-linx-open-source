@@ -207,6 +207,27 @@ btnEnviar.addEventListener('click', function () {
     }
 });
 
+const btnEnviar5121 = document.getElementById("btnEnviarOS");
+
+btnEnviar5121.addEventListener("click", function () {
+    if (btnEnviar5121.disabled) return;
+
+    btnEnviar5121.disabled = true;
+
+    btnEnviar5121.value = "Enviando...";
+})
+
+const btnEnviarModalConfirma = document.getElementById("modalConfirmButton");
+
+btnEnviarModalConfirma.addEventListener("click", function () {
+    if (btnEnviarModalConfirma.disabled) return;
+
+    btnEnviarModalConfirma.disabled = true;
+
+    btnEnviarModalConfirma.textContent = "Enviando...";
+})
+
+
 document.getElementById("nroOS_input").addEventListener("input", function () {
     this.value = this.value.replace(/\D/g, "");
 })

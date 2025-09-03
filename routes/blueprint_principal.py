@@ -41,12 +41,14 @@ def troca_senha(id):
     else:
         sql = "UPDATE LIU.LIU_USUARIO SET SENHA = :1 WHERE USUARIO = :2"
         valores = [nova_senha_form, current_user]
-        cursor, conn = abrir_cursor()
         try:
+            cursor, conn = abrir_cursor()
             cursor.execute(sql, valores)
+            conn.commit()
             flash('Usuário atualizado com sucesso!', 'success')
             return redirect(url_for('blueprint_principal.principal'))
         except Exception as e:
+            conn.rollback()
             flash(f'Erro ao atualizar o usuário: {e}', 'error')
             return redirect(url_for('blueprint_principal.principal'))
         finally:

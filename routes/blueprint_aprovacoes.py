@@ -30,9 +30,9 @@ def aprovacoes():
         FROM
             LIU.LIU_SOLICITACOES s
         JOIN 
-            FORTIS.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+            PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
         JOIN
-            FORTIS.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+            PONTAL.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
         WHERE
             s.STATUS = :1
         """
@@ -85,9 +85,9 @@ def mais_info_cd(id):
         FROM 
             LIU.LIU_SOLICITACOES s
         JOIN 
-            FORTIS.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+            PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
         JOIN
-            FORTIS.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+            PONTAL.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
         WHERE 
             s.ID = :1
         """
@@ -110,7 +110,6 @@ def mudar_status(id):
     if novo_status == 'APROVADO':
         try:
             cursor, conn = abrir_cursor()
-
             sql_solicitacao = """
             SELECT DISTINCT 
                 s.ID,
@@ -129,9 +128,9 @@ def mudar_status(id):
                 o.DES_ORIGEM AS ORIGEM_DESCRICAO
             FROM
                 LIU.LIU_SOLICITACOES s
-                LEFT JOIN FORTIS.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
-                LEFT JOIN FORTIS.GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
-                LEFT JOIN LIU.FIN_ORIGEM o ON s.ORIGEM = o.ORIGEM 
+                LEFT JOIN PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+                LEFT JOIN PONTAL.GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
+                LEFT JOIN PONTAL.FIN_ORIGEM o ON s.ORIGEM = o.ORIGEM 
             WHERE
                 ID = :1
             """
@@ -140,7 +139,7 @@ def mudar_status(id):
 
             codFornecedor = str(solicitacao['fornecedor'])
 
-            sql_fornecedor = "SELECT CLIENTE, NOME, CGCCPF FROM FORTIS.FAT_CLIENTE WHERE CLIENTE = :1"
+            sql_fornecedor = "SELECT CLIENTE, NOME, CGCCPF FROM PONTAL.FAT_CLIENTE WHERE CLIENTE = :1"
             cursor.execute(sql_fornecedor, [codFornecedor])
             fornecedor = cursor.dict_fetchone()
 
@@ -151,7 +150,7 @@ def mudar_status(id):
             else:
                 pdf_path = gerar_pdf(solicitacao, fornecedor, str(fornecedor['cgccpf']), str(solicitacao['id']))
 
-                sql_max_processo = "SELECT MAX(NRO_PROCESSO) FROM FORTIS.FAT_PROCESSO_DESPESA"
+                sql_max_processo = "SELECT MAX(NRO_PROCESSO) FROM PONTAL.FAT_PROCESSO_DESPESA"
                 cursor.execute(sql_max_processo)
                 max_processo = cursor.fetchone()[0]
 
@@ -160,14 +159,39 @@ def mudar_status(id):
                 else:
                     proximo_numero_processo = max_processo + 1
                 
-                data_atual = datetime.now().replace(microsecond=0)
+                # Validacao = Se a origem do codigo for 5121 não devemos mexer nos orcamentos (Pois nao existe)
+                if solicitacao['origem_codigo'] != 5121:
+                    # Ano e mes utilizado na SELECT dos orcamentos
+                    ano_mes = datetime.now().strftime("%Y%m")
+
+                    # SELECT nos orcamentos que retorna apenas o valor para calcular
+                    sql_origens = "SELECT VALOR FROM LIU.GD_ORCAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 AND ORIGEM = :3 AND ANO_MES = :4 AND CENTRO_CUSTO = :5"
+                    valores_origens = [solicitacao['empresa'], solicitacao['revenda'], solicitacao['origem_codigo'], ano_mes, solicitacao['departamento_codigo']]
+                    cursor.execute(sql_origens, valores_origens)
+                    retorno_origem = cursor.dict_fetchone()
+
+                    if retorno_origem:
+                        # Declarado o novo valor da origem: novo_valor = valor_origem - valor_solicitacao
+                        novo_valor = retorno_origem['valor'] - solicitacao['valor']
+
+                        # Fazer um UPDATE nos orcamentos com esse novo valor
+                        sql_update_origens = "UPDATE LIU.GD_ORCAMENTO SET VALOR = :1 WHERE EMPRESA = :2 AND REVENDA = :3 AND ORIGEM = :4 AND ANO_MES = :5 AND CENTRO_CUSTO = :6"
+                        valores_update_origens = [novo_valor, solicitacao['empresa'], solicitacao['revenda'], solicitacao['origem_codigo'], ano_mes, solicitacao['departamento_codigo']]
+                        cursor.execute(sql_update_origens, valores_update_origens)
+                        # Retirei um commit aqui para testar o conn.rollback()
+                    else:
+                        logging.error("Não foi localizado registro de orçamento para atualizar.")
+                else:
+                    logging.error(f"Origem {solicitacao['origem_codigo']} ignorada na atualização do orçamento")
 
                 sql_aprovado = "UPDATE LIU.LIU_SOLICITACOES SET STATUS = 'APROVADO', PDF_PATH = :1, USUARIO_AUTORIZANTE = :2, NRO_PROCESSO = :3 WHERE ID = :4"
                 valores = [pdf_path, current_user.CODIGO_APOLLO, proximo_numero_processo, id]
                 cursor.execute(sql_aprovado, valores)
-                conn.commit()
+                # Retirei um commit aqui para testar o conn.rollback()
 
-                sql_inserir = "INSERT INTO FORTIS.FAT_PROCESSO_DESPESA (EMPRESA, REVENDA, NRO_PROCESSO, DTA_EMISSAO, DESCRICAO, VAL_PROCESSO, SITUACAO, USUARIO, DEPARTAMENTO, USUARIO_AUTORIZANTE, CLIENTE) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)"
+                data_atual = datetime.now().replace(microsecond=0)
+
+                sql_inserir = "INSERT INTO PONTAL.FAT_PROCESSO_DESPESA (EMPRESA, REVENDA, NRO_PROCESSO, DTA_EMISSAO, DESCRICAO, VAL_PROCESSO, SITUACAO, USUARIO, DEPARTAMENTO, USUARIO_AUTORIZANTE, CLIENTE) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)"
                 valores_inserir = [
                     solicitacao['empresa'],
                     solicitacao['revenda'],
@@ -182,12 +206,13 @@ def mudar_status(id):
                     solicitacao['fornecedor']
                     ]
                 cursor.execute(sql_inserir, valores_inserir)
+
                 conn.commit()
-                logging.info("Inseriu no FAT_PROCESSO_DESPESA")
 
                 flash('Solicitação Aprovada e PDF gerado com sucesso!', 'success')
                 return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
         except Exception as e:
+            conn.rollback()
             flash(f'Erro interno ao realizar a aprovação: {e}', 'error')
             logging.error(f'Erro ao realizar a aprovação: {e}')
             return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
@@ -205,6 +230,7 @@ def mudar_status(id):
             flash('Solicitação Reprovada!', 'success')
             return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
         except Exception as e:
+            conn.rollback()
             flash(f'Erro interno ao realizar a consulta: {e}', 'error')
             return redirect(url_for('blueprint_aprovacoes.mais_info_cd', id=id))
         finally:
