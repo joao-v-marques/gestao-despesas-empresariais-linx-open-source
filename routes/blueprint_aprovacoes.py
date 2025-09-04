@@ -119,6 +119,8 @@ def mudar_status(id):
                 s.DESCRICAO,
                 s.VALOR,
                 s.ORCAMENTO,
+                s.NRO_OS,
+                s.DATA_SOLICITACAO,
                 d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
                 d.NOME AS DEPARTAMENTO_DESCRICAO,
                 u.NOME AS NOM_USUARIO_SOLICITANTE,
@@ -143,12 +145,17 @@ def mudar_status(id):
             cursor.execute(sql_fornecedor, [codFornecedor])
             fornecedor = cursor.dict_fetchone()
 
+            sql_nome_revenda = "SELECT EMPRESA, REVENDA, NOME_FANTASIA FROM PONTAL.GER_REVENDA WHERE EMPRESA = :1 AND REVENDA = :2"
+            valores_nome_revenda = [solicitacao['empresa'], solicitacao['revenda']]
+            cursor.execute(sql_nome_revenda, valores_nome_revenda)
+            nome_revenda = cursor.dict_fetchone()
+
             if solicitacao['fornecedor'] == None or solicitacao['fornecedor'] == '':
                 logging.info('Você deve cadastrar um fornecedor antes de aprovar uma solicitação!')
                 flash('Você deve cadastrar um fornecedor antes de aprovar uma solicitação!', 'error')
                 return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
             else:
-                pdf_path = gerar_pdf(solicitacao, fornecedor, str(fornecedor['cgccpf']), str(solicitacao['id']))
+                pdf_path = gerar_pdf(solicitacao, fornecedor, str(fornecedor['cgccpf']), str(solicitacao['id']), nome_revenda)
 
                 sql_max_processo = "SELECT MAX(NRO_PROCESSO) FROM PONTAL.FAT_PROCESSO_DESPESA"
                 cursor.execute(sql_max_processo)

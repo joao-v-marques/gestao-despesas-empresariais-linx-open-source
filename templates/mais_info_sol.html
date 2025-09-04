@@ -102,7 +102,7 @@
                 <label for="codigo_apollo_solicitacao_id">ID:</label>
                 <input type="text" readonly id="codigo_apollo_solicitacao_id" name="codigo_apollo" value="{{ solicitacao['id'] }}">
 
-                <label for="nro_processo_id">Nro. Processo:</label>
+                <label for="nro_processo_id">Processo ERP:</label>
                 <input type="text" readonly id="nro_processo_id" name="nro_processo" value="{% if solicitacao['nro_processo'] == None %} - {% else %} {{ solicitacao['nro_processo'] }} {% endif %}">
 
                 <label for="empresa_revenda_id">Emp./Rev.:</label>

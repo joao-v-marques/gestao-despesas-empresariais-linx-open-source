@@ -117,7 +117,7 @@
                     <thead>
                         <tr class="head-lista">
                             <th>ID</th>
-                            <th>Nro. Processo</th>
+                            <th>Processo ERP</th>
                             <th>Emp./Rev</th>
                             <th>Fornecedor</th>
                             <th>Usuario</th>
@@ -175,7 +175,7 @@
                                         <label for="id_id">ID</label>
                                         <input type="text" id="id_id" readonly value="{{ s['id'] }}">
 
-                                        <label for="nro_processo_id">Nro. Processo</label>
+                                        <label for="nro_processo_id">Processo ERP</label>
                                         <input type="text" id="nro_processo_id" readonly value="{% if s['nro_processo'] == None %} - {% else %} {{ s['nro_processo'] }} {% endif %}">
                                     </div>
 
