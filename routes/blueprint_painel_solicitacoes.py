@@ -22,29 +22,29 @@ def painel_solicitacoes():
             cursor, conn = abrir_cursor()
             base_sql = """
     SELECT DISTINCT
-        s.ID,
-        s.EMPRESA,
-        s.REVENDA,
-        s.DESCRICAO,
-        s.NRO_OS,
-        u.LOGIN AS USUARIO_SOLICITANTE, 
-        d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO, 
-        d.NOME AS DEPARTAMENTO_DESCRICAO, 
-        s.VALOR, 
-        s.STATUS,
-        s.NRO_PROCESSO,
-        s.FORNECEDOR
+        s.CAMPO,
+        s.CAMPO,
+        s.CAMPO,
+        s.CAMPO,
+        s.CAMPO,
+        u.CAMPO AS CAMPO, 
+        d.CAMPO AS CAMPO, 
+        d.CAMPO AS CAMPO, 
+        s.CAMPO, 
+        s.CAMPO,
+        s.CAMPO,
+        s.CAMPO
     FROM 
-        LIU.LIU_SOLICITACOES s
-        LEFT JOIN PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
-        LEFT JOIN PONTAL.GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
+        SCHEMA.TABELA s
+        LEFT JOIN SCHEMA.TABELA d ON s.CAMPO = d.CAMPO
+        LEFT JOIN SCHEMA.TABELA u ON s.CAMPO = u.CAMPO
 """
                 
             if filtro != 'TODOS':
-                sql = base_sql + " WHERE s.STATUS = :1 AND s.USUARIO_SOLICITANTE = :2"
+                sql = base_sql + " WHERE s.CAMPO = :1 AND s.CAMPO = :2"
                 valores = [filtro, current_user.CODIGO_APOLLO]
             else:
-                sql = base_sql + " WHERE s.USUARIO_SOLICITANTE = :1"
+                sql = base_sql + " WHERE s.CAMPO = :1"
                 valores = [current_user.CODIGO_APOLLO]
 
             colunas_permitidas = [  
@@ -83,41 +83,41 @@ def mais_info_sol(id):
         try:
             cursor, conn = abrir_cursor()
             sql_solicitacao = """SELECT
-                                    s.ID,
-                                    s.NRO_PROCESSO,
-                                    s.EMPRESA,
-                                    s.REVENDA,
-                                    s.NRO_OS,
-                                    u.LOGIN AS USUARIO_SOLICITANTE,
-                                    d.DEPARTAMENTO AS DEPARTAMENTO_SOL,
-                                    d.NOME AS DESC_DEPARTAMENTO_SOL,
-                                    s.DESCRICAO AS DESCRICAO,
-                                    s.VALOR,
-                                    s.STATUS,
-                                    s.MOTIVO_REPROVA,
-                                    s.FORNECEDOR,
-                                    s.USUARIO_AUTORIZANTE,
-                                    o.ORIGEM AS ORIGEM_SOL,
-                                    o.DES_ORIGEM AS DES_ORIGEM_SOL
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    u.CAMPO AS CAMPO,
+                                    d.CAMPO AS CAMPO,
+                                    d.CAMPO AS CAMPO,
+                                    s.CAMPO AS CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    o.CAMPO AS CAMPO,
+                                    o.CAMPO AS CAMPO
                                 FROM
-                                    LIU.LIU_SOLICITACOES s
+                                    SCHEMA.TABELA s
                                 LEFT JOIN 
-                                    PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+                                    SCHEMA.TABELA d ON s.CAMPO = d.CAMPO
                                 LEFT JOIN
-                                    PONTAL.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+                                    SCHEMA.TABELA u on s.CAMPO = u.CAMPO
                                 LEFT JOIN
-                                    PONTAL.FIN_ORIGEM o ON s.ORIGEM = o.ORIGEM
+                                    SCHEMA.TABELA o ON s.CAMPO = o.CAMPO
                                 WHERE 
-                                    ID = :1
+                                    CAMPO = :1
                                     """
             cursor.execute(sql_solicitacao, [id])
             retorno_solicitacao = cursor.dict_fetchone()
                 
-            sql_departamento = "SELECT DISTINCT DEPARTAMENTO, NOME FROM PONTAL.GER_DEPARTAMENTO ORDER BY DEPARTAMENTO"
+            sql_departamento = "SELECT DISTINCT CAMPO, CAMPO FROM SCHEMA.TABELA ORDER BY CAMPO"
             cursor.execute(sql_departamento)
             retorno_departamento = cursor.dict_fetchall()
 
-            sql_origem = "SELECT DISTINCT ORIGEM, DES_ORIGEM FROM PONTAL.FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = 'N' AND DES_ORIGEM != 'LIVRE'"
+            sql_origem = "SELECT DISTINCT CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO = 'N' AND CAMPO != 'LIVRE'"
             valores_origem = [
                 retorno_solicitacao['empresa'],
                 retorno_solicitacao['revenda'],
@@ -125,7 +125,7 @@ def mais_info_sol(id):
             cursor.execute(sql_origem, valores_origem)
             retorno_origem = cursor.dict_fetchall()
 
-            sql_autorizante = "SELECT USUARIO, LOGIN FROM PONTAL.GER_USUARIO WHERE USUARIO = :1"
+            sql_autorizante = "SELECT CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1"
             valores_autorizante = [retorno_solicitacao['usuario_autorizante']]
             cursor.execute(sql_autorizante, valores_autorizante)
             retorno_autorizante = cursor.dict_fetchone()
@@ -158,7 +158,7 @@ def inserir_fornecedor(id):
     else:
         try:
             cursor, conn = abrir_cursor()
-            sql = "UPDATE LIU.LIU_SOLICITACOES SET FORNECEDOR = :1 WHERE ID = :2"
+            sql = "UPDATE SCHEMA.TABELA SET CAMPO = :1 WHERE CAMPO = :2"
             valores = [cod_fornecedor, id]
             cursor.execute(sql, valores)
             conn.commit()
@@ -183,32 +183,32 @@ def download_relatorio():
         cursor, conn = abrir_cursor()
         sql = """
         SELECT DISTINCT
-            s.ID,
-            s.EMPRESA,
-            s.REVENDA,
-            s.NRO_PROCESSO,
-            s.USUARIO_AUTORIZANTE,
-            s.DESCRICAO,
-            s.FORNECEDOR,
-            u.LOGIN AS USUARIO_SOLICITANTE,
-            d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
-            d.NOME AS DEPARTAMENTO_DESCRICAO,
-            s.VALOR,
-            s.STATUS
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            u.CAMPO AS CAMPO,
+            d.CAMPO AS CAMPO,
+            d.CAMPO AS CAMPO,
+            s.CAMPO,
+            s.CAMPO
         FROM
-            LIU.LIU_SOLICITACOES s
+            SCHEMA.TABELA s
         JOIN
-            PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+            SCHEMA.TABELA d ON s.CAMPO = d.CAMPO
         JOIN
-            PONTAL.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+            SCHEMA.TABELA u on s.CAMPO = u.CAMPO
     """
 
         filtro = request.args.get('filtro', 'PENDENTE')
         if filtro != 'TODOS':
-            sql += "WHERE s.STATUS = :1 AND s.USUARIO_SOLICITANTE = :2"
+            sql += "WHERE s.CAMPO = :1 AND s.CAMPO = :2"
             valores = [filtro, current_user.CODIGO_APOLLO]
         else:
-            sql += "WHERE s.USUARIO_SOLICITANTE = :1"
+            sql += "WHERE s.CAMPO = :1"
             valores = [current_user.CODIGO_APOLLO]
         
         cursor.execute(sql, valores)
@@ -239,7 +239,7 @@ def download_relatorio():
 def download_pdf(id):
         try:
             cursor, conn = abrir_cursor()
-            sql = "SELECT PDF_PATH FROM LIU.LIU_SOLICITACOES WHERE ID = :1"
+            sql = "SELECT CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1"
             cursor.execute(sql, [id])
             retorno = cursor.dict_fetchone()
 
@@ -276,14 +276,14 @@ def salvar_edicao(id):
                     cursor, conn = abrir_cursor()
                     sql = """
                             UPDATE 
-                                LIU.LIU_SOLICITACOES
+                                SCHEMA.TABELA
                             SET 
-                                DEPARTAMENTO = :1,
-                                DESCRICAO = :2,
-                                VALOR = :3,
-                                ORIGEM = :4 
+                                CAMPO = :1,
+                                CAMPO = :2,
+                                CAMPO = :3,
+                                CAMPO = :4 
                             WHERE 
-                                ID = :5
+                                CAMPO = :5
                             """
                     valores = [novo_departamento, novo_descricao, novo_valor, novo_origem, id]
                     cursor.execute(sql, valores)
@@ -304,7 +304,7 @@ def salvar_edicao(id):
 def excluir_solicitacao(id):
             try:
                 cursor, conn = abrir_cursor()
-                sql = "DELETE FROM LIU.LIU_SOLICITACOES WHERE ID = :1"
+                sql = "DELETE FROM SCHEMA.TABELA WHERE CAMPO = :1"
                 cursor.execute(sql, [id])
                 conn.commit()
                 flash('Solitação excluida com sucesso!', 'success')
@@ -326,7 +326,7 @@ def reenviar_solicitacao(id):
                 try:
                     cursor, conn = abrir_cursor()
 
-                    sql = "UPDATE LIU.LIU_SOLICITACOES SET STATUS = :1, MOTIVO_REPROVA = :2 WHERE ID = :3"
+                    sql = "UPDATE SCHEMA.TABELA SET CAMPO = :1, CAMPO = :2 WHERE CAMPO = :3"
                     valores = [
                         'PENDENTE',
                         None,
@@ -350,16 +350,16 @@ def reenviar_solicitacao(id):
 def desautorizar_solicitacao(id):
     try:
         cursor, conn = abrir_cursor()
-        sql_solicitacao = "SELECT ID, NRO_PROCESSO, EMPRESA, REVENDA, ORIGEM, VALOR, DATA_SOLICITACAO, DEPARTAMENTO FROM LIU.LIU_SOLICITACOES WHERE ID = :1"
+        sql_solicitacao = "SELECT CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1"
         valores_solicitacao = [id]
         cursor.execute(sql_solicitacao, valores_solicitacao)
         retorno_solicitacao = cursor.dict_fetchone()
 
-        sql_deletar = "DELETE FROM PONTAL.FAT_PROCESSO_DESPESA WHERE NRO_PROCESSO = :1"
+        sql_deletar = "DELETE FROM SCHEMA.TABELA WHERE CAMPO = :1"
         valores_deletar = [retorno_solicitacao['nro_processo']]
         cursor.execute(sql_deletar, valores_deletar)
 
-        sql_update = "UPDATE LIU.LIU_SOLICITACOES SET STATUS = :1, NRO_PROCESSO = :2, USUARIO_AUTORIZANTE = :3 WHERE ID = :4"
+        sql_update = "UPDATE SCHEMA.TABELA SET CAMPO = :1, CAMPO = :2, CAMPO = :3 WHERE CAMPO = :4"
         valores_update = ['PENDENTE', None, None, id]
         cursor.execute(sql_update, valores_update)
 
@@ -371,7 +371,7 @@ def desautorizar_solicitacao(id):
             ano_mes = data_obj.strftime("%Y%m")
 
             # SELECT nos orcamentos que retorna apenas o valor para calcular
-            sql_orcamento = "SELECT VALOR FROM LIU.GD_ORCAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 AND ANO_MES = :3 AND ORIGEM = :4 AND CENTRO_CUSTO = :5"
+            sql_orcamento = "SELECT CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5"
             valores_orcamento = [retorno_solicitacao['empresa'], retorno_solicitacao['revenda'], ano_mes, retorno_solicitacao['origem'], retorno_solicitacao['departamento']]
             cursor.execute(sql_orcamento, valores_orcamento)
             retorno_orcamento = cursor.dict_fetchone()
@@ -381,7 +381,7 @@ def desautorizar_solicitacao(id):
                 novo_valor = retorno_orcamento['valor'] + retorno_solicitacao['valor']
 
                 # Fazer um UPDATE nos orcamentos com esse novo valor
-                update_orcamento = "UPDATE LIU.GD_ORCAMENTO SET VALOR = :1 WHERE EMPRESA = :2 AND REVENDA = :3 AND ANO_MES = :4 AND ORIGEM = :5 AND CENTRO_CUSTO = :6"
+                update_orcamento = "UPDATE SCHEMA.TABELA SET CAMPO = :1 WHERE CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5 AND CAMPO = :6"
                 valores_update_orcamento = [novo_valor, retorno_solicitacao['empresa'], retorno_solicitacao['revenda'], ano_mes, retorno_solicitacao['origem'], retorno_solicitacao['departamento']]
                 cursor.execute(update_orcamento, valores_update_orcamento)
             else:

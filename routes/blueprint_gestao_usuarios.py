@@ -15,7 +15,7 @@ def gestao_usuarios():
     conn = None
     try:
         cursor, conn = abrir_cursor()
-        sql = "SELECT * FROM LIU.LIU_USUARIO ORDER BY ID"
+        sql = "SELECT * FROM SCHEMA.TABELA ORDER BY CAMPO"
         cursor.execute(sql)
         retorno = cursor.dict_fetchall()
     except Exception as e:
@@ -57,13 +57,13 @@ def cadastrar_usuario():
         try:
             cursor, conn = abrir_cursor()
 
-            sql_cod_apollo = "SELECT USUARIO, LOGIN, NOME FROM PONTAL.GER_USUARIO WHERE USUARIO = :1"
+            sql_cod_apollo = "SELECT CAMPO, CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1"
             valores_cod_apollo = [cod_apollo_form]
             cursor.execute(sql_cod_apollo, valores_cod_apollo)
             retorno_cod_apollo = cursor.dict_fetchall()
 
             if retorno_cod_apollo:
-                sql = "INSERT INTO LIU.LIU_USUARIO (USUARIO, SENHA, NOME, FUNCAO, EMPRESA, REVENDA, CODIGO_APOLLO) VALUES (:1, :2, :3, :4, :5, :6, :7)"
+                sql = "INSERT INTO SCHEMA.TABELA (CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO) VALUES (:1, :2, :3, :4, :5, :6, :7)"
                 valores = [
                     usuario_form,
                     senha_form,
@@ -108,7 +108,7 @@ def editar_usuario(id):
     else:
         try:
             cursor, conn = abrir_cursor()
-            sql = "UPDATE LIU.LIU_USUARIO SET USUARIO = :1, SENHA = :2, NOME = :3, FUNCAO = :4, EMPRESA = :5, REVENDA = :6, CODIGO_APOLLO = :7 WHERE ID = :8"
+            sql = "UPDATE SCHEMA.TABELA SET CAMPO = :1, CAMPO = :2, CAMPO = :3, CAMPO = :4, CAMPO = :5, CAMPO = :6, CAMPO = :7 WHERE CAMPO = :8"
             valores = [novo_usuario, novo_senha, novo_nome, novo_funcao, novo_empresa, novo_revenda, cod_apollo, id]
             cursor.execute(sql, valores)
             conn.commit()
@@ -131,7 +131,7 @@ def deletar_usuario(id):
         else:
             try:
                 cursor, conn = abrir_cursor()
-                sql = "DELETE FROM LIU.LIU_USUARIO WHERE ID = :1"
+                sql = "DELETE FROM SCHEMA.TABELA WHERE CAMPO = :1"
                 cursor.execute(sql, [id])
                 conn.commit()
                 flash('Usuário deletado com sucesso!', 'success')

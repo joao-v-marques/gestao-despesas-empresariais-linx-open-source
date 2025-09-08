@@ -39,7 +39,7 @@ def troca_senha(id):
         flash('A senha deve conter no minimo 3 caracteres! Tente novamente.', 'error')
         return redirect(url_for('blueprint_principal.principal'))
     else:
-        sql = "UPDATE LIU.LIU_USUARIO SET SENHA = :1 WHERE USUARIO = :2"
+        sql = "UPDATE SCHEMA.TABELA SET CAMPO = :1 WHERE CAMPO = :2"
         valores = [nova_senha_form, current_user]
         try:
             cursor, conn = abrir_cursor()

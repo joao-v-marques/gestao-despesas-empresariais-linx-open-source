@@ -14,7 +14,7 @@ blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name_
 def lancar_solicitacao():
     try:
         cursor, conn = abrir_cursor()
-        sql_departamento = "SELECT DEPARTAMENTO, NOME FROM PONTAL.GER_DEPARTAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 ORDER BY DEPARTAMENTO"
+        sql_departamento = "SELECT CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 ORDER BY CAMPO"
         valores = [
             current_user.EMPRESA,
             current_user.REVENDA
@@ -40,7 +40,7 @@ def buscar_origens():
     revenda = int(request.args.get('revenda'))
     try:
         cursor, conn = abrir_cursor()
-        sql_origem = "SELECT ORIGEM, DES_ORIGEM FROM PONTAL.FIN_ORIGEM WHERE EMPRESA = :1 AND REVENDA = :2 AND UTILIZACAO = :3 AND DES_ORIGEM != :4"
+        sql_origem = "SELECT CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO = :3 AND CAMPO != :4"
         valores = [
             empresa,
             revenda,
@@ -63,7 +63,7 @@ def buscar_origens():
 def busca_fornecedor(codigo):
     try:
         cursor, conn = abrir_cursor()
-        sql_busca_fornecedor = "SELECT NOME FROM PONTAL.FAT_CLIENTE WHERE CLIENTE = :1" 
+        sql_busca_fornecedor = "SELECT CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1" 
         cursor.execute(sql_busca_fornecedor, [codigo])
         retorno = cursor.dict_fetchone()
         conn.close()
@@ -89,7 +89,7 @@ def consulta_orcamento():
 
     try:
         cursor, conn = abrir_cursor()
-        sql_orcamento = "SELECT VALOR FROM LIU.GD_ORCAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 AND CENTRO_CUSTO = :3 AND ORIGEM = :4 AND ANO_MES = :5"
+        sql_orcamento = "SELECT CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5"
         valores_orcamento = [
             empresa_form,
             revenda_form,
@@ -137,7 +137,7 @@ def fazer_lancamento():
     if valor_orcamento == 1:
         try:
             cursor, conn = abrir_cursor()
-            sql_os = "SELECT * FROM PONTAL.OFI_ORDEM_SERVICO WHERE EMPRESA = :1 AND REVENDA = :2 AND NRO_OS = :3"
+            sql_os = "SELECT * FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO = :3"
             cursor.execute(sql_os, [empresa_form, revenda_form, nro_os_form])
             retorno_os = cursor.fetchone()
         except Exception as e:
@@ -178,10 +178,10 @@ def fazer_lancamento():
     # Insert final
     try:
         cursor, conn = abrir_cursor()
-        sql = """INSERT INTO LIU.LIU_SOLICITACOES 
-                 (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, DESCRICAO, 
-                  VALOR, STATUS, DATA_SOLICITACAO, MOTIVO_REPROVA, 
-                  PDF_PATH, ORIGEM, ORCAMENTO, ALCADA, NRO_OS, FORNECEDOR)
+        sql = """INSERT INTO SCHEMA.TABELA
+                 (CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, 
+                  CAMPO, CAMPO, CAMPO, CAMPO, 
+                  CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO)
                  VALUES (:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15)"""
         valores = [
             int(empresa_form),

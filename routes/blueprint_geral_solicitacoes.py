@@ -19,31 +19,31 @@ def geral_solicitacoes():
         cursor, conn = abrir_cursor()
         base_sql = """
         SELECT DISTINCT
-            s.ID,
-            s.EMPRESA,
-            s.REVENDA,
-            u.LOGIN AS USUARIO_SOLICITANTE,
-            d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
-            d.NOME AS DEPARTAMENTO_DESCRICAO,
-            s.VALOR,
-            s.DESCRICAO,
-            s.MOTIVO_REPROVA,
-            s.STATUS,
-            s.NRO_PROCESSO,
-            s.FORNECEDOR
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            u.CAMPO AS CAMPO,
+            d.CAMPO AS CAMPO,
+            d.CAMPO AS CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO
         FROM
-            LIU.LIU_SOLICITACOES s
+            SCHEMA.TABELA s
         LEFT JOIN
-            PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+            SCHEMA.TABELA d ON s.CAMPO = d.CAMPO
         LEFT JOIN
-            PONTAL.GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
+            SCHEMA.TABELA u ON s.CAMPO = u.CAMPO
         """
         
         if filtro != 'TODOS':
-            sql = base_sql + "WHERE s.STATUS = :1"
+            sql = base_sql + "WHERE s.CAMPO = :1"
             valores = [filtro]
         else:
-            sql = base_sql + "ORDER BY USUARIO_SOLICITANTE"
+            sql = base_sql + "ORDER BY CAMPO"
             valores = []
 
         cursor.execute(sql, valores)
@@ -72,32 +72,32 @@ def download_relatorio():
         cursor, conn = abrir_cursor()
         sql = """
         SELECT DISTINCT
-            s.ID,
-            s.EMPRESA,
-            s.REVENDA,
-            s.NRO_PROCESSO,
-            s.USUARIO_AUTORIZANTE,
-            s.DESCRICAO,
-            s.FORNECEDOR,
-            u.LOGIN AS USUARIO_SOLICITANTE,
-            d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
-            d.NOME AS DEPARTAMENTO_DESCRICAO,
-            s.VALOR,
-            s.STATUS
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            u.CAMPO AS CAMPO,
+            d.CAMPO AS CAMPO,
+            d.CAMPO AS CAMPO,
+            s.CAMPO,
+            s.CAMPO
         FROM
-            LIU.LIU_SOLICITACOES s
+            SCHEMA.TABELA s
         JOIN
-            PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+            SCHEMA.TABELA d ON s.CAMPO = d.CAMPO
         JOIN
-            PONTAL.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+            SCHEMA.TABELA u on s.CAMPO = u.CAMPO
     """
         
         filtro = request.args.get('filtro', 'PENDENTE')
         if filtro != 'TODOS':
-            sql += "WHERE s.STATUS = :1"
+            sql += "WHERE s.CAMPO = :1"
             valores = [filtro]
         else:
-            sql += "ORDER BY s.STATUS"
+            sql += "ORDER BY s.CAMPO"
             valores = []
             
         cursor.execute(sql, valores)

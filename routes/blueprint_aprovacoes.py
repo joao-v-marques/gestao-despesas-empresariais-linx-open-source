@@ -17,28 +17,28 @@ def aprovacoes():
         cursor, conn = abrir_cursor()
         sql = """
         SELECT DISTINCT
-            s.ID,
-            s.EMPRESA,
-            s.REVENDA,
-            s.NRO_OS,
-            u.LOGIN AS USUARIO_SOLICITANTE,
-            d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
-            d.NOME  AS DEPARTAMENTO_DESCRICAO,
-            s.VALOR,
-            s.STATUS,
-            s.NRO_PROCESSO
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO AS CAMPO,
+            s.CAMPO AS CAMPO,
+            s.CAMPO AS CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO
         FROM
-            LIU.LIU_SOLICITACOES s
+            SCHEMA.TABELA s
         JOIN 
-            PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+            SCHEMA.TABELA d ON s.CAMPO = d.CAMPO
         JOIN
-            PONTAL.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+            SCHEMA.TABELA u on s.CAMPO = u.CAMPO
         WHERE
-            s.STATUS = :1
+            s.CAMPO = :1
         """
         if current_user.FUNCAO == 'Gerente':
             alcada = 'Gerente'
-            sql += " AND s.ALCADA = :2"
+            sql += " AND s.CAMPO = :2"
             valores_sql = ['PENDENTE', alcada]
         elif current_user.FUNCAO == 'Diretoria':
             valores_sql = ['PENDENTE']
@@ -70,26 +70,26 @@ def mais_info_cd(id):
         cursor, conn = abrir_cursor()
         sql = """
         SELECT 
-            s.ID,
-            s.EMPRESA,
-            s.REVENDA,
-            s.NRO_OS,
-            u.LOGIN AS USUARIO_SOLICITANTE,
-            d.DEPARTAMENTO AS DEPARTAMENTO,
-            d.NOME AS NOME,
-            s.DESCRICAO,
-            s.VALOR,
-            s.STATUS,
-            s.FORNECEDOR,
-            s.NRO_PROCESSO
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            u.CAMPO AS CAMPO,
+            d.CAMPO AS CAMPO,
+            d.CAMPO AS CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO
         FROM 
-            LIU.LIU_SOLICITACOES s
+            SCHEMA.TABELA s
         JOIN 
-            PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
+            SCHEMA.TABELA d ON s.CAMPO = d.CAMPO
         JOIN
-            PONTAL.GER_USUARIO u on s.USUARIO_SOLICITANTE = u.USUARIO
+            SCHEMA.TABELA u on s.CAMPO = u.CAMPO
         WHERE 
-            s.ID = :1
+            s.CAMPO = :1
         """
         cursor.execute(sql, [id])
         retorno = cursor.dict_fetchone()
@@ -112,40 +112,40 @@ def mudar_status(id):
             cursor, conn = abrir_cursor()
             sql_solicitacao = """
             SELECT DISTINCT 
-                s.ID,
-                s.EMPRESA,
-                s.REVENDA,
-                s.FORNECEDOR,
-                s.DESCRICAO,
-                s.VALOR,
-                s.ORCAMENTO,
-                s.NRO_OS,
-                s.DATA_SOLICITACAO,
-                d.DEPARTAMENTO AS DEPARTAMENTO_CODIGO,
-                d.NOME AS DEPARTAMENTO_DESCRICAO,
-                u.NOME AS NOM_USUARIO_SOLICITANTE,
-                u.LOGIN AS USUARIO_SOLICITANTE,
-                u.USUARIO AS COD_USUARIO_SOLICITANTE,
-                o.ORIGEM AS ORIGEM_CODIGO,
-                o.DES_ORIGEM AS ORIGEM_DESCRICAO
+                s.CAMPO,
+                s.CAMPO,
+                s.CAMPO,
+                s.CAMPO,
+                s.CAMPO,
+                s.CAMPO,
+                s.CAMPO,
+                s.CAMPO,
+                s.CAMPO,
+                d.CAMPO AS CAMPO,
+                d.CAMPO AS CAMPO,
+                u.CAMPO AS CAMPO,
+                u.CAMPO AS CAMPO,
+                u.CAMPO AS CAMPO,
+                o.CAMPO AS CAMPO,
+                o.CAMPO AS CAMPO
             FROM
-                LIU.LIU_SOLICITACOES s
-                LEFT JOIN PONTAL.GER_DEPARTAMENTO d ON s.DEPARTAMENTO = d.DEPARTAMENTO
-                LEFT JOIN PONTAL.GER_USUARIO u ON s.USUARIO_SOLICITANTE = u.USUARIO
-                LEFT JOIN PONTAL.FIN_ORIGEM o ON s.ORIGEM = o.ORIGEM 
+                SHCEMA.TABELA s
+                LEFT JOIN SCHEMA.TABELA d ON s.CAMPO = d.CAMPO
+                LEFT JOIN SCHEMA.TABELA u ON s.CAMPO = u.CAMPO
+                LEFT JOIN SCHEMA.TABELA o ON s.CAMPO = o.CAMPO 
             WHERE
-                ID = :1
+                CAMPO = :1
             """
             cursor.execute(sql_solicitacao, [id])
             solicitacao = cursor.dict_fetchone()
 
             codFornecedor = str(solicitacao['fornecedor'])
 
-            sql_fornecedor = "SELECT CLIENTE, NOME, CGCCPF FROM PONTAL.FAT_CLIENTE WHERE CLIENTE = :1"
+            sql_fornecedor = "SELECT CAMPO, CAMPO, CAMPO FROM SHCEMA.TABELA WHERE CAMPO = :1"
             cursor.execute(sql_fornecedor, [codFornecedor])
             fornecedor = cursor.dict_fetchone()
 
-            sql_nome_revenda = "SELECT EMPRESA, REVENDA, NOME_FANTASIA FROM PONTAL.GER_REVENDA WHERE EMPRESA = :1 AND REVENDA = :2"
+            sql_nome_revenda = "SELECT CAMPO, CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2"
             valores_nome_revenda = [solicitacao['empresa'], solicitacao['revenda']]
             cursor.execute(sql_nome_revenda, valores_nome_revenda)
             nome_revenda = cursor.dict_fetchone()
@@ -157,7 +157,7 @@ def mudar_status(id):
             else:
                 pdf_path = gerar_pdf(solicitacao, fornecedor, str(fornecedor['cgccpf']), str(solicitacao['id']), nome_revenda)
 
-                sql_max_processo = "SELECT MAX(NRO_PROCESSO) FROM PONTAL.FAT_PROCESSO_DESPESA"
+                sql_max_processo = "SELECT MAX(CAMPO) FROM SCHEMA.TABELA"
                 cursor.execute(sql_max_processo)
                 max_processo = cursor.fetchone()[0]
 
@@ -172,7 +172,7 @@ def mudar_status(id):
                     ano_mes = datetime.now().strftime("%Y%m")
 
                     # SELECT nos orcamentos que retorna apenas o valor para calcular
-                    sql_origens = "SELECT VALOR FROM LIU.GD_ORCAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 AND ORIGEM = :3 AND ANO_MES = :4 AND CENTRO_CUSTO = :5"
+                    sql_origens = "SELECT CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5"
                     valores_origens = [solicitacao['empresa'], solicitacao['revenda'], solicitacao['origem_codigo'], ano_mes, solicitacao['departamento_codigo']]
                     cursor.execute(sql_origens, valores_origens)
                     retorno_origem = cursor.dict_fetchone()
@@ -182,7 +182,7 @@ def mudar_status(id):
                         novo_valor = retorno_origem['valor'] - solicitacao['valor']
 
                         # Fazer um UPDATE nos orcamentos com esse novo valor
-                        sql_update_origens = "UPDATE LIU.GD_ORCAMENTO SET VALOR = :1 WHERE EMPRESA = :2 AND REVENDA = :3 AND ORIGEM = :4 AND ANO_MES = :5 AND CENTRO_CUSTO = :6"
+                        sql_update_origens = "UPDATE SCHEMA.TABELA SET CAMPO = :1 WHERE CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5 AND CAMPO = :6"
                         valores_update_origens = [novo_valor, solicitacao['empresa'], solicitacao['revenda'], solicitacao['origem_codigo'], ano_mes, solicitacao['departamento_codigo']]
                         cursor.execute(sql_update_origens, valores_update_origens)
                         # Retirei um commit aqui para testar o conn.rollback()
@@ -191,14 +191,14 @@ def mudar_status(id):
                 else:
                     logging.error(f"Origem {solicitacao['origem_codigo']} ignorada na atualização do orçamento")
 
-                sql_aprovado = "UPDATE LIU.LIU_SOLICITACOES SET STATUS = 'APROVADO', PDF_PATH = :1, USUARIO_AUTORIZANTE = :2, NRO_PROCESSO = :3 WHERE ID = :4"
+                sql_aprovado = "UPDATE SCHEMA.TABELA SET CAMPO = 'APROVADO', CAMPO = :1, CAMPO = :2, CAMPO = :3 WHERE CAMPO = :4"
                 valores = [pdf_path, current_user.CODIGO_APOLLO, proximo_numero_processo, id]
                 cursor.execute(sql_aprovado, valores)
                 # Retirei um commit aqui para testar o conn.rollback()
 
                 data_atual = datetime.now().replace(microsecond=0)
 
-                sql_inserir = "INSERT INTO PONTAL.FAT_PROCESSO_DESPESA (EMPRESA, REVENDA, NRO_PROCESSO, DTA_EMISSAO, DESCRICAO, VAL_PROCESSO, SITUACAO, USUARIO, DEPARTAMENTO, USUARIO_AUTORIZANTE, CLIENTE) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)"
+                sql_inserir = "INSERT INTO SHEMA.TABELA (CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)"
                 valores_inserir = [
                     solicitacao['empresa'],
                     solicitacao['revenda'],
@@ -230,7 +230,7 @@ def mudar_status(id):
         motivo_reprova = request.form['motivo_reprova']
         try:
             cursor, conn = abrir_cursor()
-            sql = "UPDATE LIU.LIU_SOLICITACOES SET STATUS = 'REPROVADO', MOTIVO_REPROVA = :1 WHERE ID = :2"
+            sql = "UPDATE SHEMA.TABELA SET CAMPO = 'REPROVADO', CAMPO = :1 WHERE CAMPO = :2"
             valores = [motivo_reprova, id]
             cursor.execute(sql, valores)
             conn.commit()

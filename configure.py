@@ -33,7 +33,7 @@ def config_login(app):
 
     @login_manager.user_loader
     def load_user(user_id):
-        sql = "SELECT ID, USUARIO, FUNCAO, NOME, CODIGO_APOLLO, EMPRESA, REVENDA FROM LIU.LIU_USUARIO WHERE ID = :1"
+        sql = "SELECT CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1"
         valores = [user_id]
 
         cursor, conn = abrir_cursor()
