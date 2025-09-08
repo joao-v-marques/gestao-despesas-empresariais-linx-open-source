@@ -23,8 +23,6 @@ O sistema permite gerenciar despesas empresariais, controlar aprovações e forn
 
 ## 📸 Screenshots
 
-> *(Adicione imagens reais do seu projeto na pasta `docs/` e troque os exemplos abaixo)*
-
 ![Tela de Login](docs/tela_login.png)
 ![Painel de Aprovações](docs/painel_solicitacoes.png)
 ![Lançar Solicitação](docs/lancar_solicitacao.png)
@@ -48,17 +46,21 @@ O sistema permite gerenciar despesas empresariais, controlar aprovações e forn
    cd gestao_despesas
 
 2. Crie e ative um ambiente virtual:
+    ```bash
     python -m venv venv
     source venv/bin/activate   # Linux/Mac
     venv\Scripts\activate      # Windows
 
 3. Instale as dependências:
+    ```bash
     pip install -r requirements.txt
 
 4. Configure as variáveis de ambiente (exemplo em .env.example):
+    ```bash
     SECRET_KEY=chave_segura
 
 5. Configure seu arquivo configs.json na pasta database com as seguintes informações: (Banco Oracle)
+    ```bash
     {
         "banco": {
             "user" : "User do seu banco",
@@ -71,9 +73,11 @@ O sistema permite gerenciar despesas empresariais, controlar aprovações e forn
 6. Troque as tabelas de exemplo nas rotas e modelos para as tabelas reais do seu projeto:
 
 7. Execute a aplicação:
-        python app.py
+    ```bash
+    python app.py
     Ou execute em produção:
-        waitress-serve --port=8080 app:app
+    ```bash
+    waitress-serve --port=8080 app:app
 
 
 ---
