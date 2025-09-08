@@ -139,6 +139,11 @@ def mudar_status(id):
             cursor.execute(sql_solicitacao, [id])
             solicitacao = cursor.dict_fetchone()
 
+            if not solicitacao['fornecedor']:
+                logging.info('Você deve cadastrar um fornecedor antes de aprovar uma solicitação!')
+                flash('Você deve cadastrar um fornecedor antes de aprovar uma solicitação!', 'error')
+                return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
+
             codFornecedor = str(solicitacao['fornecedor'])
 
             sql_fornecedor = "SELECT CAMPO, CAMPO, CAMPO FROM SHCEMA.TABELA WHERE CAMPO = :1"
