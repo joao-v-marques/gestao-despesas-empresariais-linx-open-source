@@ -1,7 +1,7 @@
 __pycache__/
 *.py[cod]
 *.pyc
-venv/
+.venv/
 *.log
 /dist
 main.spec
@@ -9,3 +9,5 @@ main.spec
 /database/instantclient_23_6/
 static/**/*.xlsx
 static/**/*.pdf
+.env
+/database/configs.json
