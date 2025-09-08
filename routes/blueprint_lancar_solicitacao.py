@@ -180,8 +180,8 @@ def fazer_lancamento():
         cursor, conn = abrir_cursor()
         sql = """INSERT INTO LIU.LIU_SOLICITACOES 
                  (EMPRESA, REVENDA, USUARIO_SOLICITANTE, DEPARTAMENTO, DESCRICAO, 
-                  VALOR, FORNECEDOR, STATUS, DATA_SOLICITACAO, MOTIVO_REPROVA, 
-                  PDF_PATH, ORIGEM, ORCAMENTO, ALCADA, NRO_OS)
+                  VALOR, STATUS, DATA_SOLICITACAO, MOTIVO_REPROVA, 
+                  PDF_PATH, ORIGEM, ORCAMENTO, ALCADA, NRO_OS, FORNECEDOR)
                  VALUES (:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15)"""
         valores = [
             int(empresa_form),
@@ -190,7 +190,6 @@ def fazer_lancamento():
             int(departamento_form),
             descricao_form,
             valor_float,
-            int(fornecedor_form),
             'PENDENTE',
             data_atual,
             '',
@@ -200,6 +199,10 @@ def fazer_lancamento():
             alcada,
             nro_os_form
         ]
+        if fornecedor_form:
+            valores.append(int(fornecedor_form))
+        else:
+            valores.append(fornecedor_form)
         cursor.execute(sql, valores)
         conn.commit()
         session.pop('retorno_orcamento', None)
