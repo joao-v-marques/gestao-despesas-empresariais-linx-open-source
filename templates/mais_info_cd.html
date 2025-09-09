@@ -99,8 +99,8 @@
             <h2 class="titulo">Mais Informações</h2>
 
             <form action="#" method="POST" class="formulario">
-                <label for="id_solicitacao_id">ID:</label>
-                <input type="text" readonly id="id_solicitacao_id" name="id" value="{{ solicitacao['id'] }}">
+                 <label for="codigo_apollo_solicitacao_id">ID:</label>
+                <input type="text" readonly id="codigo_apollo_solicitacao_id" name="id" value="{{ solicitacao['id'] }}">
 
                 <label for="nro_processo_id">Processo ERP:</label>
                 <input type="text" readonly id="nro_processo_id" name="nro_processo" value="{% if solicitacao['nro_processo'] == None %} - {% else %} {{ solicitacao['nro_processo'] }} {% endif %}">
@@ -127,11 +127,19 @@
                 <label for="departamento_id">Departamento:</label>
                 <input type="text" readonly id="departamento_id" name="departamento" value="{{ solicitacao['departamento'] }} - {{ solicitacao['nome'] }}">
 
+                <label for="origem_id">Origem:</label>
+                <input type="text" readonly id="origem_id" name="origem" value="{{ solicitacao['cod_origem'] }} - {{ solicitacao['des_origem'] }}">
+
                 <label for="descricao_id">Descrição:</label>
                 <textarea readonly id="descricao_id" name="descricao" rows="3">{{ solicitacao['descricao'] }}</textarea>
 
                 <label for="valor_id">Valor:</label>
                 <input type="text" readonly id="valor_id" name="valor" value="R$ {{ "{:,.2f}".format(solicitacao['valor']).replace(',',"X").replace(".", ",").replace("X", ".") }}">
+                
+                {% if solicitacao['cod_origem'] != 5121 %}
+                    <label for="valor_orcamento_id">Valor Orçamento:</label>
+                    <input type="text" readonly id="valor_orcamento_id" name="valor_orcamento" value="R$ {{ "{:,.2f}".format(solicitacao['orcamento']).replace(',',"X").replace(".", ",").replace("X", ".") }}">
+                {% endif %}
             </form>
 
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal{{ solicitacao['id'] }}">Aprovar</button>
@@ -158,8 +166,10 @@
                 </div>
             </div>
 
+            <!-- Botão para reprovar a solicitação -->
             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalReprovar{{ solicitacao['id'] }}">Reprovar</button>
 
+            <!-- Modal de confirmação para o modal de reprova -->
             <div class="modal fade" id="modalReprovar{{ solicitacao['id'] }}" tabindex="-1" aria-labelledby="modalReprovarLabel{{ solicitacao['id'] }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -186,6 +196,34 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Botão para alterar o fornecedor -->
+            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalFornecedor{{ solicitacao['id'] }}">Alterar Fornecedor</button>
+
+            <!-- Modal para alteração do fornecedor -->
+            <div class="modal fade" id="modalFornecedor{{ solicitacao['id'] }}" tabindex="-1" aria-labelledby="modalFornecedorLabel{{ solicitacao['id'] }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalFornecedorLabel{{ solicitacao['id'] }}">Alterar fornecedor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url_for('blueprint_aprovacoes.inserir_fornecedor', id=solicitacao['id']) }}" method="POST" class="form-inserir-fornecedor">
+                            <label for="inserir_fornecedor_id">Inserir Fornecedor</label>
+                            <div class="container-fornecedor-modal">
+                                <input type="number" class="cod-fornecedor-modal" id="inserir_fornecedor_id" name="inserir-fornecedor-modal">
+                                <input type="text" class="input-fornecedor-modal" id="descricao_fornecedor_modal_id_{{ solicitacao['id'] }}" name="desc-inserir-fornecedor-modal" readonly>
+                            </div>
+
+                            <input type="submit" class="btn btn-success" value="Confirmar">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         </div>
     </main>
 

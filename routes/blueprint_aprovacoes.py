@@ -74,16 +74,21 @@ def mais_info_cd(id):
             s.CAMPO,
             s.CAMPO,
             s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
+            o.CAMPO AS CAMPO,
+            o.CAMPO AS CAMPO,
             u.CAMPO AS CAMPO,
             d.CAMPO AS CAMPO,
-            d.CAMPO AS CAMPO,
-            s.CAMPO,
-            s.CAMPO,
-            s.CAMPO,
-            s.CAMPO,
-            s.CAMPO
+            d.CAMPO AS CAMPO
         FROM 
             SCHEMA.TABELA s
+        JOIN
+            SCHEMA.TABELA o ON s.CAMPO = o.CAMPO
         JOIN 
             SCHEMA.TABELA d ON s.CAMPO = d.CAMPO
         JOIN
@@ -252,3 +257,36 @@ def mudar_status(id):
         logging.info('Status Inválido!')
         flash('Status inválido!', 'error')
         return redirect(url_for('blueprint_aprovacoes.aprovacoes'))
+    
+# Rota que atualiza os fornecedores (Não é a rota para inserir um novo fornecedor no sistema)
+@blueprint_aprovacoes.route('/inserir-fornecedor/<int:id>', methods=['POST'])
+@login_required
+def inserir_fornecedor(id):
+    cod_fornecedor = request.form['inserir-fornecedor-modal'].strip()
+    desc_fornecedor = request.form['desc-inserir-fornecedor-modal'].strip()
+
+    if desc_fornecedor == 'Erro na busca':
+        flash('Você inseriu um fornecedor inválido!', 'error')
+        return redirect(url_for("blueprint_aprovacoes.mais_info_cd", id=id))
+    elif desc_fornecedor == 'Fornecedor não encontrado':
+        flash('Você inseriu um fornecedor inválido!', 'error')
+        return redirect(url_for("blueprint_aprovacoes.mais_info_cd", id=id))
+    else:
+        try:
+            cursor, conn = abrir_cursor()
+            sql = "UPDATE SCHEMA.TABELA SET CAMPO = :1 WHERE CAMPO = :2"
+            valores = [cod_fornecedor, id]
+            cursor.execute(sql, valores)
+            conn.commit()
+
+            flash('Fornecedor inserido com sucesso!', 'success')
+
+            return redirect(url_for('blueprint_aprovacoes.mais_info_cd', id=id))
+        except Exception as e:
+            conn.rollback()
+            flash(f'Erro interno ao realizar a consulta: {e}', 'error')
+            logging.error(f'{e}')
+            return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
+        finally:
+            cursor.close()
+            conn.close()
