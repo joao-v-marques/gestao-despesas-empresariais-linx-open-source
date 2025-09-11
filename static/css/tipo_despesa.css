@@ -113,21 +113,8 @@ nav {
 }
 
 .btn-troca-senha button {
-    padding: 5px;
-    border-radius: 50%;
-    background-color: var(--secondary-text);
+    background: transparent;
     border: none;
-    transition: background-color 0.3s, transform 0.3s;
-}
-
-.btn-troca-senha img {
-    width: 30px;
-    height: 30px;
-}
-
-.btn-troca-senha:hover button {
-    background-color: var(--secondary-text);
-    transform: scale(1.1);
 }
 
 .input_nova_senha,

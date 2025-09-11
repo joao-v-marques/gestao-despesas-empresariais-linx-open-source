@@ -113,21 +113,8 @@ nav {
 }
 
 .btn-troca-senha button {
-    padding: 5px;
-    border-radius: 50%;
-    background-color: var(--secondary-text);
+    background: transparent;
     border: none;
-    transition: background-color 0.3s, transform 0.3s;
-}
-
-.btn-troca-senha img {
-    width: 30px;
-    height: 30px;
-}
-
-.btn-troca-senha:hover button {
-    background-color: var(--secondary-text);
-    transform: scale(1.1);
 }
 
 .input_nova_senha,
@@ -280,4 +267,35 @@ table.tabela {
     white-space: normal;
     max-width: 300px; /* ajustável */
     word-break: break-word;
+}
+
+.td-opcoes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-more-info {
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 2.5px;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.btn-more-info:hover {
+    background-color: #3399FF;
+}
+
+.baixar-relatorio {
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.baixar-relatorio:hover {
+    background-color: #035f29;
 }

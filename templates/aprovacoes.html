@@ -11,7 +11,7 @@
     <header>
         <nav>
             <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}" class="navbar-logo">
-                <img src="#" alt="Logo Kato Navbar">
+                <img src="/static/img/Logo - Grupo Kato Branco.png" alt="Logo Kato Navbar">
             </a>
 
             <ul class="nav">
@@ -59,9 +59,9 @@
                     <a href="#">{{ usuario_logado }}</a>
                 </li>
 
-                <li class="btn-troca-senha">
-                    <button data-bs-toggle="modal" data-bs-target="#modalTrocaSenha{{ current_user.id }}" data-toggle="tooltip" data-placement="bottom" title="Trocar Senha">
-                        <img src="{{ url_for('static', filename='img/cadeado.png') }}" alt="Cadeado Troca Senha">
+                <li class="btn-troca-senha" data-bs-toggle="tooltip" data-placement="bottom" title="Trocar Senha">
+                    <button data-bs-toggle="modal" data-bs-target="#modalTrocaSenha{{ current_user.id }}">
+                        <img src="{{ url_for('static', filename='img/lock-reset.svg') }}" alt="Cadeado Troca Senha">
                     </button>
                 </li>
             </ul>
@@ -166,6 +166,13 @@
             document.head.querySelectorAll("link[rel~='icon']").forEach(el => el.remove());
             document.head.appendChild(favicon);
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
 
         // Chamada inicial
         setFaviconBasedOnTheme();
