@@ -175,31 +175,6 @@ def mudar_status(id):
                     proximo_numero_processo = 1
                 else:
                     proximo_numero_processo = max_processo + 1
-                
-                # Validacao = Se a origem do codigo for 5121 não devemos mexer nos orcamentos (Pois nao existe)
-                if solicitacao['origem_codigo'] != 5121:
-                    # Ano e mes utilizado na SELECT dos orcamentos
-                    ano_mes = datetime.now().strftime("%Y%m")
-
-                    # SELECT nos orcamentos que retorna apenas o valor para calcular
-                    sql_origens = "SELECT CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5"
-                    valores_origens = [solicitacao['empresa'], solicitacao['revenda'], solicitacao['origem_codigo'], ano_mes, solicitacao['departamento_codigo']]
-                    cursor.execute(sql_origens, valores_origens)
-                    retorno_origem = cursor.dict_fetchone()
-
-                    if retorno_origem:
-                        # Declarado o novo valor da origem: novo_valor = valor_origem - valor_solicitacao
-                        novo_valor = retorno_origem['valor'] - solicitacao['valor']
-
-                        # Fazer um UPDATE nos orcamentos com esse novo valor
-                        sql_update_origens = "UPDATE SCHEMA.TABELA SET CAMPO = :1 WHERE CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5 AND CAMPO = :6"
-                        valores_update_origens = [novo_valor, solicitacao['empresa'], solicitacao['revenda'], solicitacao['origem_codigo'], ano_mes, solicitacao['departamento_codigo']]
-                        cursor.execute(sql_update_origens, valores_update_origens)
-                        # Retirei um commit aqui para testar o conn.rollback()
-                    else:
-                        logging.error("Não foi localizado registro de orçamento para atualizar.")
-                else:
-                    logging.error(f"Origem {solicitacao['origem_codigo']} ignorada na atualização do orçamento")
 
                 sql_aprovado = "UPDATE SCHEMA.TABELA SET CAMPO = 'APROVADO', CAMPO = :1, CAMPO = :2, CAMPO = :3 WHERE CAMPO = :4"
                 valores = [pdf_path, current_user.CODIGO_APOLLO, proximo_numero_processo, id]

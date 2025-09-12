@@ -178,6 +178,43 @@ def fazer_lancamento():
     # Insert final
     try:
         cursor, conn = abrir_cursor()
+        # Validacao = Se a origem do codigo for 5121 não devemos mexer nos orcamentos (Pois nao existe)
+        if origem_form != "5121":
+            # Ano e mes utilizado na SELECT dos orcamentos
+            ano_mes = datetime.now().strftime("%Y%m")
+
+            # SELECT nos orcamentos que retorna apenas o valor para calcular
+            sql_val_orcamento = "SELECT VALOR FROM LIU.GD_ORCAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 AND ORIGEM = :3 AND ANO_MES = :4 AND CENTRO_CUSTO = :5"
+            valores_val_orcamento = [
+                empresa_form,
+                revenda_form,
+                origem_form,
+                ano_mes,
+                departamento_form
+            ]
+            cursor.execute(sql_val_orcamento, valores_val_orcamento)
+            retorno_val_orcamento = cursor.dict_fetchone()
+
+            if retorno_val_orcamento:
+                # Declarando o novo valor do orçamento: novo_valor = valor_origem - valor_solicitação
+                novo_valor_orcamento = retorno_val_orcamento['valor'] - valor_float
+
+                # Fazer um UPDATE nos orcamentos com esse novo valor
+                sql_update_orcamento = "UPDATE LIU.GD_ORCAMENTO SET VALOR = :1 WHERE EMPRESA = :2 AND REVENDA = :3 AND ORIGEM = :4 AND ANO_MES = :5 AND CENTRO_CUSTO = :6"
+                valores_update_orcamento = [
+                    novo_valor_orcamento,
+                    empresa_form,
+                    revenda_form,
+                    origem_form,
+                    ano_mes,
+                    departamento_form
+                ]
+                cursor.execute(sql_update_orcamento, valores_update_orcamento)
+            else:
+                logging.error("Não foi localizado registro de orçamento para atualizar!")
+        else:
+            logging.error(f"Origem {origem_form} ignorada na atualização do orçamento")
+
         sql = """INSERT INTO SCHEMA.TABELA
                  (CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, 
                   CAMPO, CAMPO, CAMPO, CAMPO, 

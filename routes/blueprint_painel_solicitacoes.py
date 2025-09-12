@@ -304,10 +304,54 @@ def salvar_edicao(id):
 def excluir_solicitacao(id):
             try:
                 cursor, conn = abrir_cursor()
+
+                sql_solicitacao = "SELECT ID, NRO_PROCESSO, EMPRESA, REVENDA, ORIGEM, VALOR, DATA_SOLICITACAO, DEPARTAMENTO FROM LIU.LIU_SOLICITACOES WHERE ID = :1"
+                cursor.execute(sql_solicitacao, [id])
+                retorno_solicitacao = cursor.dict_fetchone()
+
+                if retorno_solicitacao['origem'] != 5121:
+                    # Ano e mes utilizado na SELECT dos orcamentos
+                    data_solicitacao = retorno_solicitacao['data_solicitacao']
+                    data_obj = datetime.strptime(data_solicitacao, "%d/%m/%Y")
+                    ano_mes = data_obj.strftime("%Y%m")
+
+                    # SELECT nos orçamentos que retorna apenas o valor para calcular
+                    sql_orcamento = "SELECT VALOR FROM LIU.GD_ORCAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 AND ANO_MES = :3 AND ORIGEM = :4 AND CENTRO_CUSTO = :5"
+                    valores_orcamento = [
+                        retorno_solicitacao['empresa'],
+                        retorno_solicitacao['revenda'],
+                        ano_mes,
+                        retorno_solicitacao['origem'],
+                        retorno_solicitacao['departamento']
+                    ]
+                    cursor.execute(sql_orcamento, valores_orcamento)
+                    retorno_orcamento = cursor.dict_fetchone()
+
+                    if retorno_orcamento:
+                        # Declarando o novo valor da origem: novo_valor = valor_origem + valor_solicitacao (Agora é adição pois está devolvendo)
+                        novo_valor = retorno_orcamento['valor'] + retorno_solicitacao['valor']
+
+                        # Fazer um UPDATE nos orcamentos com esse novo valor
+                        update_orcamento = "UPDATE LIU.GD_ORCAMENTO SET VALOR = :1 WHERE EMPRESA = :2 AND REVENDA = :3 AND ANO_MES = :4 AND ORIGEM = :5 AND CENTRO_CUSTO = :6"
+                        valores_update_orcamento = [
+                            novo_valor,
+                            retorno_solicitacao['empresa'],
+                            retorno_solicitacao['revenda'],
+                            ano_mes,
+                            retorno_solicitacao['origem'],
+                            retorno_solicitacao['departamento']
+                        ]
+                        cursor.execute(update_orcamento, valores_update_orcamento)
+                    else:
+                        logging.error("Não foi localizado registro de orçamento para atualizar.")
+                else:
+                    logging.error(f"Origem {retorno_solicitacao['origem']} ignorada na atualização do orçamento")
+
                 sql = "DELETE FROM SCHEMA.TABELA WHERE CAMPO = :1"
                 cursor.execute(sql, [id])
-                conn.commit()
                 flash('Solitação excluida com sucesso!', 'success')
+
+                conn.commit()
 
                 return redirect(url_for('blueprint_painel_solicitacoes.painel_solicitacoes'))
             except Exception as e:
@@ -362,32 +406,6 @@ def desautorizar_solicitacao(id):
         sql_update = "UPDATE SCHEMA.TABELA SET CAMPO = :1, CAMPO = :2, CAMPO = :3 WHERE CAMPO = :4"
         valores_update = ['PENDENTE', None, None, id]
         cursor.execute(sql_update, valores_update)
-
-        # Validacao = Se a origem do codigo for 5121 não devemos mexer nos orçamentos (Pois nao existe)
-        if retorno_solicitacao['origem'] != 5121:
-            # Ano e mes utilizado na SELECT dos orcamentos
-            data_solicitacao = retorno_solicitacao['data_solicitacao']
-            data_obj = datetime.strptime(data_solicitacao, "%d/%m/%Y")
-            ano_mes = data_obj.strftime("%Y%m")
-
-            # SELECT nos orcamentos que retorna apenas o valor para calcular
-            sql_orcamento = "SELECT CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5"
-            valores_orcamento = [retorno_solicitacao['empresa'], retorno_solicitacao['revenda'], ano_mes, retorno_solicitacao['origem'], retorno_solicitacao['departamento']]
-            cursor.execute(sql_orcamento, valores_orcamento)
-            retorno_orcamento = cursor.dict_fetchone()
-
-            if retorno_orcamento:
-                # Declarado o novo valor da origem: novo_valor = valor_origem + valor_solicitacao (Agora e adicao pois esta devolvendo)
-                novo_valor = retorno_orcamento['valor'] + retorno_solicitacao['valor']
-
-                # Fazer um UPDATE nos orcamentos com esse novo valor
-                update_orcamento = "UPDATE SCHEMA.TABELA SET CAMPO = :1 WHERE CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5 AND CAMPO = :6"
-                valores_update_orcamento = [novo_valor, retorno_solicitacao['empresa'], retorno_solicitacao['revenda'], ano_mes, retorno_solicitacao['origem'], retorno_solicitacao['departamento']]
-                cursor.execute(update_orcamento, valores_update_orcamento)
-            else:
-                logging.error("Não foi localizado registro de orçamento para atualizar.")
-        else:
-            logging.error(f"Origem {retorno_solicitacao['origem']} ignorada na atualização do orçamento")
 
         # Apenas 1 commit para todas as alterações, assim fazendo com que o conn.rollback funcione corretamente
         conn.commit()
