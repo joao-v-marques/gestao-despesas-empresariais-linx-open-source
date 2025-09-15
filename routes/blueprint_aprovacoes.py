@@ -21,6 +21,7 @@ def aprovacoes():
             s.CAMPO,
             s.CAMPO,
             s.CAMPO,
+            s.CAMPO,
             s.CAMPO AS CAMPO,
             s.CAMPO AS CAMPO,
             s.CAMPO AS CAMPO,

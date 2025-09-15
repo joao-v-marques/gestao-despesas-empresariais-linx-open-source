@@ -171,7 +171,10 @@ def fazer_lancamento():
         flash('Você inseriu um fornecedor inválido!', 'error')
         return redirect(url_for("blueprint_lancar_solicitacao.lancar_solicitacao"))
 
-    alcada = "Diretoria" if valor_orcamento <= 0 else "Gerente"
+    if valor_orcamento <= valor_float:
+        alcada = "Diretoria"
+    else:
+        alcada = "Gerente"
 
     logging.info(f"Origem: {origem_form}")
 

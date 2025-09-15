@@ -104,6 +104,7 @@
                         <th>Usuario</th>
                         <th>Departamento</th>
                         <th>Valor</th>
+                        <th>Orçamento</th>
                         <th>Status</th>
                         <th class="opcoes">Opções</th>
                     </tr>
@@ -130,6 +131,11 @@
                             <td>{{ solicitacao['usuario_solicitante'] }}</td>
                             <td>{{ solicitacao['departamento_codigo'] }} - {{ solicitacao['departamento_descricao'] }}</td>
                             <td>{{ "{:,.2f}".format(solicitacao['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
+                            {% if solicitacao['orcamento'] <= solicitacao['valor'] %}
+                                <td style="color: #E63946; font-weight: bold;">Fora</td>
+                            {% else %}
+                                <td style="color: #2ECC71; font-weight: bold;">Dentro</td>
+                            {% endif %}
                             <td>{{ solicitacao['status'] }}</td>
 
                             <td><a href="{{ url_for('blueprint_aprovacoes.mais_info_cd', id=solicitacao['id']) }}" class="btn btn-primary">Mais Informações</a></td>
