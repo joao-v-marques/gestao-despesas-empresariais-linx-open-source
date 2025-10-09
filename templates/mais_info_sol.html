@@ -129,15 +129,6 @@
                     <input type="text" readonly id="usuario_autorizante_id" name="usuario_autorizante" value="{{ usuario_autorizante['login'] }}">
                 {% endif %}
 
-                <label for="departamento_id">Departamento:</label>
-                <select name="departamento" id="departamento_id" class="input-departamento" disabled>
-                    {% for d in departamento %}
-                        <option value="{{ d['departamento'] }}" {% if d['departamento'] == solicitacao['departamento_sol'] %}selected{% endif %}>
-                            {{ d['departamento'] }} - {{ d['nome'] }}
-                        </option>]
-                    {% endfor %}
-                </select>
-
                 <label for="origem_id">Origem:</label>
                 <select name="origem" id="origem_id" disabled>
                     {% for o in origem %}
@@ -147,11 +138,20 @@
                     {% endfor %}
                 </select>
 
-                <label for="descricao_id">Descrição:</label>
-                <textarea readonly id="descricao_id" name="descricao" rows="3">{{ solicitacao['descricao'] }}</textarea>
+                <label for="departamento_id">Departamento:</label>
+                <select name="departamento" id="departamento_id" class="input-departamento" disabled>
+                    {% for d in departamento %}
+                        <option value="{{ d['departamento'] }}" {% if d['departamento'] == solicitacao['departamento_sol'] %}selected{% endif %}>
+                            {{ d['departamento'] }} - {{ d['nome'] }}
+                        </option>]
+                    {% endfor %}
+                </select>
 
                 <label for="valor_id">Valor:</label>
                 <input type="text" readonly id="valor_id" name="valor" value="R$ {{ "{:,.2f}".format(solicitacao['valor']).replace(',',"X").replace(".", ",").replace("X", ".") }}">
+
+                <label for="descricao_id">Descrição:</label>
+                <textarea readonly id="descricao_id" name="descricao" rows="3">{{ solicitacao['descricao'] }}</textarea>
 
                 {% if solicitacao['status'] == 'REPROVADO' %}
                     <label for="motivo_reprova_id">Motivo da Reprova</label>

@@ -188,6 +188,20 @@ nav {
     transition: border-color 0.3s ease;
 }
 
+.formulario textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid var(--input-border);
+    color: var(--primary-text);
+    background-color: var(--input-background);
+    transition: border-color 0.3s ease;
+    resize: vertical;
+    min-height: 80px;
+}
+
 .formulario input:focus,
 .formulario select:focus {
     outline: 1px solid var(--input-focus);
@@ -215,6 +229,28 @@ nav {
     background: var(--input-background);
     color: var(--primary-text);
     cursor: not-allowed;
+}
+
+.container-empresa {
+    display: flex;
+    gap: 8px;
+}
+
+#empresa_id {
+    width: 128px;
+}
+
+#revenda_id {
+    width: 524px;
+}
+
+.container-dpto {
+    display: flex;
+    gap: 8px;
+}
+
+#departamento_id {
+    width: 468px;
 }
 
 .flash-success {

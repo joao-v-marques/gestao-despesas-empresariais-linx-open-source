@@ -91,6 +91,7 @@
             </div>
         </div>
     </header>
+
     <main>
         <div class="container">
             <h1 class="titulo-solicitacao">Lançar Nova Solicitação</h1>
@@ -102,23 +103,38 @@
                     <input type="text" class="mostrar-fornecedor" id="descricao_fornecedor_id" name="desc-fornecedor" readonly>
                 </div>
 
-                <label for="empresa_id" class="label-empresa">Empresa</label>
-                <select name="empresa" id="empresa_id">
-                    <option value="1">1</option>
-                    <option value="4">4</option>
-                </select>
+                <div class="container-empresa">
+                    <div>
+                        <label for="empresa_id" class="label-empresa">Empresa</label>
+                        <select name="empresa" id="empresa_id">
+                            <option value="1">1</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
 
-                <label for="revenda_id" class="label-revenda">Revenda</label>
-                <select name="revenda" id="revenda_id">
-                    <!-- Preenchida automaticamente via Javascript -->
-                </select>
+                    <div>
+                        <label for="revenda_id" class="label-revenda">Revenda</label>
+                        <select name="revenda" id="revenda_id">
+                            <!-- Preenchida automaticamente via Javascript -->
+                        </select>
+                    </div>
+                </div>
 
-                <label for="departamento_id" class="label-departamento">Departamento</label>
-                <select name="departamento" id="departamento_id" class="input-departamento">
-                    {% for d in departamento %}
-                        <option value="{{ d['departamento'] }}">{{ d['departamento'] }} - {{ d['nome'] }}</option>
-                    {% endfor %}
-                </select>
+                <div class="container-dpto">
+                    <div>
+                        <label for="departamento_id" class="label-departamento">Departamento</label>
+                        <select name="departamento" id="departamento_id" class="input-departamento">
+                            {% for d in departamento %}
+                                <option value="{{ d['departamento'] }}">{{ d['departamento'] }} - {{ d['nome'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="valor_id" class="label-valor">Valor</label>
+                        <input type="text" id="valor_id" name="valor" class="input-valor" required>
+                    </div>
+                </div>
 
                 <label for="origem_id">Origem</label>
                 <select name="origem" id="origem_id">
@@ -126,10 +142,8 @@
                 </select>
 
                 <label for="descricao_id" class="label-descricao">Descrição</label>
-                <input type="text" id="descricao_id" name="descricao" class="input-descricao" required>
-
-                <label for="valor_id" class="label-valor">Valor</label>
-                <input type="text" id="valor_id" name="valor" class="input-valor" required>
+                <textarea name="descricao" id="descricao_id" class="input-descricao" required></textarea>
+                <!-- <input type="text" id="descricao_id" name="descricao" class="input-descricao" required> -->
 
                 <input type="hidden" id="nroOS" name="nroOS">
             </form>

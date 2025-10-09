@@ -99,20 +99,20 @@
             <h2 class="titulo">Mais Informações</h2>
 
             <form action="#" method="POST" class="formulario">
-                 <label for="codigo_apollo_solicitacao_id">ID:</label>
+                <label for="codigo_apollo_solicitacao_id">ID:</label>
                 <input type="text" readonly id="codigo_apollo_solicitacao_id" name="id" value="{{ solicitacao['id'] }}">
 
                 <label for="nro_processo_id">Processo ERP:</label>
                 <input type="text" readonly id="nro_processo_id" name="nro_processo" value="{% if solicitacao['nro_processo'] == None %} - {% else %} {{ solicitacao['nro_processo'] }} {% endif %}">
 
+                <label for="empresa_revenda_id">Emp./Rev.:</label>
+                <input type="text" readonly id="empresa_revenda_id" name="empresa_revenda" value="{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}">
+                
                 <label for="codigo_fornecedor_id" class="label-fornecedor">Cód. Fornecedor</label>
                 <div class="container-fornecedor">
                     <input type="number" name="fornecedor" id="codigo_fornecedor_id_{{ solicitacao['id'] }}" class="input-fornecedor" readonly value="{{ solicitacao['fornecedor'] }}">
                     <input type="text" class="mostrar-fornecedor" id="descricao_fornecedor_id_{{ solicitacao['id'] }}" readonly>
                 </div>
-
-                <label for="empresa_revenda_id">Emp./Rev.:</label>
-                <input type="text" readonly id="empresa_revenda_id" name="empresa_revenda" value="{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}">
 
                 {% if solicitacao['nro_os'] == None %}
 
@@ -124,22 +124,22 @@
                 <label for="usuario_solicitante_id">Usuário Solicitante:</label>
                 <input type="text" readonly id="usuario_solicitante_id" name="usuario_solicitante" value="{{ solicitacao['usuario_solicitante'] }}">
 
-                <label for="departamento_id">Departamento:</label>
-                <input type="text" readonly id="departamento_id" name="departamento" value="{{ solicitacao['departamento'] }} - {{ solicitacao['nome'] }}">
-
                 <label for="origem_id">Origem:</label>
                 <input type="text" readonly id="origem_id" name="origem" value="{{ solicitacao['cod_origem'] }} - {{ solicitacao['des_origem'] }}">
 
-                <label for="descricao_id">Descrição:</label>
-                <textarea readonly id="descricao_id" name="descricao" rows="3">{{ solicitacao['descricao'] }}</textarea>
+                <label for="departamento_id">Departamento:</label>
+                <input type="text" readonly id="departamento_id" name="departamento" value="{{ solicitacao['departamento'] }} - {{ solicitacao['nome'] }}">
 
                 <label for="valor_id">Valor:</label>
                 <input type="text" readonly id="valor_id" name="valor" value="R$ {{ "{:,.2f}".format(solicitacao['valor']).replace(',',"X").replace(".", ",").replace("X", ".") }}">
-                
+
                 {% if solicitacao['cod_origem'] != 5121 %}
                     <label for="valor_orcamento_id">Valor Orçamento:</label>
                     <input type="text" readonly id="valor_orcamento_id" name="valor_orcamento" value="R$ {{ "{:,.2f}".format(solicitacao['orcamento']).replace(',',"X").replace(".", ",").replace("X", ".") }}">
                 {% endif %}
+
+                <label for="descricao_id">Descrição:</label>
+                <textarea readonly id="descricao_id" name="descricao" rows="3">{{ solicitacao['descricao'] }}</textarea>
             </form>
 
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal{{ solicitacao['id'] }}">Aprovar</button>
@@ -223,7 +223,7 @@
                 </div>
             </div>
         </div>
-        
+
         </div>
     </main>
 

@@ -61,17 +61,11 @@ def painel_solicitacoes():
             cursor.execute(sql, valores)
             retorno = cursor.dict_fetchall()
 
-            return render_template('painel_solicitacoes.html',
-                                    solicitacoes=retorno,
-                                    filtro=filtro,
-                                    usuario_logado=current_user.USUARIO,
-                                    sort_by=sort_by,
-                                    sort_dir=sort_dir
-                                    )
+            return render_template('painel_solicitacoes.html', solicitacoes=retorno, filtro=filtro, usuario_logado=current_user.USUARIO, sort_by=sort_by, sort_dir=sort_dir)
         except Exception as e:
                 flash(f'Erro ao realizar a consulta: {e}', 'error')
                 logging.error(f'erro: {e}')
-                return redirect(url_for('blueprint_gestao_usuarios.gestao_usuarios'))
+                return redirect(url_for('blueprint_lancar_solicitacao.lancar_solicitacao'))
         finally:
                 cursor.close()
                 conn.close()
