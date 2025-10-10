@@ -2,26 +2,53 @@
 const empresaInput = document.querySelector('#empresa_id');
 const revendaInput = document.querySelector('#revenda_id');
 
-// Função que atualiza as opções da revenda
+// ! NOVA FUNCAO PARA ATUALIZAR A REVENDA COM BASE NA EMPRESA
 function atualizarOpcoesRevenda() {
-    revendaInput.innerHTML = '';
-
     if (empresaInput.value == '1') {
-        for (let i = 1; i <= 11; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = `${i}`;
-            revendaInput.appendChild(option);
-        }
+        revendaInput.innerHTML = 
+        `
+        <option value="1">1 - VALTRA PARANAVAÍ</option>
+        <option value="2">2 - VALTRA CAMPO MOURÃO</option>
+        <option value="3">3 - VALTRA GOIOERÊ</option>
+        <option value="4">4 - VALTRA UBIRATÃ</option>
+        <option value="5">5 - VALTRA NAVIRAI</option>
+        <option value="6">6 - VALTRA MARINGÁ</option>
+        <option value="7">7 - VALTRA UMUARAMA</option>
+        <option value="8">8 - FENDT CAMPO MOURÃO</option>
+        <option value="9">9 - VALTRA LONDRINA</option>
+        <option value="10">10 - VALTRA CORNELIO PROCÓPIO</option>
+        <option value="11">11 - VALTRA JARDIM ALEGRE</option>
+        <option value="12">12 - VALTRA IRATI</option>
+        `
     } else if (empresaInput.value == '4') {
-        for (let i = 1; i <= 2; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = `${i}`;
-            revendaInput.appendChild(option);
-        }
+        revendaInput.innerHTML = 
+        `
+        <option value="1">1 - KATO MAQ. STO ANTONIO DA PLATINA</option>
+        <option value="2">2 - KATO MAQ. NAVIRAI</option>
+        `
     }
 }
+
+// ! ANTIGA FUNCAO DE ATUALIZAR A REVENDA COM BASE NA EMPRESA
+// function atualizarOpcoesRevenda() {
+//     revendaInput.innerHTML = '';
+
+//     if (empresaInput.value == '1') {
+//         for (let i = 1; i <= 11; i++) {
+//             const option = document.createElement('option');
+//             option.value = i;
+//             option.textContent = `${i}`;
+//             revendaInput.appendChild(option);
+//         }
+//     } else if (empresaInput.value == '4') {
+//         for (let i = 1; i <= 2; i++) {
+//             const option = document.createElement('option');
+//             option.value = i;
+//             option.textContent = `${i}`;
+//             revendaInput.appendChild(option);
+//         }
+//     }
+// }
 
 empresaInput.addEventListener('change', atualizarOpcoesRevenda)
 

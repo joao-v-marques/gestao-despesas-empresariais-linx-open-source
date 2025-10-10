@@ -81,3 +81,37 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const valEmpRev = document.getElementById("empresa_revenda_id");
+
+    if (valEmpRev.value == "1.1") {
+        valEmpRev.value = "1.1 - VALTRA PARANAVAÍ"
+    } else if (valEmpRev.value == '1.2') {
+        valEmpRev.value = '1.2 - VALTRA CAMPO MOURÃO' 
+    } else if (valEmpRev.value == '1.3') {
+        valEmpRev.value = '1.3 - VALTRA GOIOERÊ' 
+    } else if (valEmpRev.value == '1.4') {
+        valEmpRev.value = '1.4 - VALTRA UBIRATÃ' 
+    } else if (valEmpRev.value == '1.5') {
+        valEmpRev.value = '1.5 - VALTRA NAVIRAI' 
+    } else if (valEmpRev.value == '1.6') {
+        valEmpRev.value = '1.6 - VALTRA MARINGÁ' 
+    } else if (valEmpRev.value == '1.7') {
+        valEmpRev.value = '1.7 - VALTRA UMUARAMA' 
+    } else if (valEmpRev.value == '1.8') {
+        valEmpRev.value = '1.8 - FENDT CAMPO MOURÃO' 
+    } else if (valEmpRev.value == '1.9') {
+        valEmpRev.value = '1.9 - VALTRA LONDRINA' 
+    } else if (valEmpRev.value == '1.10') {
+        valEmpRev.value = '1.10 - VALTRA CORNELIO PROCÓPIO' 
+    } else if (valEmpRev.value == '1.11') {
+        valEmpRev.value = '1.11 - VALTRA JARDIM ALEGRE' 
+    } else if (valEmpRev.value == '1.12') {
+        valEmpRev.value = '1.12 - VALTRA IRATI'
+    } else if (valEmpRev.value == '4.1') {
+        valEmpRev.value = '4.1 - KATO MAQ. STO ANTONIO DA PLATINA'
+    } else if (valEmpRev.value == '4.2') {
+        valEmpRev.value = '4.2 - KATO MAQ. NAVIRAI'
+    }
+})
