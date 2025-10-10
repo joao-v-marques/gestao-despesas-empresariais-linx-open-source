@@ -70,7 +70,7 @@ def painel_solicitacoes():
                 cursor.close()
                 conn.close()
 
-# Rota que direciona para a pagina de mais_info_sol (Mais informações das solicitações) 
+# Rota que direciona para a pagina de mais_info_sol (Mais informações das solicitações)
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>')
 @login_required
 def mais_info_sol(id):

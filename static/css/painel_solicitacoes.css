@@ -252,12 +252,6 @@ table.tabela {
     padding: 24px 0;
 }
 
-.head-lista th:last-child,
-.body-lista td:last-child {
-    text-align: center;
-    vertical-align: middle;
-}
-
 .tabela-scroll {
     width: 100%;
     overflow-x: auto;
@@ -270,16 +264,13 @@ table.tabela {
 }
 
 .td-opcoes {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+    vertical-align: middle;
 }
 
 .btn-more-info {
     border: 2px solid white;
     border-radius: 10px;
-    padding: 2.5px;
+    padding: 10px;
     cursor: pointer;
     transition: 0.5s;
 }
