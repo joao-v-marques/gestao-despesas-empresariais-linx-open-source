@@ -112,15 +112,20 @@ def mais_info_sol(id):
                                     """
             cursor.execute(sql_solicitacao, [id])
             retorno_solicitacao = cursor.dict_fetchone()
+
+            lista_departamentos = [100, 200, 300, 400, 500, 600]
+
+            # ! Cria placeholders dinamicos dentro da lista [:1, :2, :3 ...]
+            placeholders_lista = ", ".join([f":{i+1}" for i in range(len(lista_departamentos))])
                 
-            sql_departamento = "SELECT DISTINCT CAMPO, CAMPO FROM SCHEMA.TABELA ORDER BY CAMPO"
+            sql_departamento = f"SELECT DISTINCT CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO IN ({placeholders_lista}) ORDER BY CAMPO"
             cursor.execute(sql_departamento)
             retorno_departamento = cursor.dict_fetchall()
 
             sql_origem = "SELECT DISTINCT CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO = 'N' AND CAMPO != 'LIVRE'"
             valores_origem = [
                 retorno_solicitacao['empresa'],
-                retorno_solicitacao['revenda'],
+                retorno_solicitacao['revenda']
             ]
             cursor.execute(sql_origem, valores_origem)
             retorno_origem = cursor.dict_fetchall()

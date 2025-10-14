@@ -12,13 +12,18 @@ blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name_
 @role_required('Administrador', 'Gerente', 'Corporativo', 'Solicitante')
 @login_required
 def lancar_solicitacao():
+    lista_departamentos = [100, 200, 300, 400, 500, 600]
+
+    # ! Cria placeholders dinamicos dentro da lista [:1, :2, :3 ...]
+    placeholders_lista = ", ".join([f":{i+3}" for i in range(len(lista_departamentos))])
+
     try:
         cursor, conn = abrir_cursor()
-        sql_departamento = "SELECT CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 ORDER BY CAMPO"
+        sql_departamento = f"SELECT CAMPO, CAMPO FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO3 IN ({placeholders_lista}) ORDER BY CAMPO"
         valores = [
             current_user.EMPRESA,
             current_user.REVENDA
-        ]
+        ] + lista_departamentos
         cursor.execute(sql_departamento, valores)
         retorno_departamento = cursor.dict_fetchall()
 
