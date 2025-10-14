@@ -9,7 +9,7 @@ blueprint_lancar_solicitacao = Blueprint('blueprint_lancar_solicitacao', __name_
 
 # Rota que renderiza o HTML da pagina
 @blueprint_lancar_solicitacao.route('/')
-@role_required('Administrador', 'Gerente', 'Diretoria', 'Solicitante')
+@role_required('Administrador', 'Gerente', 'Corporativo', 'Solicitante')
 @login_required
 def lancar_solicitacao():
     try:
@@ -33,7 +33,7 @@ def lancar_solicitacao():
 
 # Rota que fica constantemente atualizando as Origens utilizando Javascript
 @blueprint_lancar_solicitacao.route('/buscar-origens')
-@role_required('Administrador', 'Gerente', 'Diretoria', 'Solicitante')
+@role_required('Administrador', 'Gerente', 'Corporativo', 'Solicitante')
 @login_required
 def buscar_origens():
     empresa = int(request.args.get('empresa'))
@@ -58,7 +58,7 @@ def buscar_origens():
 
 # Rota que fica constantemente atualizando o Fornecedor utilizando Javascript
 @blueprint_lancar_solicitacao.route('/fornecedor/<int:codigo>')
-@role_required('Administrador', 'Gerente', 'Diretoria', 'Solicitante')
+@role_required('Administrador', 'Gerente', 'Corporativo', 'Solicitante')
 @login_required
 def busca_fornecedor(codigo):
     try:
@@ -77,7 +77,7 @@ def busca_fornecedor(codigo):
         return jsonify({"erro": str(e)}), 500
 
 @blueprint_lancar_solicitacao.route('/fazer-lancamento/confirm', methods=['GET', 'POST'])
-@role_required('Administrador', 'Gerente', 'Diretoria', 'Solicitante')
+@role_required('Administrador', 'Gerente', 'Corporativo', 'Solicitante')
 @login_required
 def consulta_orcamento():
     dados_form = request.get_json() # Lê o corpo da requisição como JSON
@@ -115,7 +115,7 @@ def consulta_orcamento():
 
 # Função que adiciona funcionalidade ao botão de cadastrar
 @blueprint_lancar_solicitacao.route('/fazer-lancamento', methods=['POST'])
-@role_required('Administrador', 'Gerente', 'Diretoria', 'Solicitante')
+@role_required('Administrador', 'Gerente', 'Corporativo', 'Solicitante')
 @login_required
 def fazer_lancamento():
     empresa_form = request.form['empresa']
@@ -172,7 +172,7 @@ def fazer_lancamento():
         return redirect(url_for("blueprint_lancar_solicitacao.lancar_solicitacao"))
 
     if valor_orcamento <= valor_float:
-        alcada = "Diretoria"
+        alcada = "Corporativo"
     else:
         alcada = "Gerente"
 
@@ -187,7 +187,7 @@ def fazer_lancamento():
             ano_mes = datetime.now().strftime("%Y%m")
 
             # SELECT nos orcamentos que retorna apenas o valor para calcular
-            sql_val_orcamento = "SELECT VALOR FROM LIU.GD_ORCAMENTO WHERE EMPRESA = :1 AND REVENDA = :2 AND ORIGEM = :3 AND ANO_MES = :4 AND CENTRO_CUSTO = :5"
+            sql_val_orcamento = "SELECT VALOR FROM SCHEMA.TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5"
             valores_val_orcamento = [
                 empresa_form,
                 revenda_form,
@@ -203,7 +203,7 @@ def fazer_lancamento():
                 novo_valor_orcamento = retorno_val_orcamento['valor'] - valor_float
 
                 # Fazer um UPDATE nos orcamentos com esse novo valor
-                sql_update_orcamento = "UPDATE LIU.GD_ORCAMENTO SET VALOR = :1 WHERE EMPRESA = :2 AND REVENDA = :3 AND ORIGEM = :4 AND ANO_MES = :5 AND CENTRO_CUSTO = :6"
+                sql_update_orcamento = "UPDATE SCHEMA.TABELA SET CAMPO = :1 WHERE CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5 AND CAMPO = :6"
                 valores_update_orcamento = [
                     novo_valor_orcamento,
                     empresa_form,

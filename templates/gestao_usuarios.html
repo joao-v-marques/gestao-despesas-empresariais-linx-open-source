@@ -40,7 +40,7 @@
                     </li>
                 {% endif %}
 
-                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Gerente' or current_user.FUNCAO == 'Diretoria' %}
+                {% if current_user.FUNCAO == 'Administrador' or current_user.FUNCAO == 'Gerente' or current_user.FUNCAO == 'Corporativo' %}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-white" id="aprovadorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Aprovações
@@ -115,7 +115,7 @@
             <select name="funcao" id="funcao_id" class="input-funcao">
                 <option value="Solicitante">Solicitante</option>
                 <option value="Gerente">Gerente</option>
-                <option value="Diretoria">Diretoria</option>
+                <option value="Corporativo">Corporativo</option>
                 <option value="Administrador">Administrador</option>
             </select>
 
@@ -207,7 +207,7 @@
                                     <select name="funcao" id="funcao_id_edit_{{ u['id'] }}">
                                         <option value="Solicitante" {% if u['funcao'] == "Solicitante" %}selected{%endif%}>Solicitante</option>
                                         <option value="Gerente" {% if u['funcao'] == "Gerente" %}selected{%endif%}>Gerente</option>
-                                        <option value="Diretoria" {% if u['funcao'] == "Diretoria" %}selected{%endif%}>Diretoria</option>
+                                        <option value="Corporativo" {% if u['funcao'] == "Corporativo" %}selected{%endif%}>Corporativo</option>
                                         <option value="Administrador" {% if u['funcao'] == "Administrador" %}selected{%endif%}>Administrador</option>
                                     </select>
 

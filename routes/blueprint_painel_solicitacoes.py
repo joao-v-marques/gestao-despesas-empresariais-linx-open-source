@@ -27,13 +27,16 @@ def painel_solicitacoes():
         s.CAMPO,
         s.CAMPO,
         s.CAMPO,
-        u.CAMPO AS CAMPO, 
-        d.CAMPO AS CAMPO, 
-        d.CAMPO AS CAMPO, 
         s.CAMPO, 
         s.CAMPO,
         s.CAMPO,
-        s.CAMPO
+        s.CAMPO,
+        s.CAMPO,
+        s.CAMPO,
+        s.CAMPO,
+        u.CAMPO AS CAMPO,
+        d.CAMPO AS CAMPO,
+        d.CAMPO AS CAMPO
     FROM 
         SCHEMA.TABELA s
         LEFT JOIN SCHEMA.TABELA d ON s.CAMPO = d.CAMPO
@@ -48,7 +51,7 @@ def painel_solicitacoes():
                 valores = [current_user.CODIGO_APOLLO]
 
             colunas_permitidas = [  
-                'ID', 'NRO_PROCESSO', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'VALOR', 'STATUS', 'FORNECEDOR', 'NRO_OS'
+                'ID', 'NRO_PROCESSO', 'EMPRESA', 'REVENDA', 'USUARIO_SOLICITANTE', 'DEPARTAMENTO_CODIGO', 'DEPARTAMENTO_DESCRICAO', 'VALOR', 'STATUS', 'FORNECEDOR', 'NRO_OS', 'DATA_APROVACAO', 'DATA_SOLICITACAO', 'DATA_ENCERRAMENTO'
             ]
 
             if sort_by not in colunas_permitidas:
@@ -82,15 +85,18 @@ def mais_info_sol(id):
                                     s.CAMPO,
                                     s.CAMPO,
                                     s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
+                                    s.CAMPO,
                                     u.CAMPO AS CAMPO,
                                     d.CAMPO AS CAMPO,
                                     d.CAMPO AS CAMPO,
                                     s.CAMPO AS CAMPO,
-                                    s.CAMPO,
-                                    s.CAMPO,
-                                    s.CAMPO,
-                                    s.CAMPO,
-                                    s.CAMPO,
                                     o.CAMPO AS CAMPO,
                                     o.CAMPO AS CAMPO
                                 FROM
@@ -397,12 +403,11 @@ def desautorizar_solicitacao(id):
         valores_deletar = [retorno_solicitacao['nro_processo']]
         cursor.execute(sql_deletar, valores_deletar)
 
-        sql_update = "UPDATE SCHEMA.TABELA SET CAMPO = :1, CAMPO = :2, CAMPO = :3 WHERE CAMPO = :4"
-        valores_update = ['PENDENTE', None, None, id]
+        sql_update = "UPDATE SCHEMA.TABELA SET CAMPO = :1, CAMPO = :2, CAMPO = :3, CAMPO = :4 WHERE CAMPO = :5"
+        valores_update = ['PENDENTE', None, None, None, id]
         cursor.execute(sql_update, valores_update)
 
-        # Apenas 1 commit para todas as alterações, assim fazendo com que o conn.rollback funcione corretamente
-        conn.commit()
+        conn.commit() # Apenas 1 commit para todas as alterações, assim fazendo com que o conn.rollback funcione corretamente
 
         pdf_path = os.path.join('static', 'pdf', f'solicitacao_{id}.pdf')
         if os.path.exists(pdf_path):

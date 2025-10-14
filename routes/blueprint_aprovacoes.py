@@ -11,7 +11,7 @@ blueprint_aprovacoes = Blueprint('blueprint_aprovacoes', __name__)
 # Rota que renderiza a pagina
 @blueprint_aprovacoes.route('/')
 @login_required
-@role_required('Administrador', 'Gerente', 'Diretoria')
+@role_required('Administrador', 'Gerente', 'Corporativo')
 def aprovacoes():
     try:
         cursor, conn = abrir_cursor()
@@ -22,12 +22,12 @@ def aprovacoes():
             s.CAMPO,
             s.CAMPO,
             s.CAMPO,
-            s.CAMPO AS CAMPO,
-            s.CAMPO AS CAMPO,
-            s.CAMPO AS CAMPO,
             s.CAMPO,
             s.CAMPO,
             s.CAMPO
+            u.CAMPO AS CAMPO,
+            d.CAMPO AS CAMPO,
+            d.CAMPO AS CAMPO,
         FROM
             SCHEMA.TABELA s
         JOIN 
@@ -41,7 +41,7 @@ def aprovacoes():
             alcada = 'Gerente'
             sql += " AND s.CAMPO = :2"
             valores_sql = ['PENDENTE', alcada]
-        elif current_user.FUNCAO == 'Diretoria':
+        elif current_user.FUNCAO == 'Corporativo':
             valores_sql = ['PENDENTE']
         elif current_user.FUNCAO == 'Administrador':
             valores_sql = ['PENDENTE']
@@ -65,7 +65,7 @@ def aprovacoes():
 # Rota para abrir o mais_info_cd (O certo seria mais_info_aprov)
 @blueprint_aprovacoes.route('/mais-info/<int:id>')
 @login_required
-@role_required('Administrador', 'Gerente', 'Diretoria')
+@role_required('Administrador', 'Gerente', 'Corporativo')
 def mais_info_cd(id):
     try:
         cursor, conn = abrir_cursor()
@@ -110,7 +110,7 @@ def mais_info_cd(id):
 # Rota que altera o status para APROVADO ou PENDENTE
 @blueprint_aprovacoes.route('/mudar-status/<int:id>', methods=['POST'])
 @login_required
-@role_required('Administrador', 'Gerente', 'Diretoria')
+@role_required('Administrador', 'Gerente', 'Corporativo')
 def mudar_status(id):
     novo_status = request.form['status']
     if novo_status == 'APROVADO':
@@ -177,13 +177,16 @@ def mudar_status(id):
                 else:
                     proximo_numero_processo = max_processo + 1
 
-                sql_aprovado = "UPDATE SCHEMA.TABELA SET CAMPO = 'APROVADO', CAMPO = :1, CAMPO = :2, CAMPO = :3 WHERE CAMPO = :4"
-                valores = [pdf_path, current_user.CODIGO_APOLLO, proximo_numero_processo, id]
-                cursor.execute(sql_aprovado, valores)
-                # Retirei um commit aqui para testar o conn.rollback()
-
                 data_atual = datetime.now().replace(microsecond=0)
+                data_formatada = data_atual.strftime("%d/%m/%Y")
 
+                # ! SQL para atualizar o status para aprovado e outras informacoes necessarias
+                sql_aprovado = "UPDATE SCHEMA.TABELA SET CAMPO = 'APROVADO', CAMPO = :1, CAMPO = :2, CAMPO = :3, CAMPO = :4 WHERE CAMPO = :5"
+                valores = [pdf_path, current_user.CODIGO_APOLLO, proximo_numero_processo, data_formatada, id]
+                cursor.execute(sql_aprovado, valores)
+
+
+                # ! SQL para inserir na tabela FAT_PROCESSO_DESPESA do Apollo
                 sql_inserir = "INSERT INTO SHEMA.TABELA (CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO, CAMPO) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)"
                 valores_inserir = [
                     solicitacao['empresa'],
@@ -237,6 +240,7 @@ def mudar_status(id):
 # Rota que atualiza os fornecedores (Não é a rota para inserir um novo fornecedor no sistema)
 @blueprint_aprovacoes.route('/inserir-fornecedor/<int:id>', methods=['POST'])
 @login_required
+@role_required('Administrador', 'Gerente', 'Corporativo')
 def inserir_fornecedor(id):
     cod_fornecedor = request.form['inserir-fornecedor-modal'].strip()
     desc_fornecedor = request.form['desc-inserir-fornecedor-modal'].strip()
