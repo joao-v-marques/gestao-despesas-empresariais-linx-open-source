@@ -132,7 +132,7 @@ def gerar_pdf(solicitacao, fornecedor, cnpj, id, nome_revenda):
     pdf.set_font("Arial", "B", 10)
     pdf.cell(0, row_h, "Descrição", border=1, ln=True)
     pdf.set_font("Arial", "", 10)
-    pdf.multi_cell(0, row_h, "Teste gerar o PDF do lançamento de solicitação de despesas", border=1)
+    pdf.multi_cell(0, row_h, solicitacao['descricao'], border=1)
 
     pdf.ln(5)
 
