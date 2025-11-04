@@ -104,8 +104,7 @@
                         <th>Usuario</th>
                         <th>Departamento</th>
                         <th>Valor</th>
-                        <th>Orçamento</th>
-                        <th>Status</th>
+                        <th>Alçada</th>
                         <th class="opcoes">Opções</th>
                     </tr>
                 </thead>
@@ -131,14 +130,21 @@
                             <td>{{ solicitacao['usuario_solicitante'] }}</td>
                             <td>{{ solicitacao['departamento_codigo'] }} - {{ solicitacao['departamento_descricao'] }}</td>
                             <td>{{ "{:,.2f}".format(solicitacao['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
-                            {% if solicitacao['orcamento'] <= solicitacao['valor'] %}
-                                <td style="color: #E63946; font-weight: bold;">Fora</td>
+                            {% if solicitacao['origem'] != 5121 %}
+                                {% if solicitacao['orcamento'] <= solicitacao['valor'] %}
+                                    <td style="color: #E63946; font-weight: bold;">Fora</td>
+                                {% else %}
+                                    <td style="color: #2ECC71; font-weight: bold;">Dentro</td>
+                                {% endif %}
                             {% else %}
-                                <td style="color: #2ECC71; font-weight: bold;">Dentro</td>
+                                <td>-</td>
                             {% endif %}
-                            <td>{{ solicitacao['status'] }}</td>
 
-                            <td><a href="{{ url_for('blueprint_aprovacoes.mais_info_cd', id=solicitacao['id']) }}" class="btn btn-primary">Mais Informações</a></td>
+                            <td class="td-opcoes">
+                                <a href="{{ url_for('blueprint_aprovacoes.mais_info_cd', id=solicitacao['id']) }}" class="btn-more-info" data-bs-toggle="tooltip" title="Mais Informações">
+                                    <img src="{{ url_for('static', filename='img/more-info.svg') }}" alt="Icone de mais informações da solicitacao">
+                                </a>
+                            </td>
                         </tr>
                     {% else %}
                         <tr>

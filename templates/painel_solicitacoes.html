@@ -78,10 +78,10 @@
                     <div class="modal-body">
                         <form action="{{ url_for('blueprint_principal.troca_senha', id=current_user.id  ) }}" method="POST">
                             <label for="nova_senha_id" class="label_nova_senha">Digite uma nova senha</label>
-                            <input type="text" id="nova_senha_id" name="nova_senha" class="input_nova_senha" required>
+                            <input type="text" id="nova_senha_id" name="nova_senha" class="input_nova_senha" required placeholder="Digite sua nova senha">
 
                             <label for="confirma_nova_senha_id" class="label_confirma_nova_senha">Confirme sua nova senha</label>
-                            <input type="text" id="confirma_nova_senha_id" class="input_confirma_nova_senha" name="confirma_nova_senha" required>
+                            <input type="text" id="confirma_nova_senha_id" class="input_confirma_nova_senha" name="confirma_nova_senha" required placeholder="Confirme a nova senha">
 
                             <input type="submit" class="btn btn-success" value="Confirmar">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
@@ -98,15 +98,15 @@
 
             <div class="container-btn">
                 <form method="GET" class="formulario-btn">
-                    <button type="submit" name="filtro" value="PENDENTE" class="btn btn-outline-primary {% if filtro == 'PENDENTE' %}active{% endif %}">Pendentes</button>
-                    <button type="submit" name="filtro" value="APROVADO" class="btn btn-outline-success {% if filtro == 'APROVADO' %}active{% endif %}">Aprovados</button>
-                    <button type="submit" name="filtro" value="REPROVADO" class="btn btn-outline-danger {% if filtro == 'REPROVADO' %}active{% endif %}">Reprovados</button>
-                    <button type="submit" name="filtro" value="ENCERRADO" class="btn btn-outline-warning {% if filtro == 'ENCERRADO' %}active{% endif %}">Encerrados</button>
-                    <button type="submit" name="filtro" value="TODOS" class="btn btn-outline-secondary {% if filtro == 'TODOS' %}active{% endif %}">Todos</button>
+                    <button type="submit" name="filtro" value="PENDENTE" class="btn-pendente {% if filtro == 'PENDENTE' %}active{% endif %}">Pendentes</button>
+                    <button type="submit" name="filtro" value="APROVADO" class="btn-aprovado {% if filtro == 'APROVADO' %}active{% endif %}">Aprovados</button>
+                    <button type="submit" name="filtro" value="REPROVADO" class="btn-reprovado {% if filtro == 'REPROVADO' %}active{% endif %}">Reprovados</button>
+                    <button type="submit" name="filtro" value="ENCERRADO" class="btn-encerrado {% if filtro == 'ENCERRADO' %}active{% endif %}">Encerrados</button>
+                    <button type="submit" name="filtro" value="TODOS" class="btn-todos {% if filtro == 'TODOS' %}active{% endif %}">Todos</button>
                 </form>
                 
                 <div class="baixar-relatorio" data-bs-toggle="tooltip" title="Baixar relatório">
-                    <a href="{{ url_for('blueprint_painel_solicitacoes.download_relatorio', filtro=filtro) }}" class="logo-excel" >
+                    <a href="{{ url_for('blueprint_painel_solicitacoes.download_relatorio', filtro=filtro) }}" class="baixar-relatorio">
                         <img src="{{ url_for('static', filename='img/baixar-relatorio.svg') }}" alt="Logo do Excel para Relatórios">
                     </a>
                 </div>
@@ -177,18 +177,53 @@
                                     </span>
                                 {% endif %}
                             </a></th>
-                            <th><a href="?filtro={{ filtro }}&sort_by=USUARIO_SOLICITANTE&sort_dir={{ new_dir }}">
-                                Usuário
-                                {% if sort_by == 'USUARIO_SOLICITANTE' %}
-                                    <span class="seta-ordenacao">
-                                        {% if sort_dir|lower == 'asc' %}
-                                            ↑
-                                        {% else %}
-                                            ↓
+                            {% if filtro == 'APROVADO' %}
+                                <th>
+                                    <a href="?filtro={{ filtro }}&sort_by=DATA_APROVACAO&sort_dir={{ new_dir }}">
+                                        Dta. Aprovação
+                                        {% if sort_by == 'DATA_APROVACAO' %}
+                                            <span class="seta-ordenacao">
+                                                {% if sort_dir|lower == 'asc' %}
+                                                    ↑
+                                                {% else %}
+                                                    ↓
+                                                {% endif %}
+                                            </span>
                                         {% endif %}
-                                    </span>
-                                {% endif %}
-                            </a></th>
+                                    </a>
+                                </th>
+                            {% elif filtro == 'PENDENTE' %}
+                                <th>
+                                    <a href="?filtro={{ filtro }}&sort_by=DATA_SOLICITACAO&sort_dir={{ new_dir }}">
+                                        Dta. Solicitação
+                                        {% if sort_by == 'DATA_SOLICITACAO' %}
+                                            <span class="seta-ordenacao">
+                                                {% if sort_dir|lower == 'asc' %}
+                                                    ↑
+                                                {% else %}
+                                                    ↓
+                                                {% endif %}
+                                            </span>
+                                        {% endif %}
+                                    </a>
+                                </th>
+                            {% elif filtro == 'ENCERRADO' %}
+                                <th>
+                                    <a href="?filtro={{ filtro }}&sort_by=DATA_ENCERRAMENTO&sort_dir={{ new_dir }}">
+                                        Dta. Encerramento
+                                        {% if sort_by == 'DATA_ENCERRAMENTO' %}
+                                            <span class="seta-ordenacao">
+                                                {% if sort_dir|lower == 'asc' %}
+                                                    ↑
+                                                {% else %}
+                                                    ↓
+                                                {% endif %}
+                                            </span>
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                
+                            {% endif %}
                             <th><a href="?filtro={{ filtro }}&sort_by=DEPARTAMENTO_DESCRICAO&sort_dir={{ new_dir }}">
                                 Departamento
                                 {% if sort_by == 'DEPARTAMENTO_DESCRICAO' %}
@@ -212,64 +247,56 @@
                                         {% endif %}
                                     </span>
                                 {% endif %}
-                            </a></th>
-                            <th><a href="?filtro={{ filtro }}&sort_by=STATUS&sort_dir={{ new_dir }}">
-                                Status
-                                {% if sort_by == 'STATUS' %}
-                                    <span class="seta-ordenacao">
-                                        {% if sort_dir|lower == 'asc' %}
-                                            ↑
-                                        {% else %}
-                                            ↓
-                                        {% endif %}
-                                    </span>
-                                {% endif %}
-                            </a></th>
+                            </a></th>   
                             <th>Descricao</th>
                             <th>Opções</th>
                         </tr>
                     </thead>
                     <tbody>
-                            {% for s in solicitacoes %}
-                                <tr class="body-lista">
-                                    <td>{{ s['id'] }}</td>
-                                    <td>
-                                        {% if s['nro_processo'] == None %}
-                                            -
-                                        {% else %}
-                                            {{ s['nro_processo'] }}
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
-                                    <td>
-                                        {% if s['nro_os'] == None %}
-                                            -
-                                        {% else %}
-                                            {{ s['nro_os'] }}
-                                        {% endif %}
-                                    </td>
-                                    <td>{% if s['fornecedor'] == None %} - {% else %} {{ s['fornecedor'] }} {% endif %}</td>
-                                    <td>{{ s['usuario_solicitante'] }}</td>
-                                    <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>
-                                    <td>{{ "{:,.2f}".format(s['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
-                                    <td>{{ s['status'] }}</td>
-                                    <td class="descricao">{{ s['descricao'] }}</td>
+                        {% for s in solicitacoes %}
+                            <tr class="body-lista">
+                                <td>{{ s['id'] }}</td>
+                                <td>
+                                    {% if s['nro_processo'] == None %}
+                                        -
+                                    {% else %}
+                                        {{ s['nro_processo'] }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
+                                <td>
+                                    {% if s['nro_os'] == None %}
+                                        -
+                                    {% else %}
+                                        {{ s['nro_os'] }}
+                                    {% endif %}
+                                </td>
+                                <td>{% if s['fornecedor'] == None %} - {% else %} {{ s['fornecedor'] }} {% endif %}</td>
+                                {% if filtro == 'APROVADO' %}
+                                    <td>{{ s['data_aprovacao'] }}</td>
+                                {% elif filtro == 'PENDENTE' %}
+                                    <td>{{ s['data_solicitacao'] }}</td>
+                                {% elif filtro == 'ENCERRAMENTO' %}
+                                    <td>{{ s['data_encerramento'] }}</td>
+                                {% endif %}
+                                <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>
+                                <td>R$ {{ "{:,.2f}".format(s['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
+                                <td class="descricao">{{ s['descricao'] }}</td>
 
-                                    <td class="td-opcoes">
-                                        <a href="{{ url_for('blueprint_painel_solicitacoes.mais_info_sol', id=s['id']) }}" class="btn-more-info" data-bs-toggle="tooltip" title="Mais Informações">
-                                            <img src="{{ url_for('static', filename='img/more-info.svg') }}" alt="Icone de mais informações da solicitacao">
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="11" class="nenhuma-solicitacao">Nenhuma solicitação foi encontrada</td>
-                                </tr>
-                            {% endfor %}
+                                <td class="td-opcoes">
+                                    <a href="{{ url_for('blueprint_painel_solicitacoes.mais_info_sol', id=s['id']) }}" class="btn-more-info" data-bs-toggle="tooltip" title="Mais Informações">
+                                        <img src="{{ url_for('static', filename='img/more-info.svg') }}" alt="Icone de mais informações da solicitacao">
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="10" class="nenhuma-solicitacao">Nenhuma solicitação foi encontrada</td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
-       
         </div>
     </main>
 

@@ -12,20 +12,28 @@
 </head>
 <body>
     <div class="container">
-        <h1>Gestão de Despesas</h1>
-        <img src="#" alt="Logo KATO" class="logo-kato">
 
-        <form action="{{ url_for('blueprint_login.fazer_login') }}" method="POST" class="formulario" id="loginForm">
-            <label for="usuario_id" class="label-usuario">Usuario</label>
-            <input type="text" id="usuario_id" name="usuario" class="input-usuario" oninput="this.value = this.value.toUpperCase();">
+        <div class="container-left">
+            <img src="{{ url_for('static', filename='img/user-acc.svg') }}" alt="Logo de user">
 
-            <label for="senha_id" class="label-senha">Senha</label>
-            <input type="password" id="senha_id" name="senha" class="input-senha">
+            <form action="{{ url_for('blueprint_login.fazer_login') }}" method="POST" class="formulario" id="loginForm">
+                <label for="usuario_id" class="label-usuario">Usuario</label>
+                <div class="input-container">
+                    <img src="{{ url_for('static', filename='img/user.svg') }}" alt="Logo de personagem para identificação no input" class="icon-input">
+                    <input type="text" id="usuario_id" name="usuario" class="input-usuario" oninput="this.value = this.value.toUpperCase();" placeholder="Digite seu usuário">
+                </div>
 
-            <button type="submit" class="botao-enviar" id="loginBtn">
-                <span class="loginText">Fazer Login</span>
-                <div class="loader"></div>
-            </button>
+                <label for="senha_id" class="label-senha">Senha</label>
+                <div class="input-container">
+                    <img src="{{ url_for('static', filename='img/key.svg') }}" alt="Logo de personagem para identificação no input" class="icon-input">
+                    <input type="password" id="senha_id" name="senha" class="input-senha" placeholder="Digite sua senha">
+                </div>
+
+                <button type="submit" class="botao-enviar" id="loginBtn">
+                    <span class="loginText">Fazer Login</span>
+                    <div class="loader"></div>
+                </button>
+            </form>
 
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -36,7 +44,13 @@
                     </ul>
                 {% endif %}
             {% endwith %}
-        </form>
+        </div>
+        <div class="container-right">
+            <img src="{{ url_for('static', filename='img/Logo - Grupo Kato Branco.png') }}" alt="Logo KATO" class="logo-kato">
+            <p>Bem vindo!</p>
+            <p>Faça login para acessar</p>
+            <h1>Gestão de Despesas</h1>
+        </div>
     </div>
 
     <script>

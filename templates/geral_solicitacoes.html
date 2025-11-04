@@ -91,7 +91,7 @@
             </div>
         </div>
     </header>
-    
+
     <main>
         <div class="container">
             <h1 class="titulo">Visão Geral de Solicitações</h1>
@@ -101,14 +101,14 @@
                 <form method="GET" class="formulario-btn" id="filtroForm">
                     <div class="filtros">
                         <input type="hidden" name="filtro" id="filtroInput" value="{{ filtro }}">
-                        <button type="button" value="PENDENTE" class="btn btn-outline-primary {% if filtro == 'PENDENTE' %}active{% endif %}" onclick="setFiltro('PENDENTE')">Pendentes</button>
-                        <button type="button" value="APROVADO" class="btn btn-outline-success {% if filtro == 'APROVADO' %}active{% endif %}" onclick="setFiltro('APROVADO')">Aprovados</button>
-                        <button type="button" value="REPROVADO" class="btn btn-outline-danger {% if filtro == 'REPROVADO' %}active{% endif %}" onclick="setFiltro('REPROVADO')">Reprovados</button>
-                        <button type="button" value="ENCERRADO" class="btn btn-outline-warning {% if filtro == 'ENCERRADO' %}active{% endif %}" onclick="setFiltro('ENCERRADO')">Encerrados</button>
-                        <button type="button" value="TODOS" class="btn btn-outline-secondary {% if filtro == 'TODOS' %}active{% endif %}" onclick="setFiltro('TODOS')">Todos</button>
+                        <button type="button" value="PENDENTE" id="btnPendente" class="btn btn-outline-primary {% if filtro == 'PENDENTE' %}active{% endif %}" onclick="setFiltro('PENDENTE')">Pendentes</button>
+                        <button type="button" value="APROVADO" id="btnAprovado" class="btn btn-outline-success {% if filtro == 'APROVADO' %}active{% endif %}" onclick="setFiltro('APROVADO')">Aprovados</button>
+                        <button type="button" value="REPROVADO" id="btnReprovado" class="btn btn-outline-danger {% if filtro == 'REPROVADO' %}active{% endif %}" onclick="setFiltro('REPROVADO')">Reprovados</button>
+                        <button type="button" value="ENCERRADO" id="btnEncerrado" class="btn btn-outline-warning {% if filtro == 'ENCERRADO' %}active{% endif %}" onclick="setFiltro('ENCERRADO')">Encerrados</button>
+                        <button type="button" value="TODOS" id="btnTodos" class="btn btn-outline-secondary {% if filtro == 'TODOS' %}active{% endif %}" onclick="setFiltro('TODOS')">Todos</button>
                     </div>
                 </form>
-                <div class="baixar-relatorio">
+                <div class="baixar-relatorio" data-bs-toggle="tooltip" title="Baixar Relatório">
                     <a href="{{ url_for('blueprint_geral_solicitacoes.download_relatorio', filtro=filtro) }}" class="logo-excel">
                         <img src="{{ url_for('static', filename='img/baixar-relatorio.svg') }}" alt="Logo do Excel para Relatórios">
                     </a>
@@ -153,7 +153,7 @@
                                 <td>{{ "{:,.2f}".format(s['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
                                 <td>{{ s['status'] }}</td>
                                 <td class="descricao">{{ s['descricao'] }}</td>
-                                <td>
+                                <td data-bs-toggle="tooltip" title="Mais Informações">
                                     <button class="btn-more-info" data-bs-toggle="modal" data-bs-target="#infoModal{{ s['id'] }}">
                                         <img src="{{ url_for('static', filename='img/more-info.svg') }}" alt="Icone de mais informações da solicitacao">
                                     </button>

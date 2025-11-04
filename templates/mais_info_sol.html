@@ -96,62 +96,139 @@
         <div class="container">
             <a href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}" class="voltar"><- Voltar</a>
 
-            <h2 class="titulo">Mais Informações</h2>
+            <h2 class="titulo">Mais Informações - Solicitações</h2>
 
             <form action="{{ url_for('blueprint_painel_solicitacoes.salvar_edicao', id=solicitacao['id']) }}" method="POST" class="formulario">
-                <label for="codigo_apollo_solicitacao_id">ID:</label>
-                <input type="text" readonly id="codigo_apollo_solicitacao_id" name="codigo_apollo" value="{{ solicitacao['id'] }}">
-
-                <label for="nro_processo_id">Processo ERP:</label>
-                <input type="text" readonly id="nro_processo_id" name="nro_processo" value="{% if solicitacao['nro_processo'] == None %} - {% else %} {{ solicitacao['nro_processo'] }} {% endif %}">
-
-                <label for="empresa_revenda_id">Emp./Rev.:</label>
-                <input type="text" readonly id="empresa_revenda_id" name="empresa_revenda" value="{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}">
+                <div class="conj1">
+                    <div>
+                        <label for="codigo_apollo_solicitacao_id">ID</label>
+                        <input type="text" readonly id="codigo_apollo_solicitacao_id" name="codigo_apollo" value="{{ solicitacao['id'] }}">
+                    </div>
+                    <div>
+                        <label for="empresa_revenda_id">Emp./Rev.</label>
+                        <input type="text" readonly id="empresa_revenda_id" name="empresa_revenda" value="{{ solicitacao['empresa'] }}.{{ solicitacao['revenda'] }}">
+                    </div>
+                </div>
+                <div class="conj2">
+                    <div>
+                        <label for="nro_processo_id">Processo ERP</label>
+                        <input type="text" readonly id="nro_processo_id" name="nro_processo" value="{% if solicitacao['nro_processo'] == None %} - {% else %} {{ solicitacao['nro_processo'] }} {% endif %}">
+                    </div>
+                    <div>
+                        <label for="usuario_solicitante_id">Usuário Solicitante</label>
+                        <input type="text" readonly id="usuario_solicitante_id" name="usuario_solicitante" value="{{ solicitacao['usuario_solicitante'] }}">
+                    </div>
+                </div>
+                
 
                 {% if solicitacao['nro_os'] == None %}
 
                 {% else %}
-                    <label for=" nro_os_id">Nro. O.S:</label>
-                    <input type="text" readonly id="nro_os_id" name="nro_os" value="{{ solicitacao['nro_os'] }}">
+                    <div>
+                        <label for=" nro_os_id">Nro. O.S</label>
+                        <input type="text" readonly id="nro_os_id" name="nro_os" value="{{ solicitacao['nro_os'] }}">
+                    </div>
                 {% endif %}
 
-                <label for="codigo_fornecedor_id" class="label-fornecedor">Cód. Fornecedor</label>
-                <div class="container-fornecedor">
-                    <input type="number" name="fornecedor" id="codigo_fornecedor_id_{{ solicitacao['id'] }}" class="input-fornecedor" readonly value="{{ solicitacao['fornecedor'] }}">
-                    <input type="text" class="mostrar-fornecedor" id="descricao_fornecedor_id_{{ solicitacao['id'] }}" readonly>
+                <div>
+                    <label for="codigo_fornecedor_id" class="label-fornecedor">Cód. Fornecedor</label>
+                    <div class="container-fornecedor">
+                        <input type="number" name="fornecedor" id="codigo_fornecedor_id_{{ solicitacao['id'] }}" class="input-fornecedor" readonly value="{{ solicitacao['fornecedor'] }}">
+                        <input type="text" class="mostrar-fornecedor" id="descricao_fornecedor_id_{{ solicitacao['id'] }}" readonly>
+                    </div>
                 </div>
 
-                <label for="usuario_solicitante_id">Usuário Solicitante:</label>
-                <input type="text" readonly id="usuario_solicitante_id" name="usuario_solicitante" value="{{ solicitacao['usuario_solicitante'] }}">
-
                 {% if solicitacao['status'] == 'APROVADO' %}
-                    <label for="usuario_autorizante_id">Usuario Autorizante</label>
-                    <input type="text" readonly id="usuario_autorizante_id" name="usuario_autorizante" value="{{ usuario_autorizante['login'] }}">
+                    <div>
+                        <label for="usuario_autorizante_id">Usuario Autorizante</label>
+                        <input type="text" readonly id="usuario_autorizante_id" name="usuario_autorizante" value="{{ usuario_autorizante['login'] }}">
+                    </div>
                 {% endif %}
 
-                <label for="origem_id">Origem:</label>
-                <select name="origem" id="origem_id" disabled>
-                    {% for o in origem %}
-                        <option value="{{ o['origem'] }}" {% if o['origem'] == solicitacao['origem_sol'] %}selected{% endif %}>
-                            {{ o['origem'] }} - {{ o['des_origem'] }}
-                        </option>
-                    {% endfor %}
-                </select>
+                {% if solicitacao['status'] == 'PENDENTE' %}
+                    <div class="conj4">    
+                        <div>
+                            <label for="origem_id">Origem</label>
+                            <select name="origem" id="origem_id" disabled>
+                                {% for o in origem %}
+                                    <option value="{{ o['origem'] }}" {% if o['origem'] == solicitacao['origem_sol'] %}selected{% endif %}>
+                                        {{ o['origem'] }} - {{ o['des_origem'] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-                <label for="departamento_id">Departamento:</label>
-                <select name="departamento" id="departamento_id" class="input-departamento" disabled>
-                    {% for d in departamento %}
-                        <option value="{{ d['departamento'] }}" {% if d['departamento'] == solicitacao['departamento_sol'] %}selected{% endif %}>
-                            {{ d['departamento'] }} - {{ d['nome'] }}
-                        </option>]
-                    {% endfor %}
-                </select>
+                        <div>
+                            <label for="data_solicitacao_id">Dta. Solicitação</label>
+                            <input type="text" readonly id="data_solicitacao_id" name="data_solicitacao" value="{{ solicitacao['data_solicitacao'] }}">
+                        </div>
+                    </div>
+                {% else %}
+                    <div>
+                        <label for="origem_id">Origem</label>
+                        <select name="origem" id="origem_id" disabled>
+                            {% for o in origem %}
+                                <option value="{{ o['origem'] }}" {% if o['origem'] == solicitacao['origem_sol'] %}selected{% endif %}>
+                                    {{ o['origem'] }} - {{ o['des_origem'] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
 
-                <label for="valor_id">Valor:</label>
-                <input type="text" readonly id="valor_id" name="valor" value="R$ {{ "{:,.2f}".format(solicitacao['valor']).replace(',',"X").replace(".", ",").replace("X", ".") }}">
+                <div class="conj3">
+                    <div>
+                        <label for="departamento_id">Departamento</label>
+                        <select name="departamento" id="departamento_id" class="input-departamento" disabled>
+                            {% for d in departamento %}
+                                <option value="{{ d['departamento'] }}" {% if d['departamento'] == solicitacao['departamento_sol'] %}selected{% endif %}>
+                                    {{ d['departamento'] }} - {{ d['nome'] }}
+                                </option>]
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <label for="descricao_id">Descrição:</label>
-                <textarea readonly id="descricao_id" name="descricao" rows="3">{{ solicitacao['descricao'] }}</textarea>
+                    <div>
+                        <label for="valor_id">Valor</label>
+                        <input type="text" readonly id="valor_id" name="valor" value="R$ {{ "{:,.2f}".format(solicitacao['valor']).replace(',',"X").replace(".", ",").replace("X", ".") }}">
+                    </div>
+                </div>
+
+                {% if solicitacao['status'] == 'APROVADO' %}
+                    <div class="container-datas-aprovado">
+                        <div>
+                            <label for="data_solicitacao_id">Dta. Solicitação</label>
+                            <input type="text" readonly id="data_solicitacao_id" name="data_solicitacao" value="{{ solicitacao['data_solicitacao'] }}">
+                        </div>
+
+                        <div>
+                            <label for="data_aprovacao_id">Dta. Aprovação</label>
+                            <input type="text" readonly id="data_aprovacao_id" name="data_aprovacao" value="{{ solicitacao['data_aprovacao'] }}">
+                        </div>
+                    </div>
+                {% elif solicitacao['status'] == 'ENCERRADO' %}
+                    <div class="container-datas-encerrado">
+                        <div>
+                            <label for="data_solicitacao_id">Dta. Solicitação</label>
+                            <input type="text" readonly id="data_solicitacao_id" name="data_solicitacao" value="{{ solicitacao['data_solicitacao'] }}">
+                        </div>
+
+                        <div>
+                            <label for="data_aprovacao_id">Dta. Aprovação</label>
+                            <input type="text" readonly id="data_aprovacao_id" name="data_aprovacao" value="{{ solicitacao['data_aprovacao'] }}">
+                        </div>
+
+                        <div>
+                            <label for="data_encerramento_id">Dta. Encerramento</label>
+                            <input type="text" readonly id="data_encerramento_id" name="data_encerramento" value="{{ solicitacao['data_encerramento'] }}">
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div>
+                    <label for="descricao_id">Descrição</label>
+                    <textarea readonly id="descricao_id" name="descricao" rows="3">{{ solicitacao['descricao'] }}</textarea>
+                </div>
 
                 {% if solicitacao['status'] == 'REPROVADO' %}
                     <label for="motivo_reprova_id">Motivo da Reprova</label>

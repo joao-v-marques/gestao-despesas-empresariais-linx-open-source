@@ -1,40 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-:root {
-    --primary-background: #121212; /* Background Color */
-    --secondary-background: #1F1F1F; /* Cards, Superfices, etc. */
-
-    --primary-text: #EAEAEA; /* Text Color */
-    --secondary-text: #B0B0B0; /* Text Color */
-
-    --primary-action: #0D6EFD; /* Buttons, links, etc. */
-    --primary-action-hover: #3399FF; /* Hoover */
-    --success: #2ECC71; /* Buttons, links, etc. */
-    --warning: #FFC107; /* Buttons, links, etc. */
-    --error: #E63946; /* Buttons, links, etc. */
-    
-    
-    --first-complement: #C0C0C0; /* Buttons, links, etc. */
-    --second-complement: #1E3A8A; /* Buttons, links, etc. */
-    
-    --tabela-hover: #2f2f2f; 
-
-    --input-background: #2a2a2a;
-    --input-border: #3A3A3A;
-    --input-focus: #0D6EFD; /* Usar um glow box-shadow */
-
-}
-
 body, html {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    background: var(--primary-background);
+    background-color: #F9FAFB;
 }
 
 header {
     width: 100%;
-    background: var(--secondary-background);
 }
 
 nav {
@@ -42,43 +16,43 @@ nav {
     align-items: center;
     justify-content: space-between;
     padding: 0 32px;
-    min-height: 64px;
+    height: 60px;
+    background: linear-gradient(to right, #18447F, #2C7BE5);
 }
 
 .navbar-logo img {
-    max-height: 44px;
+    max-height: 48px;
+    max-width: 160px;
     width: auto;
-    padding: 2px 8px;
+    height: auto;
+    display: block;
 }
 
 .nav {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 32px;
     list-style: none;
 }
 
 .nav-link {
-    color: var(--primary-text) !important;
+    color: white !important;
     font-weight: 700;
-    border-radius: 6px;
-    transition: background 0.2s, color 0.2s;
+    font-size: 16px;
     text-decoration: none;
-    margin-bottom: 2px;
 }
 
 .nav-link:hover,
 .nav-link:focus {
     outline: none;
-    box-shadow: none;
-    color: var(--primary-action-hover) !important;
+    color: #D4AF37 !important;
 }
 
 .dropdown-menu {
-    background-color: var(--secondary-background);
-    min-width: 180px;
+    background-color: #D9D9D9;
     border-radius: 8px;
-    border: none;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 30px 3px #3D3D3D;
 }
 
 .nav-item.dropdown:hover .dropdown-menu,
@@ -87,21 +61,20 @@ nav {
 }
 
 .dropdown-item {
-    color: var(--primary-text);
+    color: #3D3D3D;
     padding: 8px 20px;
     border-radius: 5px;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.3s;
 }
 
 .dropdown-item:hover,
 .dropdown-item:focus {
     outline: none;
-    background-color: var(--secondary-background);
-    color: var(--primary-action-hover);
+    background-color: rgb(245, 245, 245);
 }
 
 .user a {
-    color: var(--primary-text);
+    color: white !important;
     text-decoration: none;
 }
 
@@ -109,12 +82,7 @@ nav {
 .user a:focus {
     outline: none;
     box-shadow: none;
-    color: var(--primary-action-hover) !important;
-}
-
-.btn-troca-senha button {
-    background: transparent;
-    border: none;
+    color: #D4AF37 !important;
 }
 
 .input_nova_senha,
@@ -122,51 +90,69 @@ nav {
     width: 100%;
     padding: 10px;
     margin-bottom: 16px;
-    border-radius: 4px;
-    border: 1px solid var(--input-border);
-    background-color: var(--input-background);
-    color: var(--primary-text);
+    border-radius: 10px;
+    border: 1px solid #D1D5DB;
+    background-color: #F3F4F6;
+    color: #111827;
+}
+
+.btn-troca-senha button {
+    background: transparent;
+    border: none;
 }
 
 .input_nova_senha:focus,
 .input_confirma_nova_senha:focus {
-    border-color: var(--input-focus);
     outline: none;
+    border: 1px solid #2564eb56;
 }
 
 .modal-header {
-    background-color: var(--secondary-background);
-    color: var(--primary-text);
-}
-
-.modal-body {
-    background-color: var(--secondary-background);
-    color: var(--primary-text);
+    background-color: #1E3A8A;
+    color: white !important;
 }
 
 .btn-close {
     filter: invert(1);
 }
 
+.modal-body {
+    background-color: #D9D9D9;
+    color: #3D3D3D;
+}
+
+.modal-content {
+    box-shadow: 0 0 30px 3px #3D3D3D;
+    border-radius: 12px;
+}
+
+/* ! FIM DO NAVBAR  */
+
 .container {
-    background: var(--secondary-background);
-    max-width: 1480px;
-    margin: 40px auto 60px auto;
+    background: #D9D9D9;
+    box-shadow: 1px 1px 30px 3px #3D3D3D;
+    width: min(1400px, 90%);
+    max-width: 1400px;
+    box-sizing: border-box;
+    min-height: 550px;
+    height: auto;
+    margin-top: 60px;
+    margin-bottom: 60px;
     padding: 32px 18px;
     border-radius: 12px;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.11);
 }
 
 .titulo {
-    color: var(--primary-text);
+    color: #3D3D3D;
     margin-bottom: 20px;
-    font-weight: 700;
+    font-weight: bold;
     letter-spacing: 1px;
+    font-size: 36px;
     text-decoration: underline;
 }
 
 .sub-titulo {
-    color: var(--secondary-text);
+    color: #3D3D3D;
     font-style: italic;
     margin-top: -20px;
     margin-left: 20px;
@@ -181,55 +167,117 @@ nav {
 }
 
 .btn {
-    border-radius: 20px;
-    padding: 8px 22px;
     border: none;
-    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    padding: 10px 20px;
+    border-radius: 20px;
+    color: white;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+#btnPendente {
+    background-color: #1E3A8A;
+}
+
+#btnPendente:hover {
+    background-color: #2564eb;
+}
+
+#btnAprovado {
+    background-color: #198754;
+}
+
+#btnAprovado:hover {
+    background-color: #1e7e34;
+}
+
+#btnReprovado {
+    background-color: #DC3545;
+}
+
+#btnReprovado:hover {
+    background-color: #92242f;
+}
+
+#btnEncerrado {
+    background-color: #FFC107;
+}
+
+#btnEncerrado:hover {
+    background-color: #e0a800;
+}
+
+#btnTodos {
+    background-color: #6C757D;
+}
+
+#btnTodos:hover {
+    background-color: #5a6268;
 }
 
 .tabela {
     width: 100%;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     border-collapse: collapse;
-}
-
-table.tabela {
-    border-radius: 8px;
-    overflow: hidden;
+    background-color: white;
+    border-radius: 12px;
 }
 
 .tabela th {
     text-align: center;
-    background-color: var(--input-background);
-    color: var(--primary-text);
-    font-weight: 650;
+    background-color: #1E3A8A;
+    color: #F9FAFB;
     padding: 4px 8px;
-    font-size: 0.90rem;
-    letter-spacing: 1px;
+    font-size: 16px;
+}
+
+.tabela th:first-child {
+    border-top-left-radius: 12px;
+}
+
+.tabela th:last-child {
+    border-top-right-radius: 12px;
 }
 
 .tabela td {
     text-align: center;
-    padding: 5px 1px;
-    font-size: 0.80rem;
-    color: var(--primary-text);
-    border-bottom: 1px solid var(--first-complement);
+    padding: 8px 1px;
+    font-size: 14px;
     transition: background 0.2s;
 }
 
+tbody:last-child tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+tbody:last-child tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+.tabela tr:nth-child(odd) {
+    background-color: #F3F4F6;
+}
+
+.tabela tr:nth-child(even) {
+    background-color: white;
+}
+
 .tabela tr:hover td {
-    background: var(--tabela-hover);
+    background-color: #E0E7FF;
+    cursor: pointer;
 }
 
 .tabela-scroll {
     width: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
 }
 
 .tabela td.descricao {
+    overflow-y: auto;
     white-space: normal;
-    max-width: 300px; /* ajustável */
-    word-break: break-word;
+    text-align: left;
+    padding: 4px 6px;
 }
 
 .tabela td.origem {
@@ -246,23 +294,6 @@ table.tabela {
     padding: 24px 0;
 }
 
-.relatorio {
-    background-color: var(--primary-color);
-    border-radius: 8px;
-    padding: 2px 8px;
-    transition: 0.3s;
-}
-
-.relatorio:hover {
-    transform: scale(1.1);
-}
-
-.logo-excel {
-    text-decoration: none;
-    color: var(--primary-text);
-    align-items: center;
-}
-
 .logo-excel img {
     width: 36px;
     height: 36px;
@@ -276,31 +307,27 @@ table.tabela {
 .formulario-modal {
     border-radius: 10px;
     padding: 16px 18px 10px 10px;
-    box-shadow: 0 2px 12px rgba(29, 53, 87, 0.10);
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--secondary-background);
+    background-color: #D9D9D9;
+    box-shadow: 1px 1px 30px 3px #3D3D3D;
 }
 
 .formulario-modal label {
     margin-top: 10px;
     margin-bottom: 4px;
-    font-weight: 600;
-    color: var(--primary-text);
 }
 
 .formulario-modal input[type="text"] {
     width: 100%;
-    padding: 9px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--input-border);
-    background: var(--input-border);
-    margin-bottom: 8px;
-    transition: border 0.2s;
+    padding: 10px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    border: 1px solid #D1D5DB;
+    background-color: #F3F4F6;
+    color: #111827;
 }
 
 .formulario-modal input[readonly] {
-    background: var(--input-background);
-    color: var(--secondary-text);
+    background: #F3F4F6;
     cursor: not-allowed;
 }
 
@@ -314,15 +341,13 @@ table.tabela {
     max-height: 150px;
     padding: 9px 12px;
     border-radius: 6px;
-    border: 1px solid var(--input-border);
-    background: var(--input-background);
-    color: var(--secondary-text);
+    border: 1px solid #D1D5DB;
+    background: #F3F4F6;
     margin-bottom: 8px;
 }
 
 .formulario-modal textarea[readonly] {
-    background: var(--input-background);
-    color: var(--secondary-text);
+    background: #F3F4F6;
     cursor: not-allowed;
 }
 
@@ -331,8 +356,8 @@ table.tabela {
 }
 
 #motivo_reprova_id {
-    border: 1.5px solid var(--error);
-    color: var(--error);
+    border: 1.5px solid red;
+    color: red;
     font-weight: 600;
     min-height: 60px;
     max-height: 180px;
@@ -340,19 +365,19 @@ table.tabela {
 }
 
 #motivo_reprova_id:focus {
-    border-color: var(--error);
+    border-color: red;
     outline: none;
-    background: var(--input-background);
+    background: #F3F4F6;
 }
 
 .formulario-modal label[for="motivo_reprova_id"] {
-    color: var(--error);
+    color: red;
     font-weight: 600;
 }
 
 .modal-body-edit {
     padding: 24px 18px 10px 18px;
-    background-color: var(--secondary-background);
+    background-color: #F3F4F6;
 }
 
 .modal-title {
@@ -365,7 +390,7 @@ table.tabela {
     height: 44px;
     text-align: center;
     font-weight: 600;
-    border: 1px solid var(--input-border);
+    border: 1px solid #D1D5DB;
     border-radius: 6px;    
 }
 
@@ -376,26 +401,6 @@ table.tabela {
 }
 
 .btn-more-info {
-    border: 2px solid white;
-    border-radius: 10px;
-    padding: 2.5px;
-    cursor: pointer;
-    transition: 0.5s;
+    border: none;
     background-color: transparent;
-}
-
-.btn-more-info:hover {
-    background-color: #3399FF;
-}
-
-.baixar-relatorio {
-    border: 2px solid white;
-    border-radius: 10px;
-    padding: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.baixar-relatorio:hover {
-    background-color: #035f29;
 }
