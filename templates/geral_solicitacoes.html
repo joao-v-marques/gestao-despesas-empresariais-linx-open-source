@@ -115,6 +115,14 @@
                 </div>
             </div>
 
+            <div class="container-filtros-linhas" id="filtros-linhas">
+                <input type="text" id="filtro-id" placeholder="Pesquisar pelo ID">
+                <input type="text" id="filtro-fornecedor" placeholder="Pesquisar por fornecedor">
+                <input type="date" id="filtro-data">
+                <input type="text" id="filtro-departamento" placeholder="Pesquisar pelo Dpto.">
+                <input type="text" id="filtro-valor" placeholder="Pesquisar por valor">
+            </div>
+
             <div class="tabela-scroll">
                 <table class="tabela">
                     <thead>
@@ -122,7 +130,9 @@
                             <th>ID</th>
                             <th>Processo ERP</th>
                             <th>Emp./Rev</th>
+                            <th>O.S</th>
                             <th>Fornecedor</th>
+                            <th>Dta. Solicitação</th>
                             <th>Usuario</th>
                             <th>Departamento</th>
                             <th>Valor</th>
@@ -131,7 +141,7 @@
                             <th>Opções</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tabela-corpo">
                         {% for s in solicitacoes %}
                             <tr class="body-lista">
                                 <td>{{ s['id'] }}</td>
@@ -147,7 +157,17 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ s['empresa'] }}.{{ s['revenda'] }}</td>
+                                <td>
+                                    {% if s['nro_os'] == None %}
+                                        -
+                                    {% else %}
+                                        {{ s['nro_os'] }}
+                                    {% endif %}
+                                </td>
                                 <td>{{ s['fornecedor'] }}</td>
+                                <td>
+                                    {{ s['data_solicitacao'] }}
+                                </td>
                                 <td>{{ s['usuario_solicitante'] }}</td>
                                 <td>{{ s['departamento_codigo'] }} - {{ s['departamento_descricao'] }}</td>
                                 <td>{{ "{:,.2f}".format(s['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
@@ -161,7 +181,7 @@
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="11" class="nenhuma-solicitacao">Nenhuma solicitação foi encontrada</td>
+                                <td colspan="12" class="nenhuma-solicitacao">Nenhuma solicitação foi encontrada</td>
                             </tr>
                         {% endfor %}
                     </tbody>

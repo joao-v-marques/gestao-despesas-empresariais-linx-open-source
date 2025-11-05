@@ -404,3 +404,53 @@ tbody:last-child tr:last-child td:last-child {
     border: none;
     background-color: transparent;
 }
+
+/* ! Personalização dos input de filtro */
+.container-filtros-linhas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px;
+  background-color: #f8f9fb; /* tom claro e neutro */
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Inputs */
+.container-filtros-linhas input {
+  flex: 1 1 180px; /* ocupa o espaço disponível, mas respeita o mínimo */
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  background-color: #fff;
+  color: #333;
+}
+
+/* Efeito ao focar */
+.container-filtros-linhas input:focus {
+  outline: none;
+  border-color: #2563eb; /* azul moderno */
+  box-shadow: 0 0 4px rgba(37, 99, 235, 0.3);
+}
+
+/* Placeholder estilizado */
+.container-filtros-linhas input::placeholder {
+  color: #9ca3af;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container-filtros-linhas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .container-filtros-linhas input {
+    width: 100%;
+  }
+}

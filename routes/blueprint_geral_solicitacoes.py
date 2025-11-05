@@ -22,6 +22,8 @@ def geral_solicitacoes():
             s.CAMPO,
             s.CAMPO,
             s.CAMPO,
+            s.CAMPO,
+            s.CAMPO,
             u.CAMPO AS CAMPO,
             d.CAMPO AS CAMPO,
             d.CAMPO AS CAMPO,
