@@ -329,3 +329,46 @@ nav {
 .modal-footer {
     background-color: #D9D9D9;
 }
+
+/* * Filtros de usuarios */
+.container-filtros-linhas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px;
+    background: #f5f6fa;
+    border-radius: 10px;
+    border: 1px solid #dcdde1;
+    margin-bottom: 20px;
+}
+
+/* Inputs e select com o mesmo estilo */
+.container-filtros-linhas input,
+.container-filtros-linhas select {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s ease;
+    background: white;
+}
+
+/* Efeito ao focar */
+.container-filtros-linhas input:focus,
+.container-filtros-linhas select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Garante que fiquem proporcionais */
+.container-filtros-linhas input,
+.container-filtros-linhas select {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Ajuste opcional para deixar o select com tamanho igual */
+.container-filtros-linhas select {
+    cursor: pointer;
+}

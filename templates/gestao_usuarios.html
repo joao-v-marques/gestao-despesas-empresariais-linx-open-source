@@ -147,6 +147,20 @@
         <div class="container-lista">
             <h1>Lista de Gerenciamento de Usuários</h1>
 
+            <div class="container-filtros-linhas" id="filtros-linhas">
+                <input type="text" id="filtro-id" placeholder="Pesquisar pelo ID">
+                <input type="text" id="filtro-emp-rev" placeholder="Pesquisar pela Emp/Rev">
+                <input type="text" id="filtro-usuario" placeholder="Pesquisar pelo Usuário" oninput="this.value = this.value.toUpperCase();">
+                <input type="text" id="filtro-nome" placeholder="Pesquisar pelo Nome">
+                <select id="filtro-funcao">
+                    <option value="todos" selected>Todos</option>
+                    <option value="Solicitante">Solicitante</option>
+                    <option value="Gerente">Gerente</option>
+                    <option value="Corporativo">Corporativo</option>
+                    <option value="Administrador">Administrador</option>
+                </select>
+            </div>
+
             <table class="tabela">
                 <thead class="tabela-head">
                     <tr>
@@ -159,7 +173,7 @@
                         <th colspan="2" class="th-opcoes">Opções</th>
                     </tr>
                 </thead>
-                <tbody class="tabela-body">
+                <tbody class="tabela-body" id="tabela-corpo">
                     {% for u in usuarios %}
                         <tr>
                             <td>{{ u['id'] }}</td>

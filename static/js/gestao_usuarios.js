@@ -91,3 +91,42 @@ formDeletar.addEventListener("submit", function () {
     btnDeletar.disabled = true;
     btnDeletar.textContent = "Deletando..."; 
 })
+
+linhas = document.querySelectorAll("#tabela-corpo tr");
+const filtroId = document.getElementById("filtro-id")
+const filtroEmpRev = document.getElementById("filtro-emp-rev")
+const filtroUsuario = document.getElementById("filtro-usuario")
+const filtroNome = document.getElementById("filtro-nome")
+const filtroFuncao = document.getElementById("filtro-funcao")
+
+
+function filtrarTabela() {
+    const tabelaId = filtroId.value;
+    const tabelaEmpresa = filtroEmpRev.value;
+    const tabelaUsuario = filtroUsuario.value;
+    const tabelaNome = filtroNome.value;
+    
+    const tabelaFuncao = filtroFuncao.value;
+
+    linhas.forEach(linha => {
+        colunas = linha.getElementsByTagName('td');
+        const colId = colunas[0].textContent;
+        const colEmpRev = colunas[1].textContent;
+        const colUsuario = colunas[2].textContent;
+        const colNome = colunas[4].textContent;
+        const colFuncao = colunas[5].textContent;
+
+        const exibir = 
+            (!tabelaId || colId.includes(tabelaId)) &&
+            (!tabelaEmpresa || colEmpRev.includes(tabelaEmpresa)) &&
+            (!tabelaUsuario || colUsuario.includes(tabelaUsuario)) &&
+            (!tabelaNome || colNome.includes(tabelaNome)) &&
+            (tabelaFuncao === "todos" || !tabelaFuncao || colFuncao.includes(tabelaFuncao));
+
+        linha.style.display = exibir ? '' : 'none';
+    })
+}
+
+[filtroId, filtroEmpRev, filtroUsuario, filtroNome, filtroFuncao].forEach(input => {
+    input.addEventListener('input', filtrarTabela);
+});
