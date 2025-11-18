@@ -200,6 +200,41 @@ nav {
     background-color: #2564eb;
 }
 
+.conj {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.conj1-cod-apollo {
+    width: 15%;
+}
+
+.conj1-usuario {
+    width: 85%;
+}
+
+.conj2 {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.conj2 div {
+    width: 50%;
+}
+
+.conj3-nome {
+    width: 70%;
+}
+
+.conj4 {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    gap: 25px;
+}
+
 .flash-error {
     text-align: center;
     color: red;

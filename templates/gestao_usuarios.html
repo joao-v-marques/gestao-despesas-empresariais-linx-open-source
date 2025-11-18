@@ -98,38 +98,58 @@
         <form action="{{ url_for('blueprint_gestao_usuarios.cadastrar_usuario') }}" method="POST" class="formulario" id="formCad">
             <h2 class="titulo-cadastro">Cadastro de Usuários</h2>
 
-            <label for="cod_apollo_id" class="label-cod-apollo">Cód. Apollo</label>
-            <input type="text" id="cod_apollo_id" name="codigo_apollo" class="input-cod-apollo" value="0">
+            <div class="conj">
+                <div class="conj1-cod-apollo">
+                    <label for="cod_apollo_id" class="label-cod-apollo">Cód. Apollo</label>
+                    <input type="text" id="cod_apollo_id" name="codigo_apollo" class="input-cod-apollo" value="0">
+                </div>
+                <div class="conj1-usuario">
+                    <label for="usuario_id" class="label-usuario">Usuario</label>
+                    <input type="text" id="usuario_id" name="usuario" class="input-usuario">
+                </div>
+            </div>
 
-            <label for="usuario_id" class="label-usuario">Usuario</label>
-            <input type="text" id="usuario_id" name="usuario" class="input-usuario">
+            <div class="conj2">
+                <div>
+                    <label for="senha_id" class="label-senha">Senha</label>
+                    <input type="password" id="senha_id" name="senha" class="input-senha">
+                </div>
+                <div>
+                    <label for="confirma_senha_id" class="label-confirma-senha">Confirme a senha</label>
+                    <input type="password" id="confirma_senha_id" name="confirma_senha" class="input-confirma-senha">
+                </div>
+            </div>
 
-            <label for="senha_id" class="label-senha">Senha</label>
-            <input type="password" id="senha_id" name="senha" class="input-senha">
-
-            <label for="confirma_senha_id" class="label-confirma-senha">Confirme a senha</label>
-            <input type="password" id="confirma_senha_id" name="confirma_senha" class="input-confirma-senha">
-
-            <label for="nome_id" class="label-nome">Nome</label>
-            <input type="text" id="nome_id" name="nome" class="input-nome">
-
-            <label for="funcao_id" class="label-funcao">Função</label>
-            <select name="funcao" id="funcao_id" class="input-funcao">
-                <option value="Solicitante">Solicitante</option>
-                <option value="Gerente">Gerente</option>
-                <option value="Corporativo">Corporativo</option>
-                <option value="Administrador">Administrador</option>
-            </select>
-
-            <label for="empresa_id" class="label-empresa">Empresa</label>
-            <select name="empresa" id="empresa_id">
-                <option value="1">1</option>
-            </select>
-
-            <label for="revenda_id" class="label-revenda">Revenda</label>
-            <select name="revenda" id="revenda_id">
-                <!-- A Revenda é preenchida dinamicamente pelo JS -->
-            </select>
+            <div class="conj">
+                <div class="conj3-nome">
+                    <label for="nome_id" class="label-nome">Nome</label>
+                    <input type="text" id="nome_id" name="nome" class="input-nome">
+                </div>
+                <div>
+                    <label for="funcao_id" class="label-funcao">Função</label>
+                    <select name="funcao" id="funcao_id" class="input-funcao">
+                        <option value="Solicitante">Solicitante</option>
+                        <option value="Gerente">Gerente</option>
+                        <option value="Corporativo">Corporativo</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="conj4">
+                <div>
+                    <label for="empresa_id" class="label-empresa">Empresa</label>
+                    <select name="empresa" id="empresa_id">
+                        <option value="1">1</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="revenda_id" class="label-revenda">Revenda</label>
+                    <select name="revenda" id="revenda_id">
+                        <!-- A Revenda é preenchida dinamicamente pelo JS -->
+                    </select>
+                </div>
+            </div>
 
             <input type="submit" class="botao-enviar" value="Cadastrar Usuario" id="btnCad">
 
@@ -151,6 +171,7 @@
 
             <div class="container-filtros-linhas" id="filtros-linhas">
                 <input type="text" id="filtro-id" placeholder="Pesquisar pelo ID">
+                <input type="text" id="filtro-apollo" placeholder="Pesquisar pelo Cód. Apollo">
                 <input type="text" id="filtro-emp-rev" placeholder="Pesquisar pela Emp/Rev">
                 <input type="text" id="filtro-usuario" placeholder="Pesquisar pelo Usuário" oninput="this.value = this.value.toUpperCase();">
                 <input type="text" id="filtro-nome" placeholder="Pesquisar pelo Nome">
@@ -167,6 +188,7 @@
                 <thead class="tabela-head">
                     <tr>
                         <th>ID</th>
+                        <th>Cód. Apollo</th>
                         <th>Emp./Rev.</th>
                         <th>Usuario</th>
                         <th>Senha</th>
@@ -179,6 +201,7 @@
                     {% for u in usuarios %}
                         <tr>
                             <td>{{ u['id'] }}</td>
+                            <td>{{ u['codigo_apollo'] }}</td>
                             <td>{{ u['empresa'] }}.{{ u['revenda'] }}</td>
                             <td class="td-usuario">{{ u['usuario'] }}</td>
                             <td>{{ u['senha'] }}</td>
