@@ -24,7 +24,9 @@
 
                     <ul class="dropdown-menu" aria-labelledby="solicitacoesDropdown">
                         <li><a class="dropdown-item" href="{{ url_for('blueprint_painel_solicitacoes.painel_solicitacoes') }}">Painel de Solicitações</a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('blueprint_lancar_solicitacao.lancar_solicitacao') }}">Lançar Solicitação</a></li>
+                        {% if usuario_logado != 'ADMIN' %}
+                            <li><a class="dropdown-item" href="{{ url_for('blueprint_lancar_solicitacao.lancar_solicitacao') }}">Lançar Solicitação</a></li>
+                        {% endif %}
                     </ul>
                 </li>
 
@@ -166,7 +168,9 @@
 
             <!-- ! Fim do form, começo dos Modais --------------------------------------------------------------------------------------- -->
 
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal{{ solicitacao['id'] }}">Aprovar</button>
+            {% if usuario_logado != 'ADMIN' %}
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal{{ solicitacao['id'] }}">Aprovar</button>
+            {% endif %}
 
             <div class="modal fade" id="confirmModal{{ solicitacao['id'] }}" tabindex="-1" aria-labelledby="confirmModalLabel{{ solicitacao['id'] }}" aria-hidden="true">
                 <div class="modal-dialog">
@@ -190,8 +194,10 @@
                 </div>
             </div>
 
-            <!-- Botão para reprovar a solicitação -->
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalReprovar{{ solicitacao['id'] }}">Reprovar</button>
+            {% if usuario_logado != 'ADMIN' %}
+                <!-- Botão para reprovar a solicitação -->
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalReprovar{{ solicitacao['id'] }}">Reprovar</button>
+            {% endif %}
 
             <!-- Modal de confirmação para o modal de reprova -->
             <div class="modal fade" id="modalReprovar{{ solicitacao['id'] }}" tabindex="-1" aria-labelledby="modalReprovarLabel{{ solicitacao['id'] }}" aria-hidden="true">
@@ -221,8 +227,10 @@
                 </div>
             </div>
 
-            <!-- Botão para alterar o fornecedor -->
-            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalFornecedor{{ solicitacao['id'] }}">Alterar Fornecedor</button>
+            {% if usuario_logado != 'ADMIN' %}
+                <!-- Botão para alterar o fornecedor -->
+                <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalFornecedor{{ solicitacao['id'] }}">Alterar Fornecedor</button>
+            {% endif %}
 
             <!-- Modal para alteração do fornecedor -->
             <div class="modal fade" id="modalFornecedor{{ solicitacao['id'] }}" tabindex="-1" aria-labelledby="modalFornecedorLabel{{ solicitacao['id'] }}" aria-hidden="true">
@@ -246,8 +254,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
         </div>
     </main>
 
