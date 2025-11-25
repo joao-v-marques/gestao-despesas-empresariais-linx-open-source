@@ -9,7 +9,7 @@ from datetime import datetime
 
 blueprint_painel_solicitacoes = Blueprint('blueprint_painel_solicitacoes', __name__)
 
-# Rota que renderiza a pagina do painel de solicitações
+# ! Rota que renderiza a pagina do painel de solicitações
 @blueprint_painel_solicitacoes.route('/')
 @login_required
 def painel_solicitacoes():
@@ -73,7 +73,7 @@ def painel_solicitacoes():
                 cursor.close()
                 conn.close()
 
-# Rota que direciona para a pagina de mais_info_sol (Mais informações das solicitações)
+# ! Rota que direciona para a pagina de mais_info_sol (Mais informações das solicitações)
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>')
 @login_required
 def mais_info_sol(id):
@@ -144,7 +144,7 @@ def mais_info_sol(id):
                 cursor.close()
                 conn.close()
 
-# Rota que atualiza os fornecedores (Não é a rota para inserir um novo fornecedor no sistema)
+# ! Rota que atualiza os fornecedores (Não é a rota para inserir um novo fornecedor no sistema)
 @blueprint_painel_solicitacoes.route('/inserir-fornecedor/<int:id>', methods=['POST'])
 @login_required
 def inserir_fornecedor(id):
@@ -180,7 +180,7 @@ def inserir_fornecedor(id):
             cursor.close()
             conn.close()
 
-# Rota para baixar um relatório do painel de solicitações
+# ! Rota para baixar um relatório do painel de solicitações
 @blueprint_painel_solicitacoes.route('/download-relatorio', methods=['GET'])
 @login_required
 def download_relatorio():
@@ -238,7 +238,7 @@ def download_relatorio():
         cursor.close()
         conn.close()
 
-# Rota para baixar o PDF de comprovante para solicitações aprovadas
+# ! Rota para baixar o PDF de comprovante para solicitações aprovadas
 @blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/download-pdf', methods=['GET'])
 @login_required
 def download_pdf(id):
@@ -261,7 +261,7 @@ def download_pdf(id):
             cursor.close()
             conn.close()
 
-# Rota para editar uma solicitação
+# ! Rota para editar uma solicitação
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/salvar', methods=['POST'])
 @login_required
 def salvar_edicao(id):
@@ -303,7 +303,7 @@ def salvar_edicao(id):
                     cursor.close()
                     conn.close()
         
-# Rota para excluir uma solicitação
+# ! Rota para excluir uma solicitação
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/excluir', methods=['POST'])
 @login_required
 def excluir_solicitacao(id):
@@ -368,7 +368,7 @@ def excluir_solicitacao(id):
                 cursor.close()
                 conn.close()
 
-# Rota para reenviar uma solicitação reprovada
+# ! Rota para reenviar uma solicitação reprovada
 @blueprint_painel_solicitacoes.route('/mais_info_sol/<int:id>/reenviar', methods=['POST'])
 @login_required
 def reenviar_solicitacao(id):
@@ -393,7 +393,7 @@ def reenviar_solicitacao(id):
                     cursor.close()
                     conn.close()
 
-# Rota para desautorizar uma solicitação aprovada
+# ! Rota para desautorizar uma solicitação aprovada
 @blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/desautorizar', methods=['POST'])
 @login_required
 def desautorizar_solicitacao(id):
@@ -429,3 +429,82 @@ def desautorizar_solicitacao(id):
     finally:
         cursor.close()
         conn.close()
+
+# ! Rota para alterar o valor da solicitação que está PENDENTE
+@blueprint_painel_solicitacoes.route('mais_info_sol/<int:id>/alterar-valor', methods=['POST'])
+@login_required
+def alterar_valor(id):
+    novo_valor = request.form['alterar_valor'].strip()
+
+    if not novo_valor:
+        flash('Não foi localizado um valor!', 'error')
+        return redirect(url_for("blueprint_painel_solicitacoes.mais_info_sol", id=id))
+    else:
+        try:
+            # Converte string para float
+            novo_valor = float(novo_valor)
+        except ValueError:
+            flash('Valor inválido! Insira um número válido.', 'error')
+            return redirect(url_for("blueprint_painel_solicitacoes.mais_info_sol", id=id))
+        
+        try:
+            cursor, conn = abrir_cursor()
+
+            # Busca a solicitação original
+            sql_sol = "SELECT * FROM TABELA WHERE CAMPO = :1"
+            cursor.execute(sql_sol, [id])
+            solicitacao = cursor.dict_fetchone()
+
+            if not solicitacao:
+                flash("Nenhuma solicitação foi encontrada", "error")
+                return redirect(url_for("blueprint_painel_solicitacoes.painel_solicitacoes"))
+            
+            if solicitacao['status'] != "PENDENTE":
+                flash("Só é permitido alterar o valor de solicitações PENDENTES", "error")
+                return redirect(url_for("blueprint_painel_solicitacoes.painel_solicitacoes"))
+            
+            valor_antigo = float(solicitacao['valor'])
+            empresa = solicitacao['empresa']
+            revenda = solicitacao['revenda']
+            departamento = solicitacao['departamento']
+            origem = solicitacao['origem']
+
+            data = solicitacao['data_solicitacao']
+            # Faz a conversão para datetime
+            data_formatada = datetime.strptime(data, "%d/%m/%Y")
+
+            ano_mes = data_formatada.strftime("%Y%m") 
+
+            # Ajustar o orçamento se não for 5121
+            if origem != 5121:
+                sql_orcamento = "SELECT CAMPO FROM TABELA WHERE CAMPO = :1 AND CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5"
+                valores_orcamento = [empresa, revenda, origem, ano_mes, departamento]
+                cursor.execute(sql_orcamento, valores_orcamento)
+                retorno_orcamento = cursor.dict_fetchone()
+
+                if retorno_orcamento:
+                    valor_atual_orcamento = float(retorno_orcamento['valor'])
+
+                    # Reverter para o valor antigo e ai sim aplicar o novo valor do orçamento
+                    novo_valor_orcamento = valor_atual_orcamento + valor_antigo - novo_valor
+
+                    sql_atualiza_orcamento = "UPDATE TABELA SET CAMPO = :1 WHERE CAMPO = :2 AND CAMPO = :3 AND CAMPO = :4 AND CAMPO = :5 AND CAMPO = :6"
+                    valores_atualiza_orcamento = [novo_valor_orcamento, empresa, revenda, origem, ano_mes, departamento]
+                    cursor.execute(sql_atualiza_orcamento, valores_atualiza_orcamento)
+
+            # Atualizar o valor na solicitação
+            sql_atualiza_solicitacao = "UPDATE TABELA SET CAMPO = :1 WHERE CAMPO = :2"
+            valores_atualiza_solicitacao = [novo_valor, id]
+            cursor.execute(sql_atualiza_solicitacao, valores_atualiza_solicitacao)
+            conn.commit()
+
+            flash("Valor alterado com sucesso!", "success")
+            return redirect(url_for("blueprint_painel_solicitacoes.mais_info_sol", id=id))
+        
+        except Exception as e:
+            conn.rollback()
+            flash(f"Erro ao alterar o valor: {e}", "error")
+            return redirect(url_for("blueprint_painel_solicitacoes.mais_info_sol", id=id))
+        finally:
+            cursor.close()
+            conn.close()

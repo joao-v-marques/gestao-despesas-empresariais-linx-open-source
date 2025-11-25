@@ -1,5 +1,4 @@
 import os
-# from waitress import serve
 from dotenv import load_dotenv
 from flask import Flask
 from configure import config_all
@@ -12,7 +11,3 @@ app.secret_key = os.getenv('SECRET_KEY', '')
 config_all(app)
 
 app.run(debug=True)
-
-# if __name__ == "__main__":
-#     print('Inciando o Servidor Local...')
-#     serve(app, host='0.0.0.0', port=8080)
