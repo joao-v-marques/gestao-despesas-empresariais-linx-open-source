@@ -134,9 +134,9 @@
                             <td>{{ "{:,.2f}".format(solicitacao['valor']).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
                             {% if solicitacao['origem'] != 5121 %}
                                 {% if solicitacao['orcamento'] <= solicitacao['valor'] %}
-                                    <td style="color: #E63946; font-weight: bold;">Fora</td>
+                                    <td class="text-danger fw-bold">Fora</td>
                                 {% else %}
-                                    <td style="color: #2ECC71; font-weight: bold;">Dentro</td>
+                                    <td class="text-success fw-bold">OK</td>
                                 {% endif %}
                             {% else %}
                                 <td>-</td>
