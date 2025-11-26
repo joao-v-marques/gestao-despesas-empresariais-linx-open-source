@@ -246,21 +246,24 @@
             {% if usuario_logado != 'ADMIN' %}
                 <div class="botoes">
                     {% if solicitacao['status'] == 'PENDENTE' %}
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao['id'] }}">Cancelar Envio</button>
-                        {% if solicitacao['fornecedor'] == None %}
-                            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalFornecedor{{ solicitacao['id'] }}">Inserir Fornecedor</button>
-                        {% else %}
-                            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalFornecedor{{ solicitacao['id'] }}">Alterar Fornecedor</button>
-                        {% endif %}
+                        <div>
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao['id'] }}">Cancelar Envio</button>
+                            {% if solicitacao['fornecedor'] == None %}
+                                <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalFornecedor{{ solicitacao['id'] }}">Inserir Fornecedor</button>
+                            {% else %}
+                                <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalFornecedor{{ solicitacao['id'] }}">Alterar Fornecedor</button>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAlteraValor{{ solicitacao['id'] }}">Alterar Valor</button>
+                        </div>
                     {% elif solicitacao['status'] == 'REPROVADO' %}
-                        <div class="btn-reprovados">
-                            <div class="btn-exc-edit">
+                        <div class="d-flex justify-content-between align-items-center gap-2">
+                            <div class="d-flex gap-2">
                                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ solicitacao['id'] }}">Excluir</button>
                                 <button type="button" class="btn btn-primary" id="btn-editar">Editar</button>
                             </div>
-                            <div class="btn-reenviar">
-                                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalReenviar{{ solicitacao['id'] }}">Reenviar</button>
-                            </div>
+                            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalReenviar{{ solicitacao['id'] }}">Reenviar</button>
                         </div>
                     {% elif solicitacao['status'] == 'APROVADO' %}
                         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDesautorizar{{ solicitacao['id'] }}">Desautorizar Solicitação</button>
@@ -269,16 +272,16 @@
                         <a href="{{ url_for('blueprint_painel_solicitacoes.download_pdf', id=solicitacao['id']) }}" class="btn btn-info">Baixar PDF</a>
                     {% endif %}
 
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% if messages %}
-                            <ul class="flashes">
-                                {% for category, message in messages %}
-                                    <li class="flash-{{ category }}">{{ message }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    {% endwith %}
                 </div>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <ul class="flashes">
+                            {% for category, message in messages %}
+                                <li class="flash-{{ category }}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
             {% endif %}
         </div>
 
@@ -299,6 +302,28 @@
 
                             <input type="submit" class="btn btn-success" value="Confirmar">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalAlteraValor{{ solicitacao['id'] }}" tabindex="-1" aria-labelledby="modalAlteraValorLabel{{ solicitacao['id'] }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAlteraValorLabel{{ solicitacao['id'] }}">Alterar valor da solicitação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url_for('blueprint_painel_solicitacoes.alterar_valor', id=solicitacao['id']) }}" method="POST" class="form-alterar-valor">
+                            <label for="alterar_valor_id">Insira o novo valor</label>
+                            <input type="text" id="alterar_valor_id" name="alterar_valor" required>
+
+                            <div>
+                                <input type="submit" class="btn btn-success" value="Confirmar">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
                         </form>
                     </div>
                 </div>

@@ -153,7 +153,7 @@
                         <input type="text" readonly id="valor_id" name="valor" value="R$ {{ "{:,.2f}".format(solicitacao['valor']).replace(',',"X").replace(".", ",").replace("X", ".") }}">
                     </div>
                 </div>
-                {% if solicitacao['cod_origem'] != 5121 %}4
+                {% if solicitacao['cod_origem'] != 5121 %}
                     <div>
                         <label for="valor_orcamento_id">Valor Orçamento</label>
                         <input type="text" readonly id="valor_orcamento_id" name="valor_orcamento" value="R$ {{ "{:,.2f}".format(solicitacao['orcamento']).replace(',',"X").replace(".", ",").replace("X", ".") }}">
